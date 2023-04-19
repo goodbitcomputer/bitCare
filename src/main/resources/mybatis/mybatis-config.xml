@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+    <typeAliases>
+        <!--        mybatis에서 userDTO를 사용하면 자동으로 객체를 가져올수있도록 설정해놓은것-->
+        <typeAlias type="com.bit.bitcare.model.MemberDTO" alias="userDTO"/>
+
+    </typeAliases>
+<!--    <mappers>-->
+<!--        <mapper resource="config/mybatis/mapper/UserMapper.xml"/>-->
+
+<!--    </mappers>-->
+</configuration>
