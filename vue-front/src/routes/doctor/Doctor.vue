@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p>Doctor</p>
+    <p>Doctor 개발시작</p>
   </div>
 </template>
 
