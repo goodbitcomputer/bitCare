@@ -19,7 +19,7 @@ public class HomeController {
 
 //    @RequestMapping("/")
     public String showIndex(HttpSession session, Model model) {
-        System.out.println("여긴 테스트 구역11");
+        System.out.println("여긴 테스트 구역123456");
         System.out.println("test");
         System.out.println("test2");
 
