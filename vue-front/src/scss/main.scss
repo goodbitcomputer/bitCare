@@ -2,16 +2,87 @@
 $primary: #FDC000;
 $container-max-widths: (
         sm: 540px,
-        md: 704px,
-        lg: 924px,
-        xl: 1140px,
-        xxl: 1364px
+        md: 780px,
+        lg: 1000px,
+        xl: 1200px,
+        xxl: 1400px
 );
 
+
+
 // Required
-@import "../../node_modules/bootstrap/scss/functions";
-@import "../../node_modules/bootstrap/scss/variables";
-@import "../../node_modules/bootstrap/scss/mixins";
+//@import "../../node_modules/bootstrap/scss/functions";
+//@import "../../node_modules/bootstrap/scss/variables";
+//@import "../../node_modules/bootstrap/scss/mixins";
+//@import "../../node_modules/bootstrap/scss/bootstrap";
 
-@import "../../node_modules/bootstrap/scss/bootstrap";
+@media (min-width: 1200px) {
+  .container, .container-sm, .container-md, .container-lg, .container-xl {
+    max-width: 1400px;
+  }
+}
 
+.border-box {
+  margin: 5px;
+  padding: 5px;
+  border: 1px solid #DBDFE5;
+  border-radius: 10px;
+}
+
+/* 토글 사이드바 버튼 아이콘 */
+.ico {
+  position:absolute;
+  top:50%;
+  left:8px;
+  width:20px;
+  height:20px;
+  transform:translatey(-50%);
+  cursor:pointer;
+}
+.ico > div {
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:20%;
+  background-color:white;
+}
+.ico > div:nth-child(2) {
+  top:40%;
+  transition:visibility 0s .15s;
+}
+.ico.active > div:nth-child(2) {
+  visibility:hidden;
+  transition:visibility 0s;
+}
+.ico > div:nth-child(3) {
+  top:80%;
+}
+.ico > div:nth-child(1), .ico > div:nth-child(3) {
+  transition:top .15s .15s, transform .15s;
+}
+.ico.active > div:nth-child(1), .ico.active > div:nth-child(3) {
+  top:40%;
+  transform:rotate(45deg);
+  transition:top .15s, transform .15s .15s;
+}
+.ico.active > div:nth-child(3) {
+  transform:rotate(-45deg);
+}
+
+/* 아이콘 색 변화 */
+.ico[data-ico-now-animating="Y"] > div {
+  background-color:red;
+}
+
+// 전체 폰트 적용
+@font-face {
+  font-family: 'Pretendard-Regular';
+  src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+body * {
+  font-family: 'Pretendard-Regular';
+  font-size: 13px;
+}

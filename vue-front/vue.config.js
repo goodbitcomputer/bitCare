@@ -14,15 +14,15 @@ module.exports = {
 
 
     //// SpringBoot 서버 접속 주소
-    devServer: {
-      // proxy: "http://localhost:8080"
-      proxy: {
-        '/': {
-          target: "http://localhost:8080/",
-          changeOrigin: true,
-        }
-      }
-    },
+    // devServer: {
+    //   // proxy: "http://localhost:8080"
+    //   proxy: {
+    //     '/': {
+    //       target: "http://localhost:8080/",
+    //       changeOrigin: true,
+    //     }
+    //   }
+    // },
 
     chainWebpack: config => {
         const svgRule = config.module.rule("svg");
@@ -32,12 +32,13 @@ module.exports = {
     css: {
         loaderOptions: {
             sass: {
-                additionalData: `
-                    @import "@/scss/main.scss";
-                `
+                additionalData:
+                    `@import "@/scss/main.scss";
+                
+                    `
+
             }
         }
     }
-
 
 };
