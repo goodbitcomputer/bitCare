@@ -39,6 +39,7 @@
   </div>
 </template>
 
+
 <script>
 import Header from '@/components/NavBar.vue'
 // import Footer from '~/components/Footer'
@@ -50,7 +51,15 @@ export default {
   }
 }
 </script>
+<style>
+@font-face {
+  font-family: 'yg-jalnan';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
 
+</style>
 
 
 
