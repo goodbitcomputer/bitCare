@@ -24,7 +24,6 @@ export default {
     Physical,
     History,
     HistoryWrite,
-
   }
 }
 </script>
@@ -32,19 +31,43 @@ export default {
 
   .container {
     padding-top: 20px;
-    display: flex;
+    //display: flex;
   }
   btn {
     color: #0b2e13;
     background-color: #0b2e13;
   }
   .waiting {
-    width: 20%;
+    width: 100%;
   }
   .history {
-    width: 45%;
+    width: 100%;
   }
   .write {
-    width: 55%;
+    width: 100%;
   }
+  // sm
+  //@media (min-width: 576px) { ... }
+  // md
+  //@media (min-width: 768px) { ... }
+  // lg
+  @media (min-width: 992px) {
+    .container {
+      padding-top: 20px;
+      display: flex;
+    }
+    .waiting {
+      width: 20%;
+    }
+    .history {
+      width: 45%;
+    }
+    .write {
+      width: 55%;
+    }
+   }
+  // xl
+  //@media (min-width: 1200px) { ... }
+  // xxl
+  //@media (min-width: 1400px) { ... }
 </style>
