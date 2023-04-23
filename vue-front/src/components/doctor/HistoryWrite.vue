@@ -40,6 +40,9 @@
             ></b-form-radio>
           </template>
         </b-table>
+        <button @click="addRow">마지막 행 추가</button>
+<!--        상병추가모달-->
+        <writeSb-model/>
 
         <p>선택된 항목: {{ selectedItems }}</p>
       </div>
@@ -47,14 +50,33 @@
 <!--    처방-->
     <div class="border-box">
       <p>처방</p>
-      <b-table></b-table>
+      <b-table>
+        <template #cell(radio1)="data">
+          <b-form-radio
+              v-model="data.item.radio1"
+              :value="true"
+              @change="handleRadioChange(data.item)"
+          ></b-form-radio>
+        </template>
+        <template #cell(radio2)="data">
+          <b-form-radio
+              v-model="data.item.radio1"
+              :value="false"
+              @change="handleRadioChange(data.item)"
+          ></b-form-radio>
+        </template>
+      </b-table>
     </div>
   </div>
 </template>
 
 <script>
+
+import WriteSbModel from "@/components/doctor/WriteSbModal.vue";
+
 export default {
   name: "DoctorHistoryWrite",
+  components: {WriteSbModel},
   data() {
     return {
       selectedItems: [],
@@ -66,8 +88,8 @@ export default {
         { key: 'radio2', label: '선택2', thClass: 'text-center' },
       ],
       items: [
-        { id: 1, name: 'John', age: 28, gender: 'Male', radio1: true, radio2: false },
-        { id: 2, name: 'Jane', age: 35, gender: 'Female', radio1: false, radio2: true },
+        { id: 1, name: 'John', age: 28, gender: 'Male', radio1: false, radio2: true },
+        { id: 2, name: 'Jane', age: 35, gender: 'Female', radio1: true, radio2: false },
         { id: 3, name: 'Mike', age: 22, gender: 'Male', radio1: false, radio2: true },
         { id: 4, name: 'Emily', age: 29, gender: 'Female', radio1: true, radio2: false }
       ]
@@ -83,6 +105,20 @@ export default {
       } else {
         this.selectedItems = this.selectedItems.filter((i) => i.id !== item.id);
       }
+    },
+    addRow() {
+      // 추가할 행 객체 생성
+      const newRow = {
+        id: 5,
+        name: 'Tom',
+        age: 30,
+        gender: 'Female',
+        radio1: true,
+        radio2: false
+      };
+
+      // 생성한 객체를 배열에 추가
+      this.items.push(newRow);
     }
   }
 }
