@@ -20,6 +20,7 @@
 <!--                    {{ data.value }}-->
 <!--                  </div>-->
 <!--                </template>-->
+
                 <template #cell(code)="data">
                   <div class="ellipsis-code td-box-code">
                     {{ data.value }}
