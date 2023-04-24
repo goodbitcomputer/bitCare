@@ -5,10 +5,8 @@
 
 <mapper namespace="com.bit.bitcare.dao.HistoryDiagnoseDAO">
 
-    <resultMap id="historyDiagnoseList" type="historyDiagnoseDTO"/>
-
     <!-- 진료 기록의 처방부분(history_diagnose) select -->
-    <select id="selectByHistoryId" parameterType="int" resultMap="historyDiagnoseList">
+    <select id="selectByHistoryId" parameterType="int" resultType="historyDiagnoseDTO">
         select * from `history_diagnose`
         where history_id = #{historyId}
     </select>

@@ -5,10 +5,8 @@
 
 <mapper namespace="com.bit.bitcare.dao.ReceiptDAO">
 
-    <resultMap id="receiptList" type="receiptDTO"/>
-
     <!-- 해당 진료 기록(historyId)의 수납내역 -->
-    <select id="selectByHistoryId" parameterType="int" resultMap="receiptList">
+    <select id="selectByHistoryId" parameterType="int" resultType="receiptDTO">
         SELECT * FROM `receipt`
         where history_id = #{historyId}
     </select>

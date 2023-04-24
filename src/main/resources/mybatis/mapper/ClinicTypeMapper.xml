@@ -5,10 +5,8 @@
 
 <mapper namespace="com.bit.bitcare.dao.ClinicTypeDAO">
 
-    <resultMap id="clinicTypeList" type="clinicTypeDTO"/>
-
     <!-- 진료 타입 목록 -->
-    <select id="selectAll" resultMap="clinicTypeList">
+    <select id="selectAll" resultType="clinicTypeDTO">
         select * from `clinic_type`
     </select>
 

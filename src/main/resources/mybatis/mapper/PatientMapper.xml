@@ -5,8 +5,6 @@
 
 <mapper namespace="com.bit.bitcare.dao.PatientDAO">
 
-    <resultMap id="patientList" type="patientDTO"/>
-
     <!-- 환자 선택 -->
     <select id="selectOne" parameterType="int" resultType="patientDTO">
         SELECT * FROM `patient`

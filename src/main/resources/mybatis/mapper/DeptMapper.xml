@@ -5,10 +5,8 @@
 
 <mapper namespace="com.bit.bitcare.dao.DeptDAO">
 
-    <resultMap id="deptList" type="deptDTO"/>
-
     <!-- 진료과 목록 -->
-    <select id="selectAll" resultMap="deptList">
+    <select id="selectAll" resultType="deptDTO">
         select * from `dept`
     </select>
 

@@ -5,16 +5,14 @@
 
 <mapper namespace="com.bit.bitcare.dao.MessageDAO">
 
-    <resultMap id="messageList" type="messageDTO"/>
-
     <!-- 받은 메세지 목록 -->
-    <select id="selectByReceiver" parameterType="String" resultMap="messageList">
+    <select id="selectByReceiver" parameterType="String" resultType="messageDTO">
         SELECT * FROM `message`
         where `receiver`= #{logInName}
     </select>
 
     <!-- 보낸 메세지 목록 -->
-    <select id="selectBySender" parameterType="String" resultMap="messageList">
+    <select id="selectBySender" parameterType="String" resultType="messageDTO">
         SELECT * FROM `message`
         where `sender`= #{logInName}
     </select>

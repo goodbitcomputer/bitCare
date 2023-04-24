@@ -5,10 +5,8 @@
 
 <mapper namespace="com.bit.bitcare.dao.AlarmDAO">
 
-    <resultMap id="alarmList" type="alarmDTO"/>
-
     <!-- 받은 알람 select -->
-    <select id="selectByReceiver" parameterType="String" resultMap="alarmList">
+    <select id="selectByReceiver" parameterType="String" resultType="alarmDTO">
         SELECT * FROM `alarm`
         where `receiver`= #{logInName}
     </select>

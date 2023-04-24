@@ -5,10 +5,8 @@
 
 <mapper namespace="com.bit.bitcare.dao.DiseaseDAO">
 
-    <resultMap id="diseaseList" type="diseaseDTO"/>
-
     <!-- 상병 검색 -->
-    <select id="search" parameterType="String" resultMap="diseaseList">
+    <select id="search" parameterType="String" resultType="diseaseDTO">
         SELECT * FROM `disease`
         WHERE name LIKE concat('%', #{keyword}, '%')
     </select>

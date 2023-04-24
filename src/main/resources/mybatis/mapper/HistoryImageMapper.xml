@@ -5,10 +5,8 @@
 
 <mapper namespace="com.bit.bitcare.dao.HistoryImageDAO">
 
-    <resultMap id="historyImageList" type="historyImageDTO"/>
-
     <!-- 진료 기록의 이미지부분(history_image) select -->
-    <select id="selectByHistoryId" parameterType="int" resultMap="historyImageList">
+    <select id="selectByHistoryId" parameterType="int" resultType="historyImageDTO">
         select * from `history_image`
         where history_id = #{historyId}
     </select>

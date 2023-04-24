@@ -5,8 +5,6 @@
 
 <mapper namespace="com.bit.bitcare.dao.WaitingDAO">
 
-    <resultMap id="waitingList" type="waitingDTO"/>
-
     <!-- 접수 대기 인원 선택 -->
     <select id="selectOne" parameterType="int" resultType="waitingDTO">
         SELECT * FROM `waiting`
@@ -14,7 +12,7 @@
     </select>
 
     <!-- 접수 대기 목록 -->
-    <select id="selectAll" resultMap="waitingList">
+    <select id="selectAll" resultType="waitingDTO">
         SELECT * FROM `waiting`
     </select>
 

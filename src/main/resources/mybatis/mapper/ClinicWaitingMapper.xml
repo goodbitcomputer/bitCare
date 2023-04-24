@@ -5,8 +5,6 @@
 
 <mapper namespace="com.bit.bitcare.dao.ClinicWaitingDAO">
 
-    <resultMap id="clinicWaitingList" type="clinicWaitingDTO"/>
-
     <!-- 진료 대기 인원 선택 -->
     <select id="selectOne" parameterType="int" resultType="clinicWaitingDTO">
         SELECT * FROM `clinic_waiting`
@@ -14,7 +12,7 @@
     </select>
 
     <!-- 진료 대기 목록 -->
-    <select id="selectAll" resultMap="clinicWaitingList">
+    <select id="selectAll" resultType="clinicWaitingDTO">
         SELECT * FROM `clinic_waiting`
     </select>
 

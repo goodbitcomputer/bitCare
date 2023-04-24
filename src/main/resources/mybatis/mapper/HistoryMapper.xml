@@ -5,10 +5,8 @@
 
 <mapper namespace="com.bit.bitcare.dao.HistoryDAO">
 
-    <resultMap id="historyList" type="historyDTO"/>
-
     <!-- 환자(patient_id)의 진료 기록(history) 목록 -->
-    <select id="selectByPatientId" parameterType="int" resultMap="historyList">
+    <select id="selectByPatientId" parameterType="int" resultType="historyDTO">
         SELECT * FROM `history`
         WHERE patient_id = #{patientId}
     </select>
@@ -20,7 +18,7 @@
     </select>
 
     <!-- 모든 진료 기록(history) 보여주기 -->
-    <select id="selectAll" resultMap="historyList">
+    <select id="selectAll" resultType="historyDTO">
         SELECT * FROM `history`
     </select>
 

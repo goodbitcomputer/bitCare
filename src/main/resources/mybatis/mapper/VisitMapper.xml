@@ -5,10 +5,8 @@
 
 <mapper namespace="com.bit.bitcare.dao.VisitDAO">
 
-    <resultMap id="visitList" type="visitDTO"/>
-
     <!-- 진료 타입(history.visit)으로 수납(visit) 검색 -->
-    <select id="selectByType" parameterType="String" resultMap="visitList">
+    <select id="selectByType" parameterType="String" resultType="visitDTO">
         select * from `visit`
         where type = #{type}
     </select>
