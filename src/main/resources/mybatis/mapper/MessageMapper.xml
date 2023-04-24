@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bit.bitcare.dao.MessageDAO">
+
+    <!-- 받은 메세지 목록 -->
+    <select id="selectByReceiver" parameterType="String" resultType="messageDTO">
+        SELECT * FROM `message`
+        where `receiver`= #{logInName}
+    </select>
+
+    <!-- 보낸 메세지 목록 -->
+    <select id="selectBySender" parameterType="String" resultType="messageDTO">
+        SELECT * FROM `message`
+        where `sender`= #{logInName}
+    </select>
+
+    <!-- 메세지 선택 -->
+    <select id="selectOne" parameterType="int" resultType="messageDTO">
+        SELECT * FROM `message`
+        where `id`= #{id}
+    </select>
+
+    <!-- 메세지 생성 -->
+    <insert id="insert" parameterType="messageDTO">
+        insert into `message`(sender,receiver,content,message_file,state)
+        values(#{sender}, #{receiver}, #{content}, #{messageFile}, #{state})
+    </insert>
+
+    <!-- 메세지 상태 변경 -->
+    <update id="update" parameterType="messageDTO">
+        UPDATE `message`
+        SET state=#{state}
+        WHERE id=#{id}
+    </update>
+
+    <!-- 메시지 삭제 -->
+    <delete id="delete" parameterType="int">
+        DELETE FROM `message`
+        WHERE id= #{id}
+    </delete>
+
+</mapper>

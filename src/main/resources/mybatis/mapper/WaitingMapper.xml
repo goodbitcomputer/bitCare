@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bit.bitcare.dao.WaitingDAO">
+
+    <!-- 접수 대기 인원 선택 -->
+    <select id="selectOne" parameterType="int" resultType="waitingDTO">
+        SELECT * FROM `waiting`
+        WHERE id=#{id}
+    </select>
+
+    <!-- 접수 대기 목록 -->
+    <select id="selectAll" resultType="waitingDTO">
+        SELECT * FROM `waiting`
+    </select>
+
+    <!-- 접수 처리(대기 목록 삭제) -->
+    <delete id="delete" parameterType="int">
+        DELETE FROM `waiting`
+        WHERE id= #{id}
+    </delete>
+
+    <!-- 접수 대기 목록 생성 -->
+    <insert id="insert" parameterType="waitingDTO">
+        insert into `waiting`(patient_id,dept_id,type_id,symptom,entry_date,reservation_date)
+        values(#{patientId}, #{deptId}, #{typeId}, #{symptom}, now(), #{reservationDate})
+    </insert>
+
+</mapper>

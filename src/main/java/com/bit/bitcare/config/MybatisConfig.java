@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.sql.DataSource;
 
 @Configuration
-@MapperScan(basePackages = {"com.bit.carechart.mapper"})
+@MapperScan(basePackages = {"com.bit.bitcare.dao"})
 public class MybatisConfig {
     @Autowired
     ApplicationContext applicationContext;

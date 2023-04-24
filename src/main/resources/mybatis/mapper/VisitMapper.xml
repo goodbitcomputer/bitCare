@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bit.bitcare.dao.VisitDAO">
+
+    <!-- 진료 타입(history.visit)으로 수납(visit) 검색 -->
+    <select id="selectByType" parameterType="String" resultType="visitDTO">
+        select * from `visit`
+        where type = #{type}
+    </select>
+
+    <!-- 수납(visit) 선택 -->
+    <select id="selectOne" parameterType="int" resultType="visitDTO">
+        SELECT * FROM `visit`
+        WHERE id=#{id}
+    </select>
+
+</mapper>

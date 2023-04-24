@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bit.bitcare.dao.HistoryDiagnoseDAO">
+
+    <!-- 진료 기록의 처방부분(history_diagnose) select -->
+    <select id="selectByHistoryId" parameterType="int" resultType="historyDiagnoseDTO">
+        select * from `history_diagnose`
+        where history_id = #{historyId}
+    </select>
+
+    <!-- 진료 기록의 처방부분(history_diagnose) insert -->
+    <insert id="insert" parameterType="historyDiagnoseDTO">
+        insert into `history_diagnose`(history_id,code,name,dose,time,days)
+        values(#{historyId},#{code}, #{name}, #{dose}, #{time}, #{days})
+    </insert>
+
+</mapper>

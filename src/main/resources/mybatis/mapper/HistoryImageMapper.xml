@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bit.bitcare.dao.HistoryImageDAO">
+
+    <!-- 진료 기록의 이미지부분(history_image) select -->
+    <select id="selectByHistoryId" parameterType="int" resultType="historyImageDTO">
+        select * from `history_image`
+        where history_id = #{historyId}
+    </select>
+
+    <!-- 진료 기록의 이미지부분(history_image) insert -->
+    <insert id="insert" parameterType="historyImageDTO">
+        insert into `history_image`(history_id,path,entry_date,category_id)
+        values(#{historyId},#{imagePath},#{entryDate},#{categoryId})
+    </insert>
+
+</mapper>

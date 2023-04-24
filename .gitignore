@@ -42,4 +42,6 @@ src/main/resources/application.properties
 ### vue
 /src/main/resources/static/**
 
+vue-front/package-lock.json
+vue-front/package.json
 

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bit.bitcare.dao.HistoryDAO">
+
+    <!-- 환자(patient_id)의 진료 기록(history) 목록 -->
+    <select id="selectByPatientId" parameterType="int" resultType="historyDTO">
+        SELECT * FROM `history`
+        WHERE patient_id = #{patientId}
+    </select>
+
+    <!-- 진료 기록 선택 -->
+    <select id="selectOne" parameterType="int" resultType="historyDTO">
+        select * from `history`
+        where id = #{id}
+    </select>
+
+    <!-- 모든 진료 기록(history) 보여주기 -->
+    <select id="selectAll" resultType="historyDTO">
+        SELECT * FROM `history`
+    </select>
+
+    <!-- 진료 기록(history) 삭제 -->
+    <delete id="delete" parameterType="int">
+        DELETE FROM `history`
+        WHERE id= #{id}
+    </delete>
+
+    <!-- 진료 기록(history) 생성 -->
+    <insert id="insert" parameterType="historyDTO">
+        insert into `history`(employeeId,patientId,deptId,memo,bpSystolic,bpDiastolic,height,weight,temperature,symptomDetail,entryDate,visit)
+        values(#{employeeId}, #{patientId}, #{deptId}, #{memo}, #{bpSystolic}, #{dpDiastolic}, #{height}, #{weight}, #{temperature}, #{symptomDetail}, now(), #{visit})
+    </insert>
+
+</mapper>

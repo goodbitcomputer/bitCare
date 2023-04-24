@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bit.bitcare.dao.ClinicWaitingDAO">
+
+    <!-- 진료 대기 인원 선택 -->
+    <select id="selectOne" parameterType="int" resultType="clinicWaitingDTO">
+        SELECT * FROM `clinic_waiting`
+        WHERE id=#{id}
+    </select>
+
+    <!-- 진료 대기 목록 -->
+    <select id="selectAll" resultType="clinicWaitingDTO">
+        SELECT * FROM `clinic_waiting`
+    </select>
+
+    <!-- 진료 완료 처리(delete) -->
+    <delete id="delete" parameterType="int">
+        DELETE FROM `clinic_waiting`
+        WHERE id= #{id}
+    </delete>
+
+    <!-- 진료 대기 인원 생성 -->
+    <insert id="insert" parameterType="clinicWaitingDTO">
+        insert into `clinic_waiting`(patient_id,employee_id,type_id,symptom,status,entry_date)
+        values(#{patientId}, #{employeeId}, #{typeId}, #{symptom}, #{status}, now())
+    </insert>
+
+    <!-- 진료 상태 변경 -->
+    <update id="update" parameterType="clinicWaitingDTO">
+        UPDATE `clinic_waiting`
+        SET status=#{status}
+        WHERE id=#{id}
+    </update>
+
+</mapper>
