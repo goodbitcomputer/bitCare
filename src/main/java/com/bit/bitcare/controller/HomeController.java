@@ -1,36 +1,41 @@
 package com.bit.bitcare.controller;
 
-import com.bit.bitcare.model.MemberDTO;
-import com.bit.bitcare.service.MemberService;
+import com.bit.bitcare.model.EmployeeDTO;
+import com.bit.bitcare.service.EmployeeService;
+import com.bit.bitcare.serviceImpl.EmployeeServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
 public class HomeController {
-    private MemberService userService;
 
-    public HomeController(MemberService userService) {
-        this.userService = userService;
+    @Autowired
+    private EmployeeService employeeService;
+
+    public HomeController(EmployeeServiceImpl employeeService) {
+        this.employeeService = employeeService;
     }
 
-//    @RequestMapping("/")
-    public String showIndex(HttpSession session, Model model) {
+    @GetMapping("/")
+    public String showIndex() {
         System.out.println("여긴 테스트 구역");
 
-//        List<MemberDTO> userList = userService.selectAll();
-        List<MemberDTO> userList = userService.selectAll();
+        List<EmployeeDTO> employeeList = employeeService.selectAll();
 
-        for(MemberDTO u : userList) {
+        for(EmployeeDTO u : employeeList) {
             System.out.println(u);
         }
 
-        return "index";
+        return "index.html";
 
 
 //        return "redirect:/mypage/showBasket";
+    }
+
+    public String getErrorPath() {
+        return "/error";
     }
 }

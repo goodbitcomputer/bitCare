@@ -8,8 +8,24 @@
     </settings>
     <typeAliases>
         <!--        mybatis에서 userDTO를 사용하면 자동으로 객체를 가져올수있도록 설정해놓은것-->
-        <typeAlias type="com.bit.bitcare.model.MemberDTO" alias="userDTO"/>
-
+        <typeAlias type="com.bit.bitcare.model.BodyCategoryDTO" alias="bodyCategoryDTO"/>
+        <typeAlias type="com.bit.bitcare.model.EmployeeDTO" alias="employeeDTO"/>
+        <typeAlias type="com.bit.bitcare.model.PatientDTO" alias="patientDTO"/>
+        <typeAlias type="com.bit.bitcare.model.AddressDTO" alias="addressDTO"/>
+        <typeAlias type="com.bit.bitcare.model.HistoryDTO" alias="historyDTO"/>
+        <typeAlias type="com.bit.bitcare.model.DiagnoseDTO" alias="diagnoseDTO"/>
+        <typeAlias type="com.bit.bitcare.model.DiseaseDTO" alias="diseaseDTO"/>
+        <typeAlias type="com.bit.bitcare.model.HistoryDiagnoseDTO" alias="historyDiagnoseDTO"/>
+        <typeAlias type="com.bit.bitcare.model.HistoryDiseaseDTO" alias="historyDiseaseDTO"/>
+        <typeAlias type="com.bit.bitcare.model.HistoryImageDTO" alias="historyImageDTO"/>
+        <typeAlias type="com.bit.bitcare.model.WaitingDTO" alias="waitingDTO"/>
+        <typeAlias type="com.bit.bitcare.model.ClinicWaitingDTO" alias="clinicWaitingDTO"/>
+        <typeAlias type="com.bit.bitcare.model.DeptDTO" alias="deptDTO"/>
+        <typeAlias type="com.bit.bitcare.model.ClinicTypeDTO" alias="clinicTypeDTO"/>
+        <typeAlias type="com.bit.bitcare.model.VisitDTO" alias="visitDTO"/>
+        <typeAlias type="com.bit.bitcare.model.ReceiptDTO" alias="receiptDTO"/>
+        <typeAlias type="com.bit.bitcare.model.MessageDTO" alias="messageDTO"/>
+        <typeAlias type="com.bit.bitcare.model.AlarmDTO" alias="alarmDTO"/>
     </typeAliases>
 <!--    <mappers>-->
 <!--        <mapper resource="config/mybatis/mapper/UserMapper.xml"/>-->

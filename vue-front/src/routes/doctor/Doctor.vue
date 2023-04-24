@@ -1,12 +1,17 @@
 <template>
   <div>
+    <Header/>
     <p>Doctor</p>
   </div>
 </template>
 
 <script>
+import Header from '@/components/NavBar.vue'
 export default {
-  name: "DoctorView"
+  name: "NurseView",
+  components: {
+    Header
+  }
 }
 </script>
 
