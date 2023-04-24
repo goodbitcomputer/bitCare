@@ -15,7 +15,7 @@
 
 import Vue from 'vue'
 import App from './App'
-import store from './store'  // Same as './store/index.js'
+import store from '@/store/index.js'  // Same as './store/index.js'
 import router from './routes' // Same as './routes/index.js'
 //bootstrap
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue'
