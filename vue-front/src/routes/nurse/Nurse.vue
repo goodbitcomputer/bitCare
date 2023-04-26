@@ -1,16 +1,21 @@
 <template>
   <div>
-  <Header/>
+  <div>
+    <NavBar/>
+  </div>
+  <div>
 <span>nurse</span>
+  </div>
   </div>
 </template>
 
 <script>
-import Header from '@/components/NavBar.vue'
+import NavBar from "@/components/NavBar.vue";
+
 export default {
   name: "NurseView",
   components: {
-    Header
+    NavBar
   }
 }
 </script>

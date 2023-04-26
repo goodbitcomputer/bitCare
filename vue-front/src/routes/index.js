@@ -105,5 +105,5 @@ export default new VueRouter({
     //   path: '/:notFound(.*)',
     //   component: NotFound
     // }
-  ],
+  ]
 })
