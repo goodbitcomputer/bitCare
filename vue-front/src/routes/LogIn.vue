@@ -13,7 +13,11 @@
           <label for="password">Password:</label>
           <input type="password" name="password" v-model="password" />
         </div>
-        <button variant="success" type="submit">Login</button>
+        <div>
+          <input type="checkbox" name="remember-me" v-model="rememberMe" />
+          <label for="remember-me">자동 로그인</label>
+          <button variant="success" type="submit">Login</button>
+        </div>
       </form>
     </div>
   </div>
@@ -30,7 +34,8 @@ export default {
       loginError: false,
       username: '',
       password: '',
-      error: false
+      error: false,
+      rememberMe : false
     }
   },
   methods: {
@@ -40,6 +45,10 @@ export default {
           auth: {
             username: this.username,
             password: this.password
+          },
+          withCredentials: true, // 쿠키 전달을 허용합니다.
+          params: {
+            rememberMe: this.rememberMe // 자동 로그인 여부를 파라미터로 보냅니다.
           }
         });
         if (result.status === 200) {

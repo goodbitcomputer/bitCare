@@ -1,8 +1,10 @@
 package com.bit.bitcare.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class MessageDTO {
     int id;
     String sender;
