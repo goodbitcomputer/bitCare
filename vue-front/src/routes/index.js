@@ -6,6 +6,7 @@ import Nurse from './nurse/Nurse.vue'
 import LogIn from "./LogIn.vue";
 import Mobile from "@/routes/mobile/Mobile.vue";
 import Register from "@/routes/mobile/Register.vue";
+import Alarm from './alarm/Alarm.vue'
 import ImageEditor from "@/routes/doctor/ImageEditor.vue";
 // import NotFound from './NotFound'
 
@@ -18,6 +19,10 @@ export default new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
+    {
+      path: '/alarm',
+      component: Alarm
+    },
     {
       path: '/logIn/',
       component: LogIn
