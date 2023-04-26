@@ -3,7 +3,8 @@ import VueRouter from 'vue-router'
 import Home from './Home.vue'
 import Doctor from './doctor/Doctor.vue'
 import Nurse from './nurse/Nurse.vue'
-import LogIn from "./LogIn.vue";
+import LogIn from './LogIn.vue'
+import Alarm from './alarm/Alarm.vue'
 // import NotFound from './NotFound'
 
 Vue.use(VueRouter)
@@ -15,6 +16,10 @@ export default new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
+    {
+      path: '/alarm',
+      component: Alarm
+    },
     {
       path: '/logIn/',
       component: LogIn
