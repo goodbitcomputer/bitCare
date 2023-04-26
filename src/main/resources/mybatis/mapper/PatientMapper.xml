@@ -12,7 +12,7 @@
     </select>
 
     <!-- 환자 전체 선택 -->
-    <select id="selectAll" resultMap="patientList">
+    <select id="selectAll" resultType="patientDTO">
         SELECT * FROM `patient`
     </select>
 

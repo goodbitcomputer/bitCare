@@ -1,10 +1,7 @@
 <template>
   <div class="container">
-    <div>
-
-    </div>
     <div class="nav-box">
-      <b-navbar-toggle v-b-toggle.sidebar-backdrop>
+      <b-navbar-toggle target="sidebar-backdrop">
           <b-icon icon="list"></b-icon>
       </b-navbar-toggle>
       <p>비트케어BitCare</p>
@@ -16,7 +13,6 @@
       <b-sidebar
           id="sidebar-backdrop"
           title="Bit Care"
-          :backdrop-variant="variant"
           backdrop
           shadow
 
@@ -43,9 +39,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  div{
-
-  }
   .nav-box {
     display: flex;
   }

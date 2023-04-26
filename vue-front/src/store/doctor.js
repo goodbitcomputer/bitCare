@@ -1,4 +1,4 @@
-// import axios from 'axios'
+import axios from 'axios'
 
 //store.js
 // import Vuex from 'vuex';
@@ -8,28 +8,75 @@ export default {
     namespaced: true,
 
     state: {
-        sbList: [],
-        sbDummyList: [
-            {id:1, code: 'ss6412880', name: 'Macdonaldsdsadassssssssssssssssdadadsadsadsasadasdd'},
-            {id:2, code: 'dd6347880', name: 'Shaw'},
-            {id:3, code: 'ff6450880', name: 'Wilson'},
-            {id:4, code: 'qq6400540', name: 'Carney'}
-        ],
+        // write 상병데이터
+        writeSbList: [],    // historyWrite
+        sbList: [],         // sbModal
+        sbDummyList: [],    // sbModal(dummy)
+        
+        // write 처방데이터
+        writeCbList: [],    // historyWrite
     },
-    getters: {
-
-    },
+    getters: {},
     mutations: {
-        // setSbList : (state, items) => {
-        //     // return state.sbList= [...items]
-        //     state.sbList= items
-        // }
-        setSbList : function (state, items) {
-            console.log('items')
-            return state.sbList = items;
+        // modal에서 historyWrite로 상병테이블 추가
+        addWriteSbList: (state, items) => {
+            state.writeSbList= [...items];
+        },
+        // historyWrite에서 modal테이블로 list세팅
+        initSbList: (state, items) => {
+            state.sbList = [...items];
+        },
+
+        // add sbList  modal상병테이블 한줄 추가
+        setSbList: function (state, item) {
+            state.sbList.push({
+                id: item.id,
+                code: item.code,
+                name: item.name,
+                icon: false,
+                main: false,
+                sub: true,
+            })
+        },
+        // remove sbList        add 상병테이블 한줄 삭제
+        removeSbList: (state, item) => {
+            console.log("item: "+item);
+            console.log("item.id: "+item.id);
+
+            state.sbList = state.sbList.filter(param => param.id != item.id);
+        },
+        // remove writeSbList   write상병테이블 한줄 삭제
+        removeWriteSbList: (state, item) => {
+            console.log("item: "+item);
+            console.log("item.id: "+item.id);
+
+            state.writeSbList = state.writeSbList.filter(param => param.id != item.id);
+        },
+
+        // 모달창 상병(더미) 리스트 필터후 저장
+        setSbDummyList: (state, items) => {
+            state.sbDummyList = [];
+            items.forEach((item) => {
+                state.sbDummyList.push({
+                    id: item.id,
+                    code: item.code,
+                    name: item.name,
+                    icon: false,
+                })
+            })
         }
     },
     actions: {
-
+        fetchSbDummyData({commit}, filterMessage) {
+            return axios.post('/doctor/sbModalFilter', {
+                filterMessage: filterMessage,
+                sb: filterMessage,
+            }).then(response => {
+                let list = JSON.parse(response.data.list);
+                commit('setSbDummyList', list);
+            }).catch(function (error) {
+                console.log(error);
+            });
+        },
     }
 };

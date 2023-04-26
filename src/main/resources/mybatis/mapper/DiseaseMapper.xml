@@ -9,6 +9,9 @@
     <select id="search" parameterType="String" resultType="diseaseDTO">
         SELECT * FROM `disease`
         WHERE name LIKE concat('%', #{keyword}, '%')
+        OR
+        code LIKE concat('%', #{keyword}, '%')
+        LIMIT 500;
     </select>
 
     <!-- 상병 선택 -->

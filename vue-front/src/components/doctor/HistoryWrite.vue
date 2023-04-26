@@ -24,48 +24,62 @@
     <div class="border-box">
       <p>상병</p>
       <div>
-        <b-table :items="sbList" :fields="fields">
-          <template #cell(radio1)="data">
+        <b-table :items="writeSbList" :fields="sbFields">
+          <template #cell(main)="data">
             <b-form-radio
-                v-model="data.item.radio1"
+                v-model="data.item.main"
                 :value="true"
                 @change="handleRadioChange(data.item)"
             ></b-form-radio>
           </template>
-          <template #cell(radio2)="data">
+          <template #cell(sub)="data">
             <b-form-radio
-                v-model="data.item.radio1"
+                v-model="data.item.main"
                 :value="false"
                 @change="handleRadioChange(data.item)"
             ></b-form-radio>
           </template>
+          <template #cell(icon)="data">
+            <b-icon
+                icon="dash-circle" variant="danger"
+                v-model="data.item.radio1"
+                :value="true"
+                @click="removeWriteSbList(data.item)"
+            ></b-icon>
+          </template>
+          <template #cell(name)="data">
+            <div class="ellipsis-name td-box-name">
+              {{ data.value }}
+            </div>
+          </template>
         </b-table>
-        <button @click="addRow">마지막 행 추가</button>
         <!--        상병추가모달-->
         <writeSb-model/>
-
-        <p>선택된 항목: {{ selectedItems }}</p>
       </div>
     </div>
     <!--    처방-->
     <div class="border-box">
       <p>처방</p>
-      <b-table>
-        <template #cell(radio1)="data">
-          <b-form-radio
-              v-model="data.item.radio1"
-              :value="true"
-              @change="handleRadioChange(data.item)"
-          ></b-form-radio>
-        </template>
-        <template #cell(radio2)="data">
-          <b-form-radio
-              v-model="data.item.radio1"
-              :value="false"
-              @change="handleRadioChange(data.item)"
-          ></b-form-radio>
-        </template>
-      </b-table>
+      <div>
+        <b-table :items="writeCbList" :fields="cbFields">
+
+          <template #cell(icon)="data">
+            <b-icon
+                icon="dash-circle" variant="danger"
+                v-model="data.item.radio1"
+                :value="true"
+                @click="removeWriteSbList(data.item)"
+            ></b-icon>
+          </template>
+          <template #cell(name)="data">
+            <div class="ellipsis-name td-box-name">
+              {{ data.value }}
+            </div>
+          </template>
+        </b-table>
+        <!--        상병추가모달-->
+        <writeSb-model/>
+      </div>
     </div>
   </div>
 </template>
@@ -81,69 +95,60 @@ export default {
   components: {WriteSbModel},
 
   mounted() {
-    document.addEventListener('DOMContentLoaded', () => {
-      // INSERT CODE HERE
-      this.setTest(this.items)
-    });
+    // document.addEventListener('DOMContentLoaded', () => {
+    //   // INSERT CODE HERE
+    //   this.setTest(this.items)
+    // });
   },
 
   data() {
     return {
-      selectedItems: [],
-      fields: [
-        {key: 'name', label: '이름'},
-        {key: 'age', label: '나이'},
-        {key: 'gender', label: '성별'},
+      sbFields: [
+        {key: 'main', label: '주상병'},
+        {key: 'sub', label: '부상병'},
+        {key: 'code', label: '코드'},
         // {key: 'radio1', label: '선택1', thClass: 'text-center'},
-        {key: 'radio1', label: '선택1'},
-        {key: 'radio2', label: '선택2'},
+        {key: 'name', label: '명칭'},
+        {key: 'icon', label: 'remove'},
       ],
-      items: [
-        {id: 1, name: 'John', age: 28, gender: 'Male', radio1: false, radio2: true},
-        {id: 2, name: 'Jane', age: 35, gender: 'Female', radio1: true, radio2: false},
-        {id: 3, name: 'Mike', age: 22, gender: 'Male', radio1: false, radio2: true},
-        {id: 4, name: 'Emily', age: 29, gender: 'Female', radio1: true, radio2: false}
-      ]
+      cbFields: [
+        {key: 'code', label: '코드'},
+        {key: 'name', label: '명칭'},
+        {key: 'dose', label: '용량'},
+        {key: 'time', label: '일투수'},
+        {key: 'days', label: '일수'},
+        {key: 'icon', label: 'remove'},
+      ],
     }
   },
 
   // vuex
   computed: {
     ...mapState('doctor',
-      ['sbList']
+        ['sbList', 'writeSbList']
     )
   },
   methods: {
     ...mapMutations('doctor', {
-      setTest: 'setSbList',
-
+      removeWriteSbList: 'removeWriteSbList',
     }),
+    // 상병테이블 remove icon
+    removeSbButton(item) {
+      this.removeSbList(item);
+    },
 
-
+    // 라디오버튼 누를때 값 가져오는거
     handleRadioChange(item) {
       // 선택된 값을 가져와서 저장합니다.
-      if (item.radio1) {
-        this.selectedItems.push({id: item.id, value: 'radio1'});
-      } else if (item.radio2) {
-        this.selectedItems.push({id: item.id, value: 'radio2'});
+      if (item.main) {
+        this.selectedItems.push({id: item.id, value: 'main'});
+      } else if (item.sub) {
+        this.selectedItems.push({id: item.id, value: 'sub'});
       } else {
         this.selectedItems = this.selectedItems.filter((i) => i.id !== item.id);
       }
     },
-    addRow() {
-      // 추가할 행 객체 생성
-      const newRow = {
-        id: 5,
-        name: 'Tom',
-        age: 30,
-        gender: 'Female',
-        radio1: true,
-        radio2: false
-      };
 
-      // 생성한 객체를 배열에 추가
-      this.items.push(newRow);
-    }
   }
 }
 </script>
@@ -167,5 +172,15 @@ export default {
   object-fit: contain;
 }
 
+.ellipsis-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px; /* 요소의 최대 너비를 지정합니다. */
+}
+
+.td-box-name {
+  width: 200px;
+}
 
 </style>

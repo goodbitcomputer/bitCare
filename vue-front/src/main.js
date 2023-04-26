@@ -16,7 +16,7 @@
 import Vue from 'vue'
 import App from './App'
 import store from '@/store/index.js'  // Same as './store/index.js'
-import router from './routes' // Same as './routes/index.js'
+import router from '@/routes' // Same as './routes/index.js'
 //bootstrap
 import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
@@ -34,9 +34,17 @@ Vue.prototype.$axios = axios // axios를 import 해온 뒤, 전역변수로 선�
 import common from '@/assets/js/common.js'
 Vue.use(common)
 
+Vue.config.productionTip = false
+
+// new Vue({
+//   el: '#app',
+//   store,
+//   router,
+//   render: h => h(App)
+// })
 new Vue({
-  el: '#app',
+  render: h => h(App),
   store,
   router,
-  render: h => h(App)
-})
+  components: { App }
+}).$mount('#app')

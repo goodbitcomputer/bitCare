@@ -9,6 +9,8 @@
     <select id="search" parameterType="String" resultType="diagnoseDTO">
         SELECT * FROM `diagnose`
         WHERE name LIKE concat('%', #{keyword}, '%')
+        OR
+        code LIKE concat('%', #{keyword}, '%')
     </select>
 
     <!-- 처방할 약 선택 -->

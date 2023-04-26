@@ -1,21 +1,11 @@
 <template>
   <div>
-    <b-button v-b-modal.modal-center @click="initSbList(writeSbList)" class="w-100">
+    <b-button v-b-modal.modal-center @click="initCbList(writeCbList)" class="w-100">
       <b-icon icon="plus-circle" variant="white"></b-icon>
       추가 (코드/명칭 검색)
     </b-button>
-    <b-modal id="modal-center" size="lg" scrollable centered title="상병테이블 추가" button-size="sm" ref="modalRef">
-      <template #modal-footer="{ cancel }">
-        <b-button size="sm" variant="secondary" @click="closeModal()" style="width: 100px">
-          OK
-        </b-button>
-        <b-button size="sm" variant="secondary" @click="cancel()" style="width: 100px">
-          Cancel
-        </b-button>
-      </template>
-
+    <b-modal id="modal-center" size="lg" scrollable centered title="처방테이블 추가" button-size="sm" ref="modalRef">
       <div class="sbModal-box">
-
         <!--        list 박스-->
         <div class="sbModal-list-box">
           <div style="height: 40px">
@@ -23,12 +13,7 @@
           </div>
           <div>
             <div class="table-wrapper">
-              <b-table hover :items="sbList" :fields="sbAddFields" small>
-                <!--                <template #cell(id)="data">-->
-                <!--                  <div v-show="false" class="ellipsis-sb td-box-sb">-->
-                <!--                    {{ data.value }}-->
-                <!--                  </div>-->
-                <!--                </template>-->
+              <b-table hover :items="cbList" :fields="cbAddFields" small>
                 <template #cell(code)="data">
                   <div class="ellipsis-code td-box-code">
                     {{ data.value }}
@@ -42,8 +27,6 @@
                 <template #cell(icon)="data">
                   <b-icon
                       icon="dash-circle" variant="danger"
-                      v-model="data.item.radio1"
-                      :value="true"
                       @click="removeSbButton(data.item)"
                   ></b-icon>
                 </template>
@@ -72,13 +55,13 @@
               ></b-form-input>
 
               <b-input-group-append>
-                <b-button :disabled="!filter" @click="filterButton(filter)">search</b-button>
+                <b-button :disabled="!filter" @click="cbFilterButton(filter)">search</b-button>
               </b-input-group-append>
             </b-input-group>
           </b-form-group>
           <div>
             <div class="table-wrapper">
-              <b-table hover :items="sbDummyList" :fields="sbFilterFields" small>
+              <b-table hover :items="cbDummyList" :fields="cbFilterFields" small>
                 <template #cell(code)="data">
                   <div class="ellipsis-code td-box-code">
                     {{ data.value }}
@@ -91,7 +74,7 @@
                 </template>
                 <template #cell(icon)="data">
                   <b-icon
-                      v-if="addCheck(data.item)"
+                      v-if="addCbCheck(data.item)"
                       icon="check-circle" variant="success"
                       v-model="data.item.radio1"
                       :value="true"
@@ -99,7 +82,7 @@
                   <b-icon
                       v-else
                       icon="plus-circle" variant="primary"
-                      @click="addSbButton(data.item)"
+                      @click="addCbButton(data.item)"
                   ></b-icon>
                 </template>
               </b-table>
@@ -107,12 +90,21 @@
           </div>
         </div>
       </div>
+      <template #modal-footer="{ cancel }">
+        <b-button size="sm" variant="secondary" @click="closeModal()" style="width: 100px">
+          OK
+        </b-button>
+        <b-button size="sm" variant="secondary" @click="cancel()" style="width: 100px">
+          Cancel
+        </b-button>
+      </template>
     </b-modal>
   </div>
 </template>
 
 <script>
 import {mapMutations, mapState, mapActions} from 'vuex';
+import axios from "axios";
 
 export default {
   name: "writeModel",
@@ -128,7 +120,7 @@ export default {
       // 필터 로직
       filter: null,
 
-      // 상병(add) 테이블 로직
+      // 처방(add) 테이블 로직
       sbAddFields: [
         // {key: 'id', label: 'id', sortable: true},
         {key: 'code', label: '코드', sortable: true},
@@ -137,7 +129,7 @@ export default {
       ],
       sbAddItems: [],
 
-      // 상병(더미) 테이블 로직
+      // 처방(더미) 테이블 로직
       sbFilterFields: [
         // {key: 'id', label: 'id', sortable: true},
         {key: 'code', label: '코드', sortable: true},
@@ -173,7 +165,7 @@ export default {
     removeSbButton(item) {
       this.removeSbList(item);
     },
-    addCheck(item) {
+    addCbCheck(item) {
       let isCheck = this.sbList.some(obj => obj.id == item.id);
       console.log(isCheck);
       return isCheck;
@@ -183,7 +175,75 @@ export default {
       // b-modal ref를 사용하여 modal 참조
       this.addWriteSbList(this.sbList);
       this.$refs.modalRef.hide();
-    }
+    },
+
+
+  //   ------------------------------------------------------------------
+    // modal에서 historyWrite로 상병테이블 추가
+    addWriteCbList: (state, items) => {
+      state.writeSbList= [...items];
+    },
+    // historyWrite에서 modal테이블로 list세팅
+    initCbList: (state, items) => {
+      state.sbList = [...items];
+    },
+
+    // add sbList  modal상병테이블 한줄 추가
+    setCbList: function (state, item) {
+      state.sbList.push({
+        id: item.id,
+        code: item.code,
+        name: item.name,
+        icon: false,
+        main: false,
+        sub: true,
+      })
+    },
+    // remove sbList        add 상병테이블 한줄 삭제
+    removeCbList: (state, item) => {
+      console.log("item: "+item);
+      console.log("item.id: "+item.id);
+
+      state.sbList = state.sbList.filter(param => param.id != item.id);
+    },
+    // remove writeSbList   write상병테이블 한줄 삭제
+    removeWriteCbList: (state, item) => {
+      console.log("item: "+item);
+      console.log("item.id: "+item.id);
+
+      state.writeSbList = state.writeSbList.filter(param => param.id != item.id);
+    },
+
+    // 모달창 상병(더미) 리스트 필터후 저장
+    setCbDummyList: (state, items) => {
+      state.sCDummyList = [];
+      items.forEach((item) => {
+        state.sbCummyList.push({
+          id: item.id,
+          code: item.code,
+          name: item.name,
+          icon: false,
+        })
+      })
+    },
+
+    // 비동기 통신
+    fetchCbDummyData({commit}, filterMessage) {
+      return axios.post('/doctor/sbModalFilter', {
+        filterMessage: filterMessage,
+        sb: filterMessage,
+      }).then(response => {
+        let list = JSON.parse(response.data.list);
+        commit('setSbDummyList', list);
+      }).catch(function (error) {
+        console.log(error);
+      });
+    },
+
+
+
+
+
   }
 }
 </script>
