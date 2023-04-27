@@ -7,5 +7,6 @@ import com.google.gson.JsonObject;
 import java.util.List;
 
 public interface DoctorService {
-    public JsonObject filterSearch(String filterMessage);
+    public JsonObject sbFilterSearch(String filterMessage);
+    public JsonObject cbFilterSearch(String filterMessage);
 }

@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class DiagnoseDTO {
+    int id;
     int code;
     String name;
     int dose;

@@ -34,8 +34,22 @@ public class DoctorController {
         System.out.println(requestData.get("filterMessage"));
         String message = (String) requestData.get("filterMessage");
 
-        System.out.println(doctorService.filterSearch(message));
+        System.out.println(doctorService.sbFilterSearch(message));
 
-        return doctorService.filterSearch(message).toString();
+        return doctorService.sbFilterSearch(message).toString();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/cbModalFilter", method = RequestMethod.POST)
+    public String cbModalFilter(@RequestBody Map<String, Object> requestData, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        JsonObject result = new JsonObject();
+
+
+        System.out.println(requestData.get("filterMessage"));
+        String message = (String) requestData.get("filterMessage");
+
+        System.out.println(doctorService.cbFilterSearch(message));
+
+        return doctorService.cbFilterSearch(message).toString();
     }
 }

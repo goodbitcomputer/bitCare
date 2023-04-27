@@ -68,7 +68,7 @@
                 icon="dash-circle" variant="danger"
                 v-model="data.item.radio1"
                 :value="true"
-                @click="removeWriteSbList(data.item)"
+                @click="removeWriteCbList(data.item)"
             ></b-icon>
           </template>
           <template #cell(name)="data">
@@ -125,16 +125,20 @@ export default {
   // vuex
   computed: {
     ...mapState('doctor',
-        ['sbList', 'writeSbList']
+        ['sbList', 'writeSbList', 'writeCbList']
     )
   },
   methods: {
     ...mapMutations('doctor', {
       removeWriteSbList: 'removeWriteSbList',
     }),
-    // 상병테이블 remove icon
+    // 상병테이블 remove icon  write상병테이블 한줄 삭제
     removeSbButton(item) {
       this.removeSbList(item);
+    },
+    // 처방테이블 remove icon   write처방테이블 한줄 삭제
+    removeWriteCbList: (item) => {
+      this.writeCbList = this.writeCbList.filter(param => param.id != item.id);
     },
 
     // 라디오버튼 누를때 값 가져오는거

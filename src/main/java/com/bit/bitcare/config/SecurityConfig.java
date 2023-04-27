@@ -37,7 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests() //<security:intercept-url>
-                .antMatchers("/logIn","/user/register").permitAll() //permitAll 권한부여
+                .antMatchers("/logIn","/user/register", "/**").permitAll() //permitAll 권한부여
                 .anyRequest().authenticated(); //나머지 url에 대해 authenticated 권한 부여
 
         http.formLogin() //<security:form-login>
