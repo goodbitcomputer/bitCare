@@ -1,6 +1,7 @@
 package com.bit.bitcare.controller;
 
 import com.bit.bitcare.lucene.DiseaseIndexer;
+import com.bit.bitcare.model.DiagnoseDTO;
 import com.bit.bitcare.model.DiseaseDTO;
 import com.bit.bitcare.service.DoctorService;
 import com.bit.bitcare.serviceImpl.DoctorServiceImpl;
@@ -30,26 +31,20 @@ public class DoctorController {
     public String sbModalFilter(@RequestBody Map<String, Object> requestData, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         JsonObject result = new JsonObject();
 
-
-        System.out.println(requestData.get("filterMessage"));
         String message = (String) requestData.get("filterMessage");
-
-        System.out.println(doctorService.sbFilterSearch(message));
 
         return doctorService.sbFilterSearch(message).toString();
     }
 
     @ResponseBody
     @RequestMapping(value = "/cbModalFilter", method = RequestMethod.POST)
-    public String cbModalFilter(@RequestBody Map<String, Object> requestData, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public List<DiagnoseDTO> cbModalFilter(@RequestBody Map<String, Object> requestData, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         JsonObject result = new JsonObject();
 
-
-        System.out.println(requestData.get("filterMessage"));
         String message = (String) requestData.get("filterMessage");
 
         System.out.println(doctorService.cbFilterSearch(message));
 
-        return doctorService.cbFilterSearch(message).toString();
+        return doctorService.cbFilterSearch(message);
     }
 }

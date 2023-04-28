@@ -1,10 +1,10 @@
 <template>
   <div>
-    <b-button v-b-modal.modal-center @click="initCbList(writeCbList)" class="w-100">
+    <b-button v-b-modal.cbModal-center @click="initCbList(writeCbList)" class="w-100">
       <b-icon icon="plus-circle" variant="white"></b-icon>
       추가 (코드/명칭 검색)
     </b-button>
-    <b-modal id="modal-center" size="lg" scrollable centered title="처방테이블 추가" button-size="sm" ref="modalCbRef">
+    <b-modal id="cbModal-center" size="lg" scrollable centered title="처방테이블 추가" button-size="sm" ref="modalCbRef">
       <div class="sbModal-box">
         <!--        list 박스-->
         <div class="sbModal-list-box">
@@ -13,7 +13,7 @@
           </div>
           <div>
             <div class="table-wrapper">
-              <b-table hover :items="cbList" :fields="cbAddFields" small>
+              <b-table hover :items="this.cbAddItems" :fields="cbAddFields" small>
                 <template #cell(code)="data">
                   <div class="ellipsis-code td-box-code">
                     {{ data.value }}
@@ -27,7 +27,7 @@
                 <template #cell(icon)="data">
                   <b-icon
                       icon="dash-circle" variant="danger"
-                      @click="removeSbButton(data.item)"
+                      @click="removeCbList(data.item)"
                   ></b-icon>
                 </template>
               </b-table>
@@ -61,7 +61,7 @@
           </b-form-group>
           <div>
             <div class="table-wrapper">
-              <b-table hover :items="cbDummyList" :fields="cbFilterFields" small>
+              <b-table hover :items="cbDummyItems" :fields="cbFilterFields" small>
                 <template #cell(code)="data">
                   <div class="ellipsis-code td-box-code">
                     {{ data.value }}
@@ -146,12 +146,14 @@ export default {
         ['writeCbList']
     ),
 
+
+
+
   },
   methods: {
     ...mapMutations('doctor', {
       addWriteCbList: 'addWriteCbList',
     }),
-
 
 
     addCbCheck(item) {
@@ -165,37 +167,47 @@ export default {
       this.$refs.modalCbRef.hide();
     },
 
-
-  //   ------------------------------------------------------------------
+    // 처방 --------------------------------
 
     // historyWrite에서 modalCb테이블로 list세팅
-    initCbList: (state, items) => {
+    initCbList(items) {
       this.cbAddItems = [...items];
     },
 
     // add cbAddItems  modal상병테이블 한줄 추가
-    addCbButton: function (item) {
+    addCbButton(item) {
       this.cbAddItems.push({
         id: item.id,
         code: item.code,
         name: item.name,
+        dose: item.dose,
+        time: item.time,
+        days: item.days,
         icon: false,
-        main: false,
-        sub: true,
       })
     },
+    // remove cbList        add 처방테이블 한줄 삭제
+    removeCbList(item) {
+      console.log("item: " + item);
+      console.log("item.id: " + item.id);
 
+      this.cbAddItems = this.cbAddItems.filter(param => param.id != item.id);
+    },
     // 모달창 상병(더미) 리스트 필터후 저장
-    setCbDummyList: (items) => {
-      this.sbDummyItems = [];
+    setCbDummyList(items) {
+      this.cbDummyItems = [];
       items.forEach((item) => {
-        this.sbDummyList.push({
+        this.cbDummyItems.push({
           id: item.id,
           code: item.code,
           name: item.name,
+          dose: item.dose,
+          time: item.time,
+          days: item.days,
           icon: false,
         })
       })
+      console.log(this.cbDummyItems);
     },
 
     // 비동기 통신
@@ -203,15 +215,12 @@ export default {
       return axios.post('/doctor/cbModalFilter', {
         filterMessage: filterMessage,
       }).then(response => {
-        let list = JSON.parse(response.data.list);
+        let list = response.data;
         this.setCbDummyList(list);
       }).catch(function (error) {
         console.log(error);
       });
     },
-
-
-
 
 
   }

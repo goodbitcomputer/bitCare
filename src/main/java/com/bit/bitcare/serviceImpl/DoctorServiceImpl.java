@@ -75,34 +75,10 @@ public class DoctorServiceImpl implements DoctorService {
 
     // 처방(더미)테이블 search
     @Override
-    public JsonObject cbFilterSearch(String filterMessage) {
-        JsonObject result = new JsonObject();
+    public List<DiagnoseDTO> cbFilterSearch(String filterMessage) {
         List<DiagnoseDTO> list = diagnoseDAO.search(filterMessage);
 
-
-        JsonArray array = new JsonArray();
-
-        if (list == null) {
-            result.addProperty("status", "fail");
-        } else {
-            for (DiagnoseDTO d : list) {
-                JsonObject object = new JsonObject();
-                object.addProperty("id", d.getId());
-                object.addProperty("code", d.getCode());
-                object.addProperty("name", d.getName());
-                object.addProperty("does", d.getName());
-                object.addProperty("time", d.getName());
-                object.addProperty("days", d.getName());
-
-
-                array.add(object);
-            }
-
-            result.addProperty("list", array.toString());
-            result.addProperty("status", "success");
-        }
-
-        return result;
+        return list;
     }
 }
 

@@ -1,10 +1,10 @@
 <template>
   <div>
-    <b-button v-b-modal.modal-center @click="initSbList(writeSbList)" class="w-100">
+    <b-button v-b-modal.sbModal-center @click="initSbList(writeSbList)" class="w-100">
       <b-icon icon="plus-circle" variant="white"></b-icon>
       추가 (코드/명칭 검색)
     </b-button>
-    <b-modal id="modal-center" size="lg" scrollable centered title="상병테이블 추가" button-size="sm" ref="modalRef">
+    <b-modal id="sbModal-center" size="lg" scrollable centered title="상병테이블 추가" button-size="sm" ref="modalRef">
       <template #modal-footer="{ cancel }">
         <b-button size="sm" variant="secondary" @click="closeModal()" style="width: 100px">
           OK
@@ -23,6 +23,7 @@
           </div>
           <div>
             <div class="table-wrapper">
+<!--              add 테이블-->
               <b-table hover :items="sbList" :fields="sbAddFields" small>
                 <!--                <template #cell(id)="data">-->
                 <!--                  <div v-show="false" class="ellipsis-sb td-box-sb">-->
@@ -78,6 +79,7 @@
           </b-form-group>
           <div>
             <div class="table-wrapper">
+<!--              더미 테이블-->
               <b-table hover :items="sbDummyList" :fields="sbFilterFields" small>
                 <template #cell(code)="data">
                   <div class="ellipsis-code td-box-code">

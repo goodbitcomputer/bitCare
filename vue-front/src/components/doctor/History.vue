@@ -113,7 +113,7 @@ export default {
       pyFields: [
         {key: 'height', label: '키'},
         {key: 'weight', label: '체중'},
-        {key: 'bpSystolic', label: '햘압(수축)'},
+        {key: 'bpSystolic', label: '혈압(수축)'},
         {key: 'bpDiastolic', label: '혈압(이완)'},
         {key: 'temperature', label: '체온'},
       ],
@@ -171,7 +171,7 @@ b-table * * {
 }
 // 의사정보 box
 .doctor-info {
-  text-align: center;
+  //text-align: center;
 }
 .doctor-info span {
   font-size: 12px;

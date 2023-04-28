@@ -1,18 +1,16 @@
 <template>
   <div>
     <div class="border-box">
-      <div>
-        <span>진료 기록 작성</span>
-      </div>
+        <span style="font-size: 1.2em; font-weight: 700">진료 기록 작성</span>
     </div>
     <!--    증상-->
     <div class="border-box">
       <div>
-        <span>증상</span>
+        <span class="font-weight-bold">증상</span>
       </div>
       <div class="symptom-box">
         <div class="symptomInfo-box">
-          <textarea></textarea>
+          <textarea id="symptom-editor" name="symptom"></textarea>
         </div>
         <div class="writeImg-box">
           <img src="@/assets/history/s2.jpg">
@@ -22,9 +20,9 @@
 
     <!--    상병-->
     <div class="border-box">
-      <p>상병</p>
+      <span class="font-weight-bold">상병</span>
       <div>
-        <b-table :items="writeSbList" :fields="sbFields">
+        <b-table :items="writeSbList" :fields="sbFields" small>
           <template #cell(main)="data">
             <b-form-radio
                 v-model="data.item.main"
@@ -59,10 +57,9 @@
     </div>
     <!--    처방-->
     <div class="border-box">
-      <p>처방</p>
+      <span class="font-weight-bold">처방</span>
       <div>
-        <b-table :items="writeCbList" :fields="cbFields">
-
+        <b-table :items="writeCbList" :fields="cbFields" small>
           <template #cell(icon)="data">
             <b-icon
                 icon="dash-circle" variant="danger"
@@ -78,8 +75,12 @@
           </template>
         </b-table>
         <!--        상병추가모달-->
-        <writeSb-model/>
+        <writeCb-model/>
       </div>
+    </div>
+    <div class="d-flex justify-content-end">
+      <b-button class="w-25 m-1" variant="dark">초기화</b-button>
+      <b-button class="w-25 m-1" variant="primary">진료 완료</b-button>
     </div>
   </div>
 </template>
@@ -87,18 +88,48 @@
 <script>
 
 import WriteSbModel from "@/components/doctor/WriteSbModal.vue";
+import WriteCbModel from "@/components/doctor/WriteCbModal.vue";
 import {mapState, mapMutations} from 'vuex';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 
 export default {
   name: "DoctorHistoryWrite",
-  components: {WriteSbModel},
+  components: {
+    WriteSbModel,
+    WriteCbModel,
+  },
 
   mounted() {
     // document.addEventListener('DOMContentLoaded', () => {
     //   // INSERT CODE HERE
     //   this.setTest(this.items)
     // });
+
+    ClassicEditor.create(document.querySelector('#symptom-editor'), {
+      contentCss: this.contentCss,
+      toolbar: [
+        // 'heading',
+        // '|',
+        'bold',
+        'italic',
+        'link',
+        'bulletedList',
+        '|',
+        'undo',
+        'redo',
+        // '|',
+        // 'imageUpload',
+        // 'alignment',
+        // 'numberedList',
+        // 'imageInsert',
+        // 'blockQuote',
+        // '|',
+        // 'ckfinder',
+      ],
+    }).catch((error) => {
+      console.error(error);
+    });
   },
 
   data() {
@@ -130,16 +161,19 @@ export default {
   },
   methods: {
     ...mapMutations('doctor', {
+      // 상병테이블 remove icon  write상병테이블 한줄 삭제
       removeWriteSbList: 'removeWriteSbList',
+      // 처방테이블 remove icon   write처방테이블 한줄 삭제
+      removeWriteCbList: 'removeWriteCbList',
     }),
-    // 상병테이블 remove icon  write상병테이블 한줄 삭제
-    removeSbButton(item) {
-      this.removeSbList(item);
-    },
-    // 처방테이블 remove icon   write처방테이블 한줄 삭제
-    removeWriteCbList: (item) => {
-      this.writeCbList = this.writeCbList.filter(param => param.id != item.id);
-    },
+    // // 상병테이블 remove icon  write상병테이블 한줄 삭제
+    // removeSbButton(item) {
+    //   this.removeWriteSbList(item);
+    // },
+    // // 처방테이블 remove icon   write처방테이블 한줄 삭제
+    // removeCbButton(item) {
+    //   this.removeWriteCbList(item);
+    // },
 
     // 라디오버튼 누를때 값 가져오는거
     handleRadioChange(item) {
@@ -186,5 +220,6 @@ export default {
 .td-box-name {
   width: 200px;
 }
+
 
 </style>
