@@ -31,11 +31,6 @@ Vue.prototype.$axios = axios // axios를 import 해온 뒤, 전역변수로 선�
 // import loadImage from './plugins/loadImage'
 // Vue.use(loadImage)
 
-// import css1 from '@/assets/made/assets/css/style.css'
-// import js1 from '@/assets/made/assets/vendor/aos/aos.js'
-// Vue.use(css1)
-// Vue.use(js1)
-
 
 
 import common from '@/assets/js/common.js';

@@ -4,7 +4,8 @@ import Home from './Home.vue'
 import Doctor from './doctor/Doctor.vue'
 import Nurse from './nurse/Nurse.vue'
 import LogIn from "./LogIn.vue";
-import Mobile from "./mobile/Mobile.vue";
+import Mobile from "@/routes/mobile/Mobile.vue";
+import Register from "@/routes/mobile/Register.vue";
 // import NotFound from './NotFound'
 
 Vue.use(VueRouter)
@@ -35,6 +36,10 @@ export default new VueRouter({
     {
       path: '/m.home/',
       component: Mobile
+    },
+    {
+      path: '/m.register/',
+      component: Register
     },
     // {
     //   path: '/:notFound(.*)',

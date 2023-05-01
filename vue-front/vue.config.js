@@ -43,22 +43,22 @@ module.exports = {
             }
         }
     },
-    configureWebpack: {
-        module: {
-            rules: [
-                {
-                    test: /\.(png|jpe?g|gif)$/i,
-                    use: [
-                        {
-                            loader: 'file-loader',
-                            options: {
-                                name: 'assets/img/[name].[hash:8].[ext]'
-                            }
-                        }
-                    ]
-                }
-            ]
-        }
-    }
+    // configureWebpack: {
+    //     module: {
+    //         rules: [
+    //             {
+    //                 test: /\.(png|jpe?g|gif)$/i,
+    //                 use: [
+    //                     {
+    //                         loader: 'file-loader',
+    //                         options: {
+    //                             name: 'assets/img/[name].[hash:8].[ext]'
+    //                         }
+    //                     }
+    //                 ]
+    //             }
+    //         ]
+    //     }
+    // }
 
 };
