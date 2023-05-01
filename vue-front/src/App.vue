@@ -33,19 +33,16 @@
 
 <template>
   <div id="app">
-<!--    <Header/>-->
     <RouterView />
 <!--    <Footer />-->
   </div>
 </template>
 
 <script>
-// import Header from '@/components/NavBar.vue'
 // import Footer from '~/components/Footer'
 
 export default {
   components: {
-    // Header
     // Footer
   }
 }
