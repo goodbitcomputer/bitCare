@@ -14,6 +14,9 @@ import org.springframework.web.socket.config.annotation.WebSocketTransportRegist
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
+    @Autowired
+    private WebSocketHandler webSocketHandler;
+
     @Override
     // 클라이언트가 메시지를 구독할 endpoint를 정의합니다.
     public void configureMessageBroker(MessageBrokerRegistry config) {

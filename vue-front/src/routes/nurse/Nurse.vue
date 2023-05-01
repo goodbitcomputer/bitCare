@@ -1,21 +1,14 @@
 <template>
-  <div>
-  <div>
-    <NavBar/>
-  </div>
-  <div>
-<span>nurse</span>
-  </div>
+  <div class="container">
+    <span>nurse</span>
   </div>
 </template>
 
 <script>
-import NavBar from "@/components/NavBar.vue";
 
 export default {
   name: "NurseView",
   components: {
-    NavBar
   }
 }
 </script>
