@@ -1,6 +1,4 @@
 <template>
-  <div>
-    <NavBar/>
   <div class="container">
     <div class="waiting border-box"><waiting/></div>
     <div class="history border-box">
@@ -10,7 +8,6 @@
     </div>
     <div class="write border-box"><history-write/></div>
   </div>
-  </div>
 </template>
 
 <script>
@@ -19,11 +16,9 @@ import Patient from "@/components/doctor/Patient.vue";
 import Physical from "@/components/doctor/Physical.vue";
 import History from "@/components/doctor/History.vue";
 import HistoryWrite from "@/components/doctor/HistoryWrite.vue";
-import NavBar from "@/components/NavBar.vue";
 export default {
   name: "DoctorView",
   components: {
-    NavBar,
     Waiting,
     Patient,
     Physical,

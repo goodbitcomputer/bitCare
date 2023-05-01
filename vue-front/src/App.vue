@@ -33,6 +33,7 @@
 
 <template>
   <div id="app">
+    <Header/>
     <RouterView />
 <!--    <Footer />-->
   </div>
@@ -41,9 +42,12 @@
 
 <script>
 // import Footer from '~/components/Footer'
+import Header from '@/components/NavBar.vue'
 
 export default {
+
   components: {
+    Header
     // Footer
   }
 }
