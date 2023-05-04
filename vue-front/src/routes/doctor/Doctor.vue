@@ -64,7 +64,6 @@ btn {
 .write {
   width: 100%;
 }
-
 // sm
 //@media (min-width: 576px) { ... }
 // md
