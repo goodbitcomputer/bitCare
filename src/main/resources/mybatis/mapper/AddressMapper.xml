@@ -6,9 +6,9 @@
 <mapper namespace="com.bit.bitcare.dao.AddressDAO">
 
     <!-- 환자 정보 중 주소 생성 -->
-    <insert id="insert" parameterType="addressDTO">
-        insert into `address`(zip_code,road_address,street_address)
-        values(#{zipCode}, #{roadAddress}, #{streetAddress})
+    <insert id="insert" parameterType="addressDTO" useGeneratedKeys="true" keyProperty="id">
+        insert into `address`(zip_code,road_address,street_address, extra_address)
+        values(#{zipCode}, #{roadAddress}, #{streetAddress}, #{extraAddress})
     </insert>
 
     <!-- 주소 선택 -->

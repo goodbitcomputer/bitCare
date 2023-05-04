@@ -11,6 +11,18 @@
         WHERE id=#{id}
     </select>
 
+    <!-- 환자 (휴대폰번호) 선택 -->
+    <select id="selectByPhone" parameterType="string" resultType="patientDTO">
+        SELECT * FROM `patient`
+        WHERE phone_number = #{phoneNumber}
+    </select>
+
+    <!-- 환자 (주민등록번호) 선택 -->
+    <select id="selectByIdentity" parameterType="string" resultType="patientDTO">
+        SELECT * FROM `patient`
+        WHERE identity_number = #{identityNumber}
+    </select>
+
     <!-- 환자 전체 선택 -->
     <select id="selectAll" resultType="patientDTO">
         SELECT * FROM `patient`
@@ -23,7 +35,7 @@
     </delete>
 
     <!-- 환자 정보 생성 -->
-    <insert id="insert" parameterType="patientDTO">
+    <insert id="insert" parameterType="patientDTO" useGeneratedKeys="true" keyProperty="id">
         insert into `patient`(name,identity_number,gender,birth,phone_number,address_id)
         values(#{name}, #{identityNumber}, #{gender}, #{birth}, #{phoneNumber}, #{addressId})
     </insert>

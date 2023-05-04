@@ -6,9 +6,9 @@ import java.util.Date;
 
 @Data
 public class WaitingDTO {
+    int id;
     int patientId;
     int deptId;
-    int typeId;
     String symptom;
     Date entryDate;
     Date reservationDate;

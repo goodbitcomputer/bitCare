@@ -29,22 +29,14 @@ public class DoctorController {
     @ResponseBody
     @RequestMapping(value = "/sbModalFilter", method = RequestMethod.POST)
     public String sbModalFilter(@RequestBody Map<String, Object> requestData, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        JsonObject result = new JsonObject();
-
         String message = (String) requestData.get("filterMessage");
-
         return doctorService.sbFilterSearch(message).toString();
     }
 
     @ResponseBody
     @RequestMapping(value = "/cbModalFilter", method = RequestMethod.POST)
     public List<DiagnoseDTO> cbModalFilter(@RequestBody Map<String, Object> requestData, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        JsonObject result = new JsonObject();
-
         String message = (String) requestData.get("filterMessage");
-
-        System.out.println(doctorService.cbFilterSearch(message));
-
         return doctorService.cbFilterSearch(message);
     }
 }

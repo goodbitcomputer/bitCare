@@ -6,6 +6,7 @@ import java.util.Date;
 
 @Data
 public class HistoryDTO {
+    int id;
     int employeeId;
     int patientId;
     int deptId;

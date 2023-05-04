@@ -24,8 +24,8 @@
 
     <!-- 접수 대기 목록 생성 -->
     <insert id="insert" parameterType="waitingDTO">
-        insert into `waiting`(patient_id,dept_id,type_id,symptom,entry_date,reservation_date)
-        values(#{patientId}, #{deptId}, #{typeId}, #{symptom}, now(), #{reservationDate})
+        insert into `waiting`(patient_id,dept_id,symptom,entry_date,reservation_date)
+        values(#{patientId}, #{deptId}, #{symptom}, now(), #{reservationDate})
     </insert>
 
 </mapper>

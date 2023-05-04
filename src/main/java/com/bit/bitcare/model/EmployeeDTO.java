@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class EmployeeDTO {
+    int id;
     String phoneNumber;
     String name;
     int deptId;

@@ -188,9 +188,6 @@ export default {
     },
     // remove cbList        add 처방테이블 한줄 삭제
     removeCbList(item) {
-      console.log("item: " + item);
-      console.log("item.id: " + item.id);
-
       this.cbAddItems = this.cbAddItems.filter(param => param.id != item.id);
     },
     // 모달창 상병(더미) 리스트 필터후 저장
@@ -207,7 +204,6 @@ export default {
           icon: false,
         })
       })
-      console.log(this.cbDummyItems);
     },
 
     // 비동기 통신

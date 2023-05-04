@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class HistoryDiagnoseDTO {
+    int id;
     int historyId;
     String code;
     String name;
