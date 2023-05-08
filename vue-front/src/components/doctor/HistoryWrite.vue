@@ -1,12 +1,13 @@
 <template>
   <div>
     <div class="border-box">
-        <span style="font-size: 1.2em; font-weight: 700">진료 기록 작성</span>
+      <span style="font-size: 1.2em; font-weight: 700">진료 기록 작성</span>
     </div>
     <!--    증상-->
     <div class="border-box">
-      <div>
-        <span class="font-weight-bold">증상</span>
+      <div class="d-flex">
+        <span class="font-weight-bold flex-grow-1">증상</span>
+        <button @click="editorBtn">편집</button>
       </div>
       <div class="symptom-box">
         <div class="symptomInfo-box">
@@ -186,6 +187,11 @@ export default {
         this.selectedItems = this.selectedItems.filter((i) => i.id !== item.id);
       }
     },
+
+    // editorBtn
+    editorBtn() {
+      this.$router.push('/doctor/editor');
+    }
 
   }
 }

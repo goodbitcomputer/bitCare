@@ -7,10 +7,10 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 
 //@SpringBootApplication
 @SpringBootApplication(exclude={SecurityAutoConfiguration.class})
-public class CareChartApplication {
+public class BitCareApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CareChartApplication.class, args);
+		SpringApplication.run(BitCareApplication.class, args);
 	}
 
 }

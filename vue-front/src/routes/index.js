@@ -6,6 +6,7 @@ import Nurse from './nurse/Nurse.vue'
 import LogIn from "./LogIn.vue";
 import Mobile from "@/routes/mobile/Mobile.vue";
 import Register from "@/routes/mobile/Register.vue";
+import ImageEditor from "@/routes/doctor/ImageEditor.vue";
 // import NotFound from './NotFound'
 
 Vue.use(VueRouter)
@@ -28,6 +29,10 @@ export default new VueRouter({
     {
       path: '/doctor/',
       component: Doctor
+    },
+    {
+      path: '/doctor/editor',
+      component: ImageEditor
     },
     {
       path: '/nurse/',

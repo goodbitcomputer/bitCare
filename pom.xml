@@ -106,6 +106,8 @@
 	</dependencies>
 
 	<build>
+<!--		war 파일 이름 설정-->
+		<finalName>ROOT</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
