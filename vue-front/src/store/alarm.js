@@ -8,15 +8,24 @@ export default {
     namespaced: true,
 
     state: {
-        messageList: []
+        isDeleted: false,
+        count: 0,
+        messageList: [],
+        alarmList: []
     },
     getters: {
-
+        getCount(state){
+            return state.count
+        }
     },
     mutations: {
         setMessage : function (state, items) {
             console.log(state.messageList)
             return state.messageList = items;
+        },
+        setCount : function (state, count) {
+            console.log(state.count)
+            return state.count = count;
         }
     },
     actions: {

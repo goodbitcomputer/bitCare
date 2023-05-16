@@ -1,7 +1,9 @@
 <template>
   <b-navbar toggleable="lg" class="b-navbar navbar-expand-md navbar-dark bg-dark">
-    <div class="container">
-      <b-navbar-brand> BitCare </b-navbar-brand>
+    <div id="nav" class="container">
+      <b-navbar-brand>
+        <img src="@/assets/history/logo.png" width="100px">
+      </b-navbar-brand>
 
       <b-navbar-toggle v-b-toggle.sidebar-backdrop>
       </b-navbar-toggle>
@@ -13,11 +15,16 @@
           <router-link to="/doctor" class="nav-item nav-link">Doctor</router-link>
         </b-navbar-nav>
         <b-navbar-nav class="ml-auto">
-          <router-link to="/alarm" class="nav-item nav-link">
-            <div>
+          <b-button type="button" class="nav-item nav-link" id="alarm" @click="showDetails()">
+            <div v-if="getCount > 0">
+              <span v-if="state==='new'" class="note-new">{{ getCount }}</span>
+              <span v-else class="note-num">{{ getCount }}</span>
+              <b-icon-bell-fill title="새로운 알람!" id="notification"></b-icon-bell-fill>
+            </div>
+            <div v-else>
               <b-icon-bell title="알람"></b-icon-bell>
             </div>
-          </router-link>
+          </b-button>
           <router-link to="/admin" class="nav-item nav-link">
             <div>
               <b-icon-person-fill title="계정"></b-icon-person-fill>
@@ -26,38 +33,51 @@
         </b-navbar-nav>
       </b-collapse>
 
-        <b-sidebar
-            id="sidebar-backdrop"
-            title="Bit Care"
-            :backdrop-variant="variant"
-            backdrop
-            shadow
+      <b-sidebar
+          id="sidebar-backdrop"
+          title="Bit Care"
+          :backdrop-variant="variant"
+          backdrop
+          shadow
 
-        >
-          <div class="px-3 py-2">
-            <p>
-              <router-link to="/">Home</router-link>
-            </p>
-            <p>
-              <router-link to="/nurse">Nurse</router-link>
-            </p>
-            <p>
-              <router-link to="/doctor">Doctor</router-link>
-            </p>
-            <p>
-              <router-link to="/">환자 정보</router-link>
-            </p>
-            <p>
-              <router-link to="/nurse">의료진 정보</router-link>
-            </p>
-            <p>
-              <router-link to="/doctor">쪽지</router-link>
-            </p>
-          </div>
-        </b-sidebar>
+      >
+        <div class="px-3 py-2">
+          <p>
+            <router-link to="/" id="alarmSideBar">Home</router-link>
+          </p>
+          <p>
+            <router-link to="/nurse" id="alarmSideBar">Nurse</router-link>
+          </p>
+          <p>
+            <router-link to="/doctor" id="alarmSideBar">Doctor</router-link>
+          </p>
+          <p>
+            <router-link to="/" id="alarmSideBar">환자 정보</router-link>
+          </p>
+          <p>
+            <router-link to="/nurse" id="alarmSideBar">의료진 정보</router-link>
+          </p>
+          <p>
+            <b-button type="button" id="alarmSideBar" @click="showDetails()">
+              <span v-if=" count > 0">
+                쪽지 <span class="badge badge-danger">{{ count }}</span>
+              </span>
+              <span v-else>
+                쪽지
+              </span>
+            </b-button>
+          </p>
+        </div>
+      </b-sidebar>
     </div>
-  </b-navbar >
-
+    <div>
+      <b-modal v-model="showDetailsModal" id="modal" size="lg" title="쪽지">
+        <div id="alarmList">
+          <MessageAlarm/>
+        </div>
+      </b-modal>
+    </div>
+  </b-navbar>
 </template>
 
 <script>
@@ -65,33 +85,49 @@ import {mapMutations, mapState,} from 'vuex';
 import axios from "axios";
 import SockJS from "sockjs-client";
 import Stomp from "webstomp-client";
+import MessageAlarm from "@/routes/alarm/Alarm.vue";
 
 export default {
+  components: {MessageAlarm},
   data() {
     return {
+      count: this.count,
       stompClient: null,
       recvList: this.messageList,
       receiver: "",
       message: "",
       sender: "",
-      state: "new",
-      message_file: ""
+      state: "",
+      message_file: "",
+      showDetailsModal: false,
+      isLogin: false
     }
   },
   created() {
     this.recvList = this.messageList;
     this.getSessionLogIn();
+    this.settingRecvList();
     // App.vue가 생성되면 소켓 연결을 시도합니다.
-    this.connect();
+    setTimeout(() => this.connect(), 100)
   },
   computed: {
     ...mapState('alarm',
-        ['messageList']
+        ['messageList', 'count']
     ),
+    ...mapState('login',
+        ['role']
+    ),
+    getCount(){
+      return this.$store.state.alarm.count
+    }
   },
   methods: {
     ...mapMutations('alarm', {
       setMessage: 'setMessage',
+      setCount: 'setCount',
+    }),
+    ...mapMutations('login', {
+      setRole: 'setRole'
     }),
     getSessionLogIn() {
       // Axios를 사용하여 RESTful API 호출
@@ -102,10 +138,13 @@ export default {
             if (response.data && response.data.isLoggedIn) {
               let logIn = JSON.parse(JSON.stringify(response.data.logIn));
               console.log('현재 로그인된 사용자: ' + logIn.name);
+              console.log(logIn.role)
               this.receiver = logIn.name;
+              this.setRole(logIn.role)
               console.log(this.recvList)
-            } else {
-              console.log('로그인되어 있지 않습니다.');
+            } else{
+              this.setRole('ROLE_ADMIN')
+              this.$router.push('/login')
             }
           })
           .catch(error => {
@@ -114,12 +153,11 @@ export default {
     },
     connect() {
       const serverURL = "http://localhost:8080/receive"
+      let options = {debug: false, protocols: Stomp.VERSIONS.supportedProtocols()};
       let socket = new SockJS(serverURL);
-      this.stompClient = Stomp.over(socket);
+      this.stompClient = Stomp.over(socket, options);
       console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)
-      this.stompClient.connect({
-            'client-id': this.receiver
-          },
+      this.stompClient.connect({},
           () => {
             // 소켓 연결 성공
             this.connected = true;
@@ -129,16 +167,52 @@ export default {
             this.stompClient.subscribe("/send/" + this.receiver, res => {
               console.log('구독으로 받은 메시지 입니다.', res.body);
               // 받은 데이터를 json으로 파싱하고 리스트에 넣어줍니다.
+              this.state = JSON.parse(res.body).state
               this.recvList.push(JSON.parse(res.body))
               this.setMessage(this.recvList)
+              this.alarmLength()
+              setTimeout(() => this.state = "", 1501)
             });
           },
           (error) => {
             // 소켓 연결 실패
+            this.connected = false
             console.log('소켓 연결 실패', error);
-            this.connected = false;
           }
       );
+    },
+    /* 새로운 메세지 수 */
+    alarmLength() {
+      if(this.recvList != null) {
+        this.count = this.recvList.filter(element => "new" === element.state).length
+      }
+      this.setCount(this.count)
+    },
+    /* DB 데이터 가져오기 */
+    settingRecvList() {
+      // Axios를 사용하여 RESTful API 호출
+      axios.get('/api/receiveList')
+          .then(response => {
+            console.log(response.data);
+            // 세션 데이터 사용 예시
+            if (response.data && response.data.isLoggedIn) {
+              this.isLogin = true
+              let receiveList = JSON.parse(JSON.stringify(response.data.receiveList))
+              console.log(receiveList)
+              this.recvList = receiveList
+              this.setMessage(this.recvList)
+              console.log(this.recvList)
+              this.alarmLength()
+            } else {
+              console.log('로그인되어 있지 않습니다.');
+            }
+          })
+          .catch(error => {
+            console.error('세션 데이터를 가져오는 중 에러 발생: ', error);
+          });
+    },
+    showDetails() {
+      this.showDetailsModal = true;
     }
   }
 }
@@ -148,61 +222,177 @@ export default {
 :root {
   --accent-color: #f3ff87;
   --text-color: #f0f4f5;
-  --background-color: #0b002b;}
+  --background-color: #0b002b;
+}
 
 a {
   text-decoration: none;
-  color: var(--text-color);}
+  color: var(--text-color);
+}
 
 .b-navbar {
   position: sticky;
   top: 0; /* 필수 */
+  z-index: 500;
   display: flex;
   justify-content: space-between;
   align-items: center;
   background-color: var(--background-color);
-  padding: 8px 12px;}
+  padding: 8px 12px;
+}
 
 .b-nav_logo {
   font-size: 24px;
-  color: var(--text-color);}
+  color: var(--text-color);
+}
 
 .b-nav_logo i {
-  color: var(--accent-color);}
+  color: var(--accent-color);
+}
 
 .b-nav_logo span {
-  color: var(--accent-color);}
+  color: var(--accent-color);
+}
 
 .b-nav_menu {
   display: flex;
   list-style: none;
-  padding-left: 0;}
+  padding-left: 0;
+}
 
 .b-nav_menu li {
-  padding: 8px 12px;}
+  padding: 8px 12px;
+}
 
 .b-nav_menu li:hover {
   color: var(--background-color);
   background-color: var(--accent-color);
-  border-radius: 4px;}
+  border-radius: 4px;
+}
 
 .b-nav_menu li a:hover {
-  color: var(--background-color);}
+  color: var(--background-color);
+}
 
 .b-nav_icons {
   display: flex;
   color: #7dc0ff;
   list-style: none;
-  padding-left: 0;}
+  padding-left: 0;
+}
 
 .b-nav_icons li {
-  padding: 8px 5px;}
+  padding: 8px 5px;
+}
 
 .b-navbar_toggleBtn {
   display: none;
-  color:var(--text-color);
+  color: var(--text-color);
   position: absolute;
   right: 32px;
-  font-size: 24px;}
+  font-size: 24px;
+}
 
+.note-num {
+  position: relative;
+  top: -5px;
+  right: -25px;
+  z-index: 3;
+  height: 17px;
+  width: 17px;
+  line-height: 17px;
+  text-align: center;
+  font-weight: bold;
+  background-color: red;
+  border-radius: 15px;
+  display: inline-block;
+}
+
+.note-new {
+  position: relative;
+  top: -5px;
+  right: -25px;
+  z-index: 3;
+  height: 17px;
+  width: 17px;
+  line-height: 17px;
+  text-align: center;
+  background-color: red;
+  border-radius: 15px;
+  display: inline-block;
+  animation: pulse 1.5s 1;
+}
+
+.note-new:after {
+  position: relative;
+  top: -5px;
+  right: -25px;
+  z-index: 3;
+  height: 17px;
+  width: 17px;
+  line-height: 17px;
+  text-align: center;
+  background-color: red;
+  border-radius: 15px;
+  display: inline-block;
+  animation: sonar 1.5s 1;
+}
+
+@keyframes sonar {
+  0% {
+    transform: scale(.9);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  20% {
+    transform: scale(1.4);
+  }
+  50% {
+    transform: scale(.9);
+  }
+  80% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+#notification {
+  position: relative;
+}
+
+#alarm {
+  background-color: var(--background-color);
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+
+#alarmSideBar {
+  background-color: var(--background-color);
+  border: none;
+  outline: none;
+  box-shadow: none;
+  color: var(--background-color);
+  z-index: 1500;
+}
+
+#modal {
+  z-index: 999;
+  display: block;
+}
+
+#alarmList {
+  height: 50vh; overflow-y: auto;
+}
 </style>

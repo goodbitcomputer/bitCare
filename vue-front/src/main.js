@@ -53,3 +53,21 @@ new Vue({
   router,
   components: { App }
 }).$mount('#app')
+
+router.beforeEach((to, from, next) => {
+  let roleStatus = store.state.login.role // 권한 상태
+  let roleName;
+  if (!to.meta.roles.includes(roleStatus)) {
+    if(roleStatus === 'ROLE_DOCTOR'){
+      roleName = '의사'
+    } else if(roleStatus === 'ROLE_NURSE'){
+      roleName = '간호사'
+    }
+
+    alert('해당 페이지에 접근 권한이 없습니다.\n접근권한을 가진 계정으로 로그인 하십시오.\n현재 로그인한 계정의 권한 : '+roleName)
+
+    next(from)
+  } else {
+    next()
+  }
+})
