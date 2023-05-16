@@ -1,10 +1,7 @@
 <template>
   <div>
-  <div>
     <NavBar/>
-  </div>
   <div class="home container">
-    <nav-bar/>
 <!--    <img alt="Vue logo" src="../assets/logo.png">-->
     <HelloWorld msg="Welcome to Your Vue.js App"/>
   </div>
@@ -25,5 +22,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+body * {
+  font-family: 'Pretendard-Regular';
+  font-size: 13px;
+}
 </style>

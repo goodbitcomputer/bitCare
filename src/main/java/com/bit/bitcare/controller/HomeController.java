@@ -23,7 +23,7 @@ public class HomeController {
         this.employeeService = employeeService;
     }
 
-    @GetMapping("/")
+    @GetMapping("/test")
     public String showIndex() throws IOException {
         System.out.println("여긴 테스트 구역");
 

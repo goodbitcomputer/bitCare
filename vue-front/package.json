@@ -22,11 +22,12 @@
     "swiper": "^9.2.4",
     "vue": "^2.6.14",
     "vue-router": "^3.5.1",
-    "vuex": "^3.6.2",
-    "webstomp-client": "^1.2.6"
+    "vue-session": "^1.0.0",
     "vue-svg-loader": "^0.16.0",
+    "vue2-editor": "^2.10.3",
     "vuex": "^3.6.2",
-    "vuex-persistedstate": "^4.1.0"
+    "vuex-persistedstate": "^4.1.0",
+    "webstomp-client": "^1.2.6"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
