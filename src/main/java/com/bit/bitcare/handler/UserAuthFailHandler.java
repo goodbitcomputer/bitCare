@@ -1,5 +1,6 @@
 package com.bit.bitcare.handler;
 
+import com.google.gson.JsonObject;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,8 @@ public class UserAuthFailHandler implements AuthenticationFailureHandler {
     public void onAuthenticationFailure(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
                                         AuthenticationException e) throws IOException, ServletException {
         e.printStackTrace();
-        httpServletResponse.sendRedirect("/");
+
+        System.out.println("UserAuthFailHandler.onAuthenticationFailure");
+//        httpServletResponse.sendRedirect("/");
     }
 }

@@ -3,17 +3,41 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
+<!--
+     * ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+     * 2023.05.17 홍사범
+     *
+     * selectOne 수정, SelectAll 수정, selectAllByDept 추가
+     * waiting, patient join
+     * ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+-->
+
 <mapper namespace="com.bit.bitcare.dao.WaitingDAO">
 
     <!-- 접수 대기 인원 선택 -->
     <select id="selectOne" parameterType="int" resultType="waitingDTO">
-        SELECT * FROM `waiting`
-        WHERE id=#{id}
+        SELECT waiting.*, patient.name, patient.identity_number, patient.phone_number, patient.gender, patient.birth,
+        patient.address_id FROM waiting
+        LEFT JOIN patient
+        ON waiting.patient_id = patient.id
+        WHERE waiting.id= #{id}
     </select>
 
     <!-- 접수 대기 목록 -->
     <select id="selectAll" resultType="waitingDTO">
-        SELECT * FROM `waiting`
+        SELECT waiting.*, patient.name, patient.identity_number, patient.phone_number, patient.gender, patient.birth,
+        patient.address_id FROM waiting
+        LEFT JOIN patient
+        ON waiting.patient_id = patient.id;
+    </select>
+
+    <!-- 접수대기환자 by진료과목  -->
+    <select id="selectAllByDept" resultType="waitingDTO">
+        SELECT waiting.*, patient.name, patient.identity_number, patient.phone_number, patient.gender, patient.birth,
+        patient.address_id FROM waiting
+        LEFT JOIN patient
+        ON waiting.patient_id = patient.id
+        WHERE waiting.dept_id = #{deptId};
     </select>
 
     <!-- 접수 처리(대기 목록 삭제) -->

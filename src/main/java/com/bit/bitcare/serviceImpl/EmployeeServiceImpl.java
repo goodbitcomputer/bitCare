@@ -215,6 +215,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public boolean register(EmployeeDTO attempt) {
         attempt.setPassword(passwordEncoder.encode(attempt.getPassword()));
+        attempt.setRole("auth");
         if (validate(attempt.getUsername())) {
             employeeDAO.register(attempt);
             return true;
@@ -247,6 +248,5 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(json);
     }
-
 }
 
