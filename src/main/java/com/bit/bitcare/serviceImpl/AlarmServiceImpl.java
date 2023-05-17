@@ -20,6 +20,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * ---------------------------------------------------------------------------
+ * 2023.05.16
+ *
+ * AlarmServiceImpl
+ * AlarmService 인터페이스에 대한 구현체
+ * SimpleMessagingTemplate, AlarmDAO, EmployeeDAO, MessageDAO, ObjectMapper 객체 사용
+ * 메소드 목록
+ * 1. SocketHandler : 클라이언트로 전달받은 메시지를 MessageDTO, AlarmDTO 객체로 변환 후 receiver 가 구독한 주소로 전송하는 메소드
+ * 2. getReceiveList : 클라이언트 접속자의 받은 알림을 AlarmDAO 를 통해 List 객체로 변환 후 리턴하는 메소드
+ * 3. deleteMessage : Message 의 id를 전달받아 삭제시키는 메소드
+ */
 @Service
 public class AlarmServiceImpl implements AlarmService {
     private final SimpMessagingTemplate simpMessagingTemplate;

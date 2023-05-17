@@ -81,6 +81,13 @@
 </template>
 
 <script>
+/**
+ * ---------------------------------------------------------------------------
+ * 2023.05.16
+ *
+ * NavBar.vue
+ * Stomp, SockJS로 웹소켓 통신을 구현한 vue 컴포넌트
+ */
 import {mapMutations, mapState,} from 'vuex';
 import axios from "axios";
 import SockJS from "sockjs-client";

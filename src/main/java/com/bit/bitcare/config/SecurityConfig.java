@@ -34,13 +34,20 @@ public class SecurityConfig {
      * 2023.05.15
      *
      * authenticationManager
-     * AuthenticationManager 객체 생성
+     * AuthenticationManager Bean 객체 생성
      */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
 
+    /**
+     * ---------------------------------------------------------------------------
+     * 2023.05.16
+     *
+     * userDetailService
+     * UserDetailsService 객체 주입
+     */
     @Autowired
     private UserDetailsService userDetailService;
 
@@ -51,6 +58,13 @@ public class SecurityConfig {
     }
      */
 
+    /**
+     * ---------------------------------------------------------------------------
+     * 2023.05.16
+     *
+     * dataSource
+     * DataSource 객체 주입 - 객체는 application.properties 설정에 따라 생성됨
+     */
     @Autowired
     private DataSource dataSource;
 
