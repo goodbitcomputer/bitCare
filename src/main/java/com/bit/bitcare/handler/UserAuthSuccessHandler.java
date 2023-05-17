@@ -22,7 +22,11 @@ public class UserAuthSuccessHandler implements AuthenticationSuccessHandler {
         HttpSession session = httpServletRequest.getSession();
         session.setAttribute("logIn", employeeDTO);
 
-        httpServletResponse.sendRedirect("/");
+        System.out.println("UserAuthSuccessHandler.onAuthenticationSuccess");
+
+        System.out.println("login: "+ employeeDTO);
+
+//        httpServletResponse.sendRedirect("/");
 
     }
 }

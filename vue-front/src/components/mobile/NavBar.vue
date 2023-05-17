@@ -19,10 +19,10 @@
     </div>
 
     <!-- ======= Header ======= -->
-    <header id="header" class="fixed-top d-flex align-items-cente">
+    <header id="header" class="fixed-top d-flex align-items-center">
       <div class="container-fluid container-xl d-flex align-items-center justify-content-lg-between">
 
-        <h1 class="logo me-auto me-lg-0"><router-link to="m.home" tag="a">BitCare Platform</router-link></h1>
+        <h1 class="logo me-auto me-lg-0"><router-link to="/mobile/home" tag="a">BitCare Platform</router-link></h1>
         <!-- Uncomment below if you prefer to use an image logo -->
         <!-- <a href="index.html" class="logo me-auto me-lg-0"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
 

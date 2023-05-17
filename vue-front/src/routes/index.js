@@ -5,7 +5,10 @@ import Doctor from './doctor/Doctor.vue'
 import Nurse from './nurse/Nurse.vue'
 import LogIn from "./LogIn.vue";
 import Mobile from "@/routes/mobile/Mobile.vue";
-import Register from "@/routes/mobile/Register.vue";
+import MobileRegister from "@/routes/mobile/Register.vue";
+import MobileLogin from "@/routes/mobile/Login.vue";
+import MobileDoctor from "@/routes/mobile/Doctor.vue";
+import ImageEditor from "@/routes/doctor/ImageEditor.vue";
 import Alarm from './alarm/Alarm.vue'
 import store from "@/store";
 // import NotFound from './NotFound'
@@ -89,19 +92,40 @@ export default new VueRouter({
       }
     },
     {
-      path: '/m.home',
+      path: '/doctor/editor',
+      component: ImageEditor,
+      meta: {
+        roles: ['ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_NURSE']
+      }
+    },
+    {
+      path: '/mobile/home/',
       component: Mobile,
       meta: {
         roles: ['ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_NURSE']
       }
     },
     {
-      path: '/m.register',
-      component: Register,
+      path: '/mobile/login/',
+      component: MobileLogin,
       meta: {
         roles: ['ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_NURSE']
       }
-    }
+    },
+    {
+      path: '/mobile/register/',
+      component: MobileRegister,
+      meta: {
+        roles: ['ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_NURSE']
+      }
+    },
+    {
+      path: '/mobile/doctor/',
+      component: MobileDoctor,
+      meta: {
+        roles: ['ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_NURSE']
+      }
+    },
     // {
     //   path: '/:notFound(.*)',
     //   component: NotFound

@@ -30,7 +30,7 @@ export default {
       this.time--;
       if(this.time<0) {
         clearInterval(x);
-        this.$router.push('m.home');
+        this.$router.push('/mobile/home');
       }
     }, 1000);
   },
