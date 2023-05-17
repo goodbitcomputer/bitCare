@@ -48,7 +48,7 @@ public class MobileController {
     }
 
     @ResponseBody
-    @PostMapping("/register")
+    @PostMapping("/register_proc")
     public Boolean register(@RequestBody Map<String, Object> requestData, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         return mobileService.register(requestData);

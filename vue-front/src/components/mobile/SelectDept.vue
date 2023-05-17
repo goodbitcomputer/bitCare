@@ -39,7 +39,7 @@
 import axios from "axios";
 
 const Swal = window.Swal;
-import {mapActions, mapMutations, mapState} from "vuex";
+import {mapMutations, mapState} from "vuex";
 
 export default {
   name: "SelectDept",
@@ -69,9 +69,6 @@ export default {
       setSymptom: 'setSymptom',
       setNextStep: 'setNextStep',
       initState: 'initState',
-    }),
-    ...mapActions('mobile', {
-      insertRegister: 'insertRegister'
     }),
     dropClick(item) {
       this.dept = item.dept;
@@ -128,7 +125,7 @@ export default {
     },
     // 접수
     register() {
-      return axios.post('/mobile/register', {
+      return axios.post('/mobile/register_proc', {
         patientId: this.patientId,
         deptId: this.deptId,
         symptom: this.symptom,

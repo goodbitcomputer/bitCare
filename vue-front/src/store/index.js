@@ -2,8 +2,8 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import doctor from './doctor'
 import alarm from './alarm'
-// import about from './about'
 import mobile from './mobile'
+import mobileDoctor from './mobileDoctor'
 import createPersistedState from 'vuex-persistedstate';
 import login from "./login";
 Vue.use(Vuex)
@@ -14,9 +14,12 @@ export default new Vuex.Store({
         doctor,
         alarm,
         mobile,
-        login
+        login,
+        mobileDoctor,
     },
     plugins: [
-        createPersistedState(),
+        createPersistedState({
+            paths: ['mobile'],
+        }),
     ]
 })
