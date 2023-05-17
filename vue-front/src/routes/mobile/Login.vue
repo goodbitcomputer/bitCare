@@ -20,8 +20,7 @@
               <b-input class="m-auto" v-model="username" name="username" placeholder="ID"></b-input>
               <b-input class="m-auto" v-model="password" name="password" style="margin: 5px 0 !important;"
                        type="password" placeholder="Password"></b-input>
-              <input type="checkbox" name="remember-me" v-model="rememberMe"/>
-              <label for="remember-me">자동 로그인</label>
+              <input class="text-start" type="checkbox" name="remember-me">자동로그인
               <button @click="login" class="w-25 btn btn-primary" variant="success" type="submit">Login</button>
             </div>
           </div>
@@ -36,8 +35,7 @@
 <script>
 import "/public/assets/css/style.scss";
 import NavBar from "@/components/mobile/NavBar.vue";
-import axios from "axios";
-import {mapMutations, mapState} from "vuex";
+// import axios from "axios";
 
 export default {
   name: "MobileLogin",
@@ -46,21 +44,9 @@ export default {
   },
   data() {
     return {
-      loginSuccess: false,
-      loginError: false,
       username: '',
       password: '',
-      error: false,
-      rememberMe: false
     }
-  },
-  mounted() {
-    this.autoLogin()
-  },
-  computed: {
-    ...mapState('login',
-        ['role']
-    )
   },
   methods: {
     // 비동기 통신
@@ -82,48 +68,7 @@ export default {
     //     console.log(error);
     //   });
     // },
-    ...mapMutations('login', {
-      setRole: 'setRole'
-    }),
-    autoLogin(){
-      this.setRole('ROLE_ADMIN')
-      axios.post('/autoLogin', {}
-      ).then((response) => {
-        if (response.status === 200) {
-          if (response.data.logIn === 'success') {
-            this.setRole(response.data.role)
-            this.$router.push('/mobile/doctor')
-          } else {
-            console.log(response.data)
-          }
-        }
-      }).catch((err) => {
-        this.loginError = true;
-        throw new Error(err)
-      })
-    },
-    login() {
-      axios.post('/auth', {
-        username: this.username,
-        password: this.password,
-      }, {
-        params: {
-          rememberMe: this.rememberMe
-        }
-      }).then((response) => {
-        if (response.status === 200) {
-          if (response.data.logIn === 'success') {
-            this.setRole(response.data.role)
-            this.$router.push('/mobile/doctor')
-          } else {
-            console.log(response.data)
-          }
-        }
-      }).catch((err) => {
-        this.loginError = true;
-        throw new Error(err)
-      })
-    }
+
 
   }
 }

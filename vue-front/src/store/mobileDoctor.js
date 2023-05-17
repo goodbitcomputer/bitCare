@@ -5,11 +5,7 @@ export default {
     namespaced: true,
 
     state: {
-        nextStep: 1,    // 1: camera, 2: gallery
-        localStream:'',
-        userCameraList: [],
-        newCameraList: [],
-        photo:'',
+        nextStep: 1,    // 1: auth, 2: register휴대폰or주민번호, 3: register이름, 4: register주소, 5: 접수
 
 
     },
@@ -18,18 +14,13 @@ export default {
         setNextStep: (state, item) => {
             state.nextStep = item;
         },
-        setNewCameraList: (state, item) => {
-            state.newCameraList.push(item);
-        },
-        setPhoto: (state, item) => {
-            state.photo = item;
-        },
         setAddress: (state, {postcode, roadAddress, streetAddress, extraAddress}) => {
             state.postcode = postcode;
             state.roadAddress = roadAddress;
             state.streetAddress = streetAddress;
             state.extraAddress = extraAddress;
         },
+
 
 
     }, actions: {
