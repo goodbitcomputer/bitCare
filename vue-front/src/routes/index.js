@@ -7,6 +7,7 @@ import LogIn from "./LogIn.vue";
 import Mobile from "@/routes/mobile/Mobile.vue";
 import Register from "@/routes/mobile/Register.vue";
 import Alarm from './alarm/Alarm.vue'
+import store from "@/store";
 // import NotFound from './NotFound'
 
 Vue.use(VueRouter)
@@ -105,5 +106,5 @@ export default new VueRouter({
     //   path: '/:notFound(.*)',
     //   component: NotFound
     // }
-  ]
+  ],
 })
