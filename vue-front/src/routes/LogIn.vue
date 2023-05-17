@@ -36,7 +36,7 @@ export default {
   methods: {
     async login() {
       try {
-        const result = await axios.get('/logIn', {
+        const result = await axios.get('/logIn_proc', {
           auth: {
             username: this.username,
             password: this.password

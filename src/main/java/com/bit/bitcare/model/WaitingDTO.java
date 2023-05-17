@@ -12,4 +12,18 @@ public class WaitingDTO {
     String symptom;
     Date entryDate;
     Date reservationDate;
+
+    /*
+     * ------------------------------------------------------------
+     * 2023.05.17 홍사범
+     *
+     * waitingDTO, patientDTO join 하기위해 수정
+     * ------------------------------------------------------------
+    */
+    String name;
+    String phoneNumber;
+    String identityNumber;
+    Date birth;
+    String gender;
+    int addressId;
 }

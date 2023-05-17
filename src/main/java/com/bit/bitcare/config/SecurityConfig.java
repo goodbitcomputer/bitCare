@@ -2,11 +2,13 @@ package com.bit.bitcare.config;
 
 import com.bit.bitcare.handler.UserAuthFailHandler;
 import com.bit.bitcare.handler.UserAuthSuccessHandler;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -16,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -27,7 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return (web) -> web.ignoring().antMatchers("");
     }
 
-     */
+    */
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -37,17 +40,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests() //<security:intercept-url>
-                .antMatchers("/logIn","/user/register", "/**").permitAll() //permitAll 권한부여
+                .antMatchers("/logIn","/user/register", "/mobile/login").permitAll() //permitAll 권한부여
                 .anyRequest().authenticated(); //나머지 url에 대해 authenticated 권한 부여
 
         http.formLogin() //<security:form-login>
                 .loginPage("/logIn")
-                .loginProcessingUrl("/doLogin")
+                .loginProcessingUrl("/Login_proc")
                 .defaultSuccessUrl("/")
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .successHandler(loginSuccessHandler())
                 .failureHandler(loginFailureHandler());
+
+//        http.formLogin() //<security:form-login>
+////                .loginPage("/m.login")
+//                .loginProcessingUrl("/doLogin")
+//                .defaultSuccessUrl("/")
+//                .usernameParameter("username")
+//                .passwordParameter("password")
+//                .successHandler(loginSuccessHandler())
+//                .failureHandler(loginFailureHandler());
 
         http.csrf().disable();
 
@@ -68,11 +80,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public UserAuthSuccessHandler loginSuccessHandler() {
+        System.out.println("loginSuccessHandler");
         return new UserAuthSuccessHandler();
     }
 
     @Bean
     public UserAuthFailHandler loginFailureHandler() {
+        System.out.println("loginFailureHandler");
         return new UserAuthFailHandler();
     }
 

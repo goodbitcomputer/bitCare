@@ -9,7 +9,7 @@
     <router-link to="/">Home</router-link> |
     <router-link to="/nurse">Nurse</router-link> |
     <router-link to="/doctor">Doctor</router-link> |
-    <router-link to="/m.home">Mobile</router-link>
+    <router-link to="/mobile/home">Mobile</router-link>
     <div>
       <b-sidebar
           id="sidebar-backdrop"

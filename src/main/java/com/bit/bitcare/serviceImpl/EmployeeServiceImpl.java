@@ -4,6 +4,7 @@ import com.bit.bitcare.dao.EmployeeDAO;
 import com.bit.bitcare.model.UserCustomDetails;
 import com.bit.bitcare.model.EmployeeDTO;
 import com.bit.bitcare.service.EmployeeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,13 +16,16 @@ import java.util.List;
 @Service
 public class EmployeeServiceImpl implements UserDetailsService, EmployeeService {
 
-    private final EmployeeDAO employeeDAO;
+    private EmployeeDAO employeeDAO;
 
     private BCryptPasswordEncoder passwordEncoder; // password는 데이터베이스에 인코딩되어 저장되어야한다. (시큐리티에서 막음)
 
-    public EmployeeServiceImpl(EmployeeDAO employeeDAO, BCryptPasswordEncoder passwordEncoder){
+//    public EmployeeServiceImpl(EmployeeDAO employeeDAO, BCryptPasswordEncoder passwordEncoder){
+//        this.employeeDAO = employeeDAO;
+//        this.passwordEncoder = passwordEncoder;
+//    }
+    public EmployeeServiceImpl(EmployeeDAO employeeDAO){
         this.employeeDAO = employeeDAO;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
