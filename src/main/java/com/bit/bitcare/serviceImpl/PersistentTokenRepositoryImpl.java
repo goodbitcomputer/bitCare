@@ -10,6 +10,20 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.util.Date;
 
+/**
+ * ---------------------------------------------------------------------------
+ * 2023.05.16
+ *
+ * PersistentTokenRepositoryImpl
+ * PersistentTokenRepository 인터페이스에 대한 구현체
+ * DataSource, JdbcTokenRepositoryImpl 객체 사용
+ * 메소드 목록
+ * 1. createNewToken : 새 토큰을 생성 및 저장하는 메소드
+ * 2. updateToken : 토큰 정보를 업데이트 하는 메소드
+ * 3. getTokenForSeries : series 값으로 그에 해당하는 토큰을 리턴하는 메소드
+ * 4. removeUserTokens : 토큰을 삭제하는 메소드
+ */
+
 @Repository
 @RequiredArgsConstructor
 public class PersistentTokenRepositoryImpl implements PersistentTokenRepository {

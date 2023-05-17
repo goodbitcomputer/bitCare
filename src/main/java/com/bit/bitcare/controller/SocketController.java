@@ -12,10 +12,24 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class SocketController {
 
+    /**
+     * ---------------------------------------------------------------------------
+     * 2023.05.16
+     *
+     * alarmService
+     * AlarmService 객체 주입
+     */
     @Autowired
     private AlarmService alarmService;
 
-    // /receive를 메시지를 받을 endpoint로 설정합니다.
+    /**
+     * ---------------------------------------------------------------------------
+     * 2023.05.16
+     *
+     * SocketHandler
+     * /receive 주소로 메시지를 받고 alarmService.SocketHandler 메소드를 이용하여 /send 주소로 메시지를 보냄
+     *
+     */
     @MessageMapping("/receive/{receive}")
     // SocketHandler는 1) /receive에서 메시지를 받고, /send로 메시지를 보내줍니다.
     // 정의한 MessageDTO를 1) 인자값, 2) 반환값으로 사용합니다.

@@ -14,13 +14,26 @@ import org.springframework.web.socket.config.annotation.WebSocketTransportRegist
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
+    /**
+     * ---------------------------------------------------------------------------
+     * 2023.05.16
+     *
+     * configureMessageBroker
+     * 클라이언트가 메시지를 구독할 endpoint 를 정의하는 메소드
+     */
     @Override
-    // 클라이언트가 메시지를 구독할 endpoint를 정의합니다.
     public void configureMessageBroker(MessageBrokerRegistry config) {
         config.enableSimpleBroker("/send");
         config.setApplicationDestinationPrefixes("/app");
     }
 
+    /**
+     * ---------------------------------------------------------------------------
+     * 2023.05.16
+     *
+     * registerStompEndpoints
+     * connection 이 이뤄질때 CORS 를 허용하는 메소드
+     */
     @Override
     // connection을 맺을때 CORS 허용합니다.
     public void registerStompEndpoints(StompEndpointRegistry registry) {

@@ -29,7 +29,19 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import javax.crypto.spec.SecretKeySpec;
-
+/**
+ * ---------------------------------------------------------------------------
+ * 2023.05.16
+ *
+ * EmployeeServiceImpl
+ * EmployeeService 인터페이스에 대한 구현체
+ * ObjectMapper, EmployeeDAO, BCryptPasswordEncoder, EmployeeDetailService, PersistentTokenRepositoryImpl 객체 사용
+ * 메소드 목록
+ * 1. autoLogin : cookie 에 저장되어 있는 토큰 정보로 자동 로그인을 수행하는 메소드.
+ * 2. auth : EmployeeDTO 객체로 UserDetails 객체를 생성하여 SpringSecurity 인증을 진행하고, session 에 로그인 정보를 저장하여 로그인 처리를 하는 메소드
+ *           rememberMe 값이 true 라면 인증 토큰을 생성하여 persistentTokenRepository에 저장하고 cookie를 생성한다.
+ * 3. getLogInInfo : session 에 저장되어있는 로그인 정보를 받아서 리턴하는 메소드
+ */
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 

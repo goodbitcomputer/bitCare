@@ -8,6 +8,13 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 
 @Configuration
 public class FilterConfig {
+    /**
+     * ---------------------------------------------------------------------------
+     * 2023.05.16
+     *
+     * encodeFilterBean
+     * MS949 인코딩 필터 적용
+     */
     @Bean
     public FilterRegistrationBean  encodeFilterBean() {
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
