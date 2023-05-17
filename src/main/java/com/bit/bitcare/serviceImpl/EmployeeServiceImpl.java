@@ -146,21 +146,21 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public ResponseEntity<String> auth(EmployeeDTO attempt, HttpServletRequest request, HttpServletResponse response, boolean rememberMe) throws IOException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
 
-        System.out.println("attempt : " + attempt);
 
         EmployeeDTO logIn = employeeDAO.validate(attempt.getUsername());
 
         UserDetails userDetails = employeeDetailService.loadUserByUsername(attempt.getUsername());
 
-        boolean isLogIn = passwordEncoder.matches(attempt.getPassword(), userDetails.getPassword());
+        boolean isLogIn = false;
 
-        System.out.println("logIn : " + logIn);
+        if(userDetails != null) {
+            isLogIn = passwordEncoder.matches(attempt.getPassword(), userDetails.getPassword());
+        }
 
         Map<String, Object> data = new HashMap<>();
 
 
         if (isLogIn) {
-            System.out.println(logIn);
             HttpSession session = request.getSession();
             session.setAttribute("logIn", logIn);
             // 사용자 정보를 이용하여 인증 객체 생성
@@ -227,7 +227,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     public ResponseEntity<String> getLogInInfo(HttpServletRequest request) throws IOException {
         HttpSession session = request.getSession();
         EmployeeDTO employeeDTO = (EmployeeDTO) session.getAttribute("logIn");
-        System.out.println(employeeDTO);
         boolean isLoggedIn = (employeeDTO != null);
 
         // JSON 데이터 생성
