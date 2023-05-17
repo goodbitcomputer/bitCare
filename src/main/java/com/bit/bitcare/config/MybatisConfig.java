@@ -14,9 +14,25 @@ import javax.sql.DataSource;
 @Configuration
 @MapperScan(basePackages = {"com.bit.bitcare.dao"})
 public class MybatisConfig {
+
+    /**
+     * ---------------------------------------------------------------------------
+     * 2023.05.16
+     *
+     * applicationContext
+     * ApplicationContext 객체 주입
+     */
     @Autowired
     ApplicationContext applicationContext;
 
+    /**
+     * ---------------------------------------------------------------------------
+     * 2023.05.16
+     *
+     * sqlSessionFactory
+     * @param dataSource : DataSource 객체 - application.properties
+     * @return : sqlSession 객체 return
+     */
     @Bean
     public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();

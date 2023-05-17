@@ -7,13 +7,17 @@
       <form @submit.prevent="login()">
         <div>
           <label for="username">Username:</label>
-          <input type="text" name="username" v-model="username" />
+          <input type="text" name="username" v-model="username"/>
         </div>
         <div>
           <label for="password">Password:</label>
-          <input type="password" name="password" v-model="password" />
+          <input type="password" name="password" v-model="password"/>
         </div>
-        <button variant="success" type="submit">Login</button>
+        <div>
+          <input type="checkbox" name="remember-me" v-model="rememberMe"/>
+          <label for="remember-me">자동 로그인</label>
+          <button variant="success" type="submit">Login</button>
+        </div>
       </form>
     </div>
   </div>
@@ -24,32 +28,59 @@ import axios from 'axios'
 
 export default {
   name: 'LogIn',
+  created() {
+    this.autoLogin()
+  },
   data() {
     return {
       loginSuccess: false,
       loginError: false,
       username: '',
       password: '',
-      error: false
+      error: false,
+      rememberMe: false
     }
   },
   methods: {
-    async login() {
-      try {
-        const result = await axios.get('/logIn', {
-          auth: {
-            username: this.username,
-            password: this.password
+    autoLogin(){
+      axios.post('/autoLogin', {}
+      ).then((response) => {
+        if (response.status === 200) {
+          if (response.data.logIn === 'success') {
+            this.$store.state.alarm.alarmList = []
+            this.$store.state.login.role = response.data.role
+            this.$router.push('/')
+          } else {
+            console.log(response.data)
           }
-        });
-        if (result.status === 200) {
-          this.loginSuccess = true
-          await this.$router.push('/')
         }
-      } catch (err) {
+      }).catch((err) => {
         this.loginError = true;
         throw new Error(err)
-      }
+      })
+    },
+    login() {
+      axios.post('/auth', {
+        username: this.username,
+        password: this.password,
+      }, {
+        params: {
+          rememberMe: this.rememberMe
+        }
+      }).then((response) => {
+        if (response.status === 200) {
+          if (response.data.logIn === 'success') {
+            this.$store.state.alarm.alarmList = []
+            this.$store.state.login.role = response.data.role
+            this.$router.push('/')
+          } else {
+            console.log(response.data)
+          }
+        }
+      }).catch((err) => {
+        this.loginError = true;
+        throw new Error(err)
+      })
     }
   }
 }
