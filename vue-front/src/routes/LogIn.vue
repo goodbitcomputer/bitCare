@@ -25,6 +25,7 @@
 
 <script>
 import axios from 'axios'
+import {mapMutations, mapState} from "vuex";
 
 export default {
   name: 'LogIn',
@@ -41,14 +42,21 @@ export default {
       rememberMe: false
     }
   },
+  computed: {
+    ...mapState('login',
+        ['role']
+    )
+  },
   methods: {
+    ...mapMutations('login', {
+      setRole: 'setRole'
+    }),
     autoLogin(){
       axios.post('/autoLogin', {}
       ).then((response) => {
         if (response.status === 200) {
           if (response.data.logIn === 'success') {
-            this.$store.state.alarm.alarmList = []
-            this.$store.state.login.role = response.data.role
+            this.setRole(response.data.role)
             this.$router.push('/')
           } else {
             console.log(response.data)
@@ -70,8 +78,7 @@ export default {
       }).then((response) => {
         if (response.status === 200) {
           if (response.data.logIn === 'success') {
-            this.$store.state.alarm.alarmList = []
-            this.$store.state.login.role = response.data.role
+            this.setRole(response.data.role)
             this.$router.push('/')
           } else {
             console.log(response.data)

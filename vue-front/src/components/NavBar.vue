@@ -121,9 +121,6 @@ export default {
     ...mapState('alarm',
         ['messageList', 'count']
     ),
-    ...mapState('login',
-        ['role']
-    ),
     getCount(){
       return this.$store.state.alarm.count
     }
@@ -132,9 +129,6 @@ export default {
     ...mapMutations('alarm', {
       setMessage: 'setMessage',
       setCount: 'setCount',
-    }),
-    ...mapMutations('login', {
-      setRole: 'setRole'
     }),
     getSessionLogIn() {
       // Axios를 사용하여 RESTful API 호출
@@ -147,10 +141,8 @@ export default {
               console.log('현재 로그인된 사용자: ' + logIn.name);
               console.log(logIn.role)
               this.receiver = logIn.name;
-              this.setRole(logIn.role)
               console.log(this.recvList)
             } else{
-              this.setRole('ROLE_ADMIN')
               this.$router.push('/login')
             }
           })
