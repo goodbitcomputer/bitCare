@@ -52,6 +52,7 @@ export default {
       setRole: 'setRole'
     }),
     autoLogin(){
+      this.setRole('ROLE_ADMIN')
       axios.post('/autoLogin', {}
       ).then((response) => {
         if (response.status === 200) {

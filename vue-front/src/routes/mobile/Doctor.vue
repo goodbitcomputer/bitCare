@@ -3,7 +3,8 @@
     <NavBar/>
     <Home v-if="false"/>
     <PatientList v-if="false"/>
-    <PatientOne/>
+    <PatientHistoryList v-if="false"/>
+    <PatientHistory v-if="true"/>
     <Waiting v-if="false"/>
 
     <Footer/>
@@ -16,7 +17,8 @@ import NavBar from "@/components/mobile/NavBar.vue";
 import Footer from "@/components/mobile/doctor/Footer.vue";
 import Home from "@/components/mobile/doctor/Home.vue";
 import PatientList from "@/components/mobile/doctor/PatientList.vue";
-import PatientOne from "@/components/mobile/doctor/PatientOne.vue";
+import PatientHistoryList from "@/components/mobile/doctor/PatientHistoryList.vue";
+import PatientHistory from "@/components/mobile/doctor/PatientHistory.vue";
 import Waiting from "@/components/mobile/doctor/Wating.vue";
 
 export default {
@@ -26,7 +28,8 @@ export default {
     Footer,
     Home,
     PatientList,
-    PatientOne,
+    PatientHistoryList,
+    PatientHistory,
     Waiting,
   }
 }

@@ -15,7 +15,7 @@
           <span>cn.6 </span>
           <span>1951.09.04 </span>
           <span>70세 </span>
-          <span>여</span>
+          <span>여 </span>
           <div style="display: inline-block; color: white">진료중</div>
         </div>
         <div>
@@ -95,7 +95,7 @@ export default {
 
 #mobile-doctor:before {
   content: "";
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.2);
   position: absolute;
   bottom: 0;
   top: 0;
@@ -114,16 +114,16 @@ export default {
 
 .patient-box {
   text-align: left;
-  /*background-color: white;*/
-  background: rgba(12, 11, 9, 0.7);
+  background-color: white;
+  /*background: rgba(12, 11, 9, 0.7);*/
   height: 80px;
 }
 .patient-box *{
-  color: #cccccc;
+  /*color: #cccccc;*/
   white-space: nowrap;
 }
 .patient-box .title *{
-  color: white;
+  /*color: white;*/
   white-space: nowrap;
 }
 
@@ -154,8 +154,8 @@ export default {
 .border-box {
   margin: 0 0 5px 0;
   padding: 5px;
-  /*border: 1px solid #DBDFE5;*/
-  border: 1px solid ;
+  border: 1px solid #DBDFE5;
+  /*border: 1px solid ;*/
   border-radius: 5px;
 }
 

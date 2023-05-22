@@ -19,7 +19,7 @@ export default new Vuex.Store({
     },
     plugins: [
         createPersistedState({
-            paths: ['mobile'],
+            paths: ['mobile', 'login'],
         }),
     ]
 })
