@@ -6,30 +6,28 @@
     </div>
     <div id="gui_controls">
       <button
-          id="switchCameraButton"
-          name="switch Camera"
-          type="button"
-          aria-pressed="false"
-      ></button>
-      <button id="takePhotoButton" name="take Photo" type="button" @click="takePicture();"></button>
-      <button
           id="toggleFullScreenButton"
           name="toggle FullScreen"
           type="button"
           aria-pressed="false"
-      ></button>
+          @click="galleryBtn"
+      ><img style="padding: 10px" src="/assets/mobile/img/icon-gallery.png"></button>
+      <button id="takePhotoButton" name="take Photo" type="button" @click="takePicture();"><img
+          src="/assets/mobile/img/ic_photo_camera_white_48px.svg"></button>
+      <button
+          id="switchCameraButton"
+          name="switch Camera"
+          type="button"
+          aria-pressed="false"
+      ><img style="padding: 10px" src="/assets/mobile/img/icon-change.png"></button>
     </div>
-    <img id="cameraImg">
     <canvas ref="canvas" style="display: none;"></canvas>
   </div>
-<!--  <div>-->
-<!--    <video ref="video" autoplay></video>-->
-<!--    <button @click="takePicture">사진 촬영</button>-->
-<!--    <canvas ref="canvas" style="display: block;"></canvas>-->
-<!--  </div>-->
+
 </template>
 
 <script>
+import {mapMutations} from "vuex";
 
 export default {
   name: "MobileCamera",
@@ -79,6 +77,7 @@ export default {
     }
 
     initCamera();
+
     function initCamera() {
       // check if mediaDevices is supported
       if (
@@ -123,6 +122,7 @@ export default {
     }
 
     initCameraUI();
+
     function initCameraUI() {
       video = document.getElementById('video');
 
@@ -230,8 +230,8 @@ export default {
       var constraints = {
         audio: false,
         video: {
-          width: { ideal: size },
-          height: { ideal: size },
+          width: {ideal: size},
+          height: {ideal: size},
           //width: { min: 1024, ideal: window.innerWidth, max: 1920 },
           //height: { min: 776, ideal: window.innerHeight, max: 1080 },
           facingMode: currentFacingMode,
@@ -285,7 +285,9 @@ export default {
       // https://stackoverflow.com/questions/42458849/access-blob-value-outside-of-canvas-toblob-async-function
       function getCanvasBlob(canvas) {
         return new Promise(function (resolve) {
-          canvas.toBlob(function (blob) { resolve(blob); }, 'image/jpeg');
+          canvas.toBlob(function (blob) {
+            resolve(blob);
+          }, 'image/jpeg');
         });
       }
 
@@ -300,7 +302,6 @@ export default {
 // closure; store this in a variable and call the variable as function
 // eg. var takeSnapshotUI = createClickFeedbackUI();
 // takeSnapshotUI();
-
 
 
     function createClickFeedbackUI() {
@@ -346,6 +347,27 @@ export default {
   },
 
   methods: {
+    ...mapMutations('mobileDoctor', {
+      setNewCameraList: 'setNewCameraList',
+      setNextStep: 'setNextStep',
+    }),
+    initStream() {
+      if (window.stream) {
+        window.stream.getTracks().forEach(function (track) {
+          // console.log(track);
+          track.stop();
+        });
+      }
+    },
+    galleryBtn() {
+      // let video = document.getElementById('video');
+      // video.pause();
+      // let vidTrack = this.localStream.getVideoTracks();
+      // this.localStream.removeTrack(vidTrack);
+      this.initStream();
+
+      this.setNextStep(2);
+    },
     takePicture() {
       const video = this.$refs.video;
       const canvas = this.$refs.canvas;
@@ -373,13 +395,20 @@ export default {
       }
 
 // Blob 객체 생성
-      let blob = new Blob([arrayBuffer], { type: "image/png" });
+      let blob = new Blob([arrayBuffer], {type: "image/png"});
 
 // Blob URL 생성
       let url = URL.createObjectURL(blob);
-      console.log(blob);
+
+// File 객체 생성
+      let file = new File([blob], "image.png", {type: "image/png"});
+
+      // newCameraList on vuex 저장
+      this.setNewCameraList({blob: blob, url: url, file: file, storeSelect: false, photoSelect: false});
+
       console.log(url);
-      document.getElementById('cameraImg').src = url;
+
+      // document.getElementById('cameraImg').src = url;
 
 
     }
@@ -390,8 +419,6 @@ export default {
 <style lang="scss" scoped>
 
 
-
-
 body {
   margin: 0px;
   padding: 0px;
@@ -399,8 +426,8 @@ body {
 }
 
 #vid_container {
-  //position: fixed;
-  position: relative;
+  position: fixed;
+  //position: relative;
   top: 0;
   left: 0;
 }
@@ -457,7 +484,7 @@ button {
   top: calc(50% - 40px);
   width: 80px;
   height: 80px;
-  background-image: url('/assets/mobile/img/ic_photo_camera_white_48px.svg');
+  //background-image: url('/public/assets/mobile/img/ic_photo_camera_white_48px.svg');
   border-radius: 50%;
   background-color: rgba(0, 0, 0, 0.5);
 }
@@ -470,26 +497,27 @@ button {
   //display: none;
   width: 64px;
   height: 64px;
-  background-image: url('/assets/mobile/img/ic_fullscreen_white_48px.svg');
+  //background-image: url('/public/assets/mobile/img/ic_fullscreen_white_48px.svg');
   border-radius: 50%;
   background-color: rgba(0, 0, 0, 0.5);
 }
 
-#toggleFullScreenButton[aria-pressed='true'] {
-  background-image: url('/assets/mobile/img/ic_fullscreen_exit_white_48px.svg');
-}
+//#toggleFullScreenButton[aria-pressed='true'] {
+//  background-image: url('/public/assets/mobile/img/ic_fullscreen_exit_white_48px.svg');
+//}
 
 #switchCameraButton {
-  //display: none;
+  display: none;
   width: 64px;
   height: 64px;
-  background-image: url('/assets/mobile/img/ic_camera_rear_white_36px.svg');
+  //background-image: url('/assets/mobile/img/ic_camera_rear_white_36px.svg');
+  //background-image: url('/public/assets/mobile/img/home_house_icon.png');
   border-radius: 50%;
   background-color: rgba(0, 0, 0, 0.5);
 }
 
 #switchCameraButton[aria-pressed='true'] {
-  background-image: url('/assets/mobile/img/ic_camera_front_white_36px.svg');
+  //background-image: url('/public/assets/mobile/img/ic_camera_front_white_36px.svg');
 }
 
 @media screen and (orientation: portrait) {
@@ -508,13 +536,12 @@ button {
     height: 20%;
     left: 0;
   }
-
-  #switchCameraButton {
+  #toggleFullScreenButton {
     left: calc(20% - 32px);
     top: calc(50% - 32px);
   }
 
-  #toggleFullScreenButton {
+  #switchCameraButton {
     left: calc(80% - 32px);
     top: calc(50% - 32px);
   }
@@ -542,14 +569,14 @@ button {
     left: 0;
   }
 
-  #switchCameraButton {
-    left: calc(50% - 32px);
-    top: calc(18% - 32px);
-  }
-
   #toggleFullScreenButton {
     left: calc(50% - 32px);
     top: calc(82% - 32px);
+  }
+
+  #switchCameraButton {
+    left: calc(50% - 32px);
+    top: calc(18% - 32px);
   }
 
 }

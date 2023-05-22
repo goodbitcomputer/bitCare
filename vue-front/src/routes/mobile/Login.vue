@@ -37,7 +37,7 @@
 import "/public/assets/css/style.scss";
 import NavBar from "@/components/mobile/NavBar.vue";
 import axios from "axios";
-// import axios from "axios";
+import {mapMutations, mapState} from "vuex";
 
 export default {
   name: "MobileLogin",
@@ -56,6 +56,11 @@ export default {
   },
   mounted() {
     this.autoLogin()
+  },
+  computed: {
+    ...mapState('login',
+        ['role']
+    )
   },
   methods: {
     // 비동기 통신
@@ -77,13 +82,16 @@ export default {
     //     console.log(error);
     //   });
     // },
-    autoLogin() {
+    ...mapMutations('login', {
+      setRole: 'setRole'
+    }),
+    autoLogin(){
+      this.setRole('ROLE_ADMIN')
       axios.post('/autoLogin', {}
       ).then((response) => {
         if (response.status === 200) {
           if (response.data.logIn === 'success') {
-            this.$store.state.alarm.alarmList = []
-            this.$store.state.login.role = response.data.role
+            this.setRole(response.data.role)
             this.$router.push('/mobile/doctor')
           } else {
             console.log(response.data)
@@ -105,8 +113,7 @@ export default {
       }).then((response) => {
         if (response.status === 200) {
           if (response.data.logIn === 'success') {
-            this.$store.state.alarm.alarmList = []
-            this.$store.state.login.role = response.data.role
+            this.setRole(response.data.role)
             this.$router.push('/mobile/doctor')
           } else {
             console.log(response.data)

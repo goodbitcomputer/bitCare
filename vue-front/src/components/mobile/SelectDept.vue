@@ -138,7 +138,7 @@ export default {
             showConfirmButton: false,
             timer: 1000
           }).then(() => {
-            this.$router.push('m.home');
+            this.$router.push('/mobile/home');
           })
         }
       }).catch(function (error) {

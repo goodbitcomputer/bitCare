@@ -31,6 +31,12 @@ Vue.prototype.$axios = axios // axios를 import 해온 뒤, 전역변수로 선�
 // import loadImage from './plugins/loadImage'
 // Vue.use(loadImage)
 
+// swiper
+// import { Swiper, SwiperSlide } from "vue-awesome-swiper";
+import VueAwesomeSwiper from 'vue-awesome-swiper'
+import "swiper/css/swiper.css";
+Vue.use(VueAwesomeSwiper);
+
 
 
 import common from '@/assets/js/common.js';

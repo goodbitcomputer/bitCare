@@ -1,10 +1,10 @@
 <template>
   <div>
     <NavBar/>
-  <div class="home container">
-<!--    <img alt="Vue logo" src="../assets/logo.png">-->
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+    <div class="home container">
+      <!--    <img alt="Vue logo" src="../assets/logo.png">-->
+      <HelloWorld msg="Welcome to Your Vue.js App"/>
+    </div>
   </div>
 </template>
 
@@ -17,7 +17,7 @@ export default {
   components: {
     NavBar,
     HelloWorld
-  }
+  },
 }
 </script>
 
