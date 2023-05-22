@@ -22,8 +22,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-body * {
-  font-family: 'Pretendard-Regular';
-  font-size: 13px;
-}
 </style>

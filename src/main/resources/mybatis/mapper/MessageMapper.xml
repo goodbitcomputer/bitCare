@@ -7,24 +7,30 @@
 
     <!-- 받은 메세지 목록 -->
     <select id="selectByReceiver" parameterType="String" resultType="messageDTO">
-        SELECT * FROM `message`
-        where `receiver`= #{logInName}
+        SELECT `message`.* , `alarm`.`entry_date` FROM `message`
+        inner join `alarm` on `message`.`content`=`alarm`.`content`
+        where `message`.`receiver`= #{logInName}
+        order by `alarm`.`entry_date` desc
     </select>
 
     <!-- 보낸 메세지 목록 -->
     <select id="selectBySender" parameterType="String" resultType="messageDTO">
-        SELECT * FROM `message`
-        where `sender`= #{logInName}
+        SELECT `message`.* , `alarm`.`entry_date` FROM `message`
+        inner join `alarm` on `message`.`content`=`alarm`.`content`
+        where `message`.`sender`= #{logInName}
+        order by `alarm`.`entry_date` desc
     </select>
 
     <!-- 메세지 선택 -->
     <select id="selectOne" parameterType="int" resultType="messageDTO">
-        SELECT * FROM `message`
-        where `id`= #{id}
+        SELECT `message`.* , `alarm`.`entry_date` FROM `message`
+        inner join `alarm` on `message`.`content`=`alarm`.`content`
+        where `message`.`id`= #{id}
+        order by `alarm`.`entry_date` desc
     </select>
 
     <!-- 메세지 생성 -->
-    <insert id="insert" parameterType="messageDTO">
+    <insert id="insert" parameterType="messageDTO" useGeneratedKeys="true" keyProperty="id">
         insert into `message`(sender,receiver,content,message_file,state)
         values(#{sender}, #{receiver}, #{content}, #{messageFile}, #{state})
     </insert>
@@ -42,4 +48,9 @@
         WHERE id= #{id}
     </delete>
 
+    <!-- 전체 메시지 삭제 -->
+    <delete id="allDelete" parameterType="string">
+        DELETE FROM `message`
+        WHERE name= #{name}
+    </delete>
 </mapper>

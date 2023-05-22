@@ -14,8 +14,4 @@ export default {
 </script>
 
 <style scoped>
-body * {
-  font-family: 'Pretendard-Regular';
-  font-size: 13px;
-}
 </style>

@@ -25,7 +25,7 @@
 
 <script>
 import axios from 'axios'
-import {mapMutations, mapState} from "vuex";
+import {mapMutations, mapState} from "vuex"
 
 export default {
   name: 'LogIn',
@@ -44,26 +44,49 @@ export default {
   },
   computed: {
     ...mapState('login',
-        ['role']
+        ['role','name']
     )
   },
   methods: {
     ...mapMutations('login', {
-      setRole: 'setRole'
+      setRole: 'setRole',
+      setName: 'setName'
     }),
     autoLogin(){
+      axios.get('/api/login')
+          .then(response => {
+            console.log(response.data)
+            // 세션 데이터 사용 예시
+            if (response.data && response.data.isLoggedIn) {
+              let logIn = JSON.parse(JSON.stringify(response.data.logIn))
+              console.log('현재 로그인된 사용자: ' + logIn.name)
+              console.log(logIn.role)
+              this.setName(logIn.name)
+              this.setRole(logIn.role)
+              console.log(this.recvList)
+              this.$router.push('/')
+            } else{
+              this.setName('admin')
+              this.setRole('ROLE_ADMIN')
+            }
+          })
+          .catch(error => {
+            console.error('세션 데이터를 가져오는 중 에러 발생: ', error)
+          })
+
       axios.post('/autoLogin', {}
       ).then((response) => {
         if (response.status === 200) {
           if (response.data.logIn === 'success') {
             this.setRole(response.data.role)
+            this.setName(response.data.name)
             this.$router.push('/')
           } else {
             console.log(response.data)
           }
         }
       }).catch((err) => {
-        this.loginError = true;
+        this.loginError = true
         throw new Error(err)
       })
     },
@@ -79,13 +102,14 @@ export default {
         if (response.status === 200) {
           if (response.data.logIn === 'success') {
             this.setRole(response.data.role)
+            this.setName(response.data.name)
             this.$router.push('/')
           } else {
             console.log(response.data)
           }
         }
       }).catch((err) => {
-        this.loginError = true;
+        this.loginError = true
         throw new Error(err)
       })
     }

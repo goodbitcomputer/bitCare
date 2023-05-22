@@ -9,6 +9,7 @@
     <select id="selectByReceiver" parameterType="String" resultType="alarmDTO">
         SELECT * FROM `alarm`
         where `receiver`= #{logInName}
+        order by `entry_date` desc
     </select>
 
     <!-- 조회할 알람 선택 -->
@@ -19,7 +20,7 @@
     </select>
 
     <!-- 알람 생성 -->
-    <insert id="insert" parameterType="alarmDTO">
+    <insert id="insert" parameterType="alarmDTO" useGeneratedKeys="true" keyProperty="id">
         insert into `alarm`(sender,receiver,content,type,entry_date,state)
         values(#{sender}, #{receiver}, #{content}, #{type}, now(), #{state})
     </insert>
@@ -37,6 +38,13 @@
     <delete id="delete" parameterType="int">
         DELETE FROM `alarm`
         WHERE id= #{id}
+    </delete>
+
+    <!-- 알람 전체 삭제 -->
+
+    <delete id="allDelete" parameterType="String">
+        DELETE FROM `alarm`
+        WHERE receiver = #{name}
     </delete>
 
 </mapper>

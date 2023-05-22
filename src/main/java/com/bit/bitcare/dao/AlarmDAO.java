@@ -12,4 +12,5 @@ public interface AlarmDAO {
     public void insert(AlarmDTO alarmDTO);
     public void update(AlarmDTO alarmDTO);
     public void delete(int id);
+    public void allDelete(String name);
 }

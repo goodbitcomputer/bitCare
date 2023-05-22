@@ -4,33 +4,39 @@
       <table class="table message-table">
         <thead>
         <tr>
-          <th>발신자</th>
-          <th>수신 일자</th>
-          <th></th>
+          <th>
+            알람 목록
+            <button type="button" class="btn btn-danger btn-sm" id="allDelete" @click="allDeleteMessage()">
+              전체 삭제
+            </button>
+          </th>
         </tr>
         </thead>
-        <tbody>
-        <tr v-for="message in recvList" :key="message.id">
-          <td>{{ message.sender }}</td>
-          <td>{{ formatDate(message.entryDate) }}</td>
+        <tbody v-if="alarmList != null">
+        <tr v-for="message in alarmList" :key="message.id">
           <td>
+            <div>{{ message.sender }}</div>
+            <div>{{ typeString(message.type) }}</div>
+            <div>{{ formatDate(message.entryDate) }}</div>
             <div>
-              <button type="button" @click="showDetails(message)">
+              <button type="button" @click="showDetails()">
                 자세히 보기
               </button>
-              <button type="button" class="btn btn-danger btn-sm" @click="deleteMessage(message)">
+              <button type="button" class="btn btn-danger btn-sm" id="deleteButton" @click="deleteMessage(message)">
                 삭제
               </button>
             </div>
           </td>
         </tr>
         </tbody>
+        <tbody v-else>
+          <tr>
+            <td>
+              <span>새로운 알람이 없습니다!</span>
+            </td>
+          </tr>
+        </tbody>
       </table>
-    </div>
-    <div>
-      <b-modal v-model="showDetailsModal" size="lg" title="쪽지 내용">
-        <div v-html="selectedMessage.content"></div>
-      </b-modal>
     </div>
   </div>
   <!--  <div>-->
@@ -61,7 +67,7 @@
 import Stomp from 'webstomp-client'
 import SockJS from 'sockjs-client'
 import axios from "axios";
-import {mapState, mapMutations} from "vuex";
+import {mapMutations, mapState} from "vuex";
 
 export default {
   data() {
@@ -76,20 +82,15 @@ export default {
       message_file: "",
       entryDate: "",
       type: "",
+      count: 0,
       selectedMessage: "",
-      showDetailsModal: false,
-      fields: [
-        {key: 'sender', label: '보낸 사람'},
-        {key: 'content', label: '내용'},
-        {key: 'entryDate', label: '수신 일자'},
-        {key: 'action', label: '작업'}
-      ]
+      showDetailsModal: this.showModal,
     }
   },
-  name: "MessageList",
+  name: "AlarmList",
   created() {
-    this.recvList = this.messageList;
-    this.count = this.messageCount;
+    this.recvList = this.alarmList;
+    this.count = this.alarmCount;
     this.getSessionLogIn();
     // App.vue가 생성되면 소켓 연결을 시도합니다.
   },
@@ -98,13 +99,14 @@ export default {
   },
   computed: {
     ...mapState('alarm',
-        ['messageList', 'messageCount']
+        ['alarmList', 'alarmCount', "showModal"]
     ),
   },
   methods: {
     ...mapMutations('alarm', {
-      setMessage: 'setMessage',
-      setCount: 'setCount'
+      setAlarm: 'setAlarm',
+      setAlarmCount: 'setAlarmCount',
+      setModal: 'setModal'
     }),
     formatDate(dateString) {
       const date = new Date(dateString);
@@ -115,6 +117,13 @@ export default {
       const minutes = String(date.getMinutes()).padStart(2, '0');
       const seconds = String(date.getSeconds()).padStart(2, '0');
       return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    },
+    typeString(type){
+      if(type === 'message'){
+        return '쪽지'
+      } else{
+        return '공지'
+      }
     },
     getSessionLogIn() {
       // Axios를 사용하여 RESTful API 호출
@@ -181,10 +190,9 @@ export default {
             this.stompClient.subscribe("/send/" + this.sender, res => {
               console.log('구독으로 받은 메시지 입니다.', res.body)
               // 받은 데이터를 json으로 파싱하고 리스트에 넣어줍니다.
-              this.recvList = this.messageList
               this.recvList.push(JSON.parse(res.body))
-              this.setMessage(this.recvList)
-              this.setCount(this.count)
+              this.setAlarm(this.recvList)
+              this.setAlarmCount(this.count)
             });
           },
           (error) => {
@@ -197,7 +205,7 @@ export default {
     /* DB 데이터 가져오기 */
     settingRecvList() {
       // Axios를 사용하여 RESTful API 호출
-      axios.get('/api/receiveMessageList')
+      axios.get('/api/receiveList')
           .then(response => {
             console.log(response.data);
             // 세션 데이터 사용 예시
@@ -206,7 +214,7 @@ export default {
               let receiveList = JSON.parse(JSON.stringify(response.data.receiveList));
               console.log(receiveList)
               this.recvList = receiveList
-              this.setMessage(this.recvList)
+              this.setAlarm(this.recvList)
               this.alarmLength()
               console.log(this.recvList)
             } else {
@@ -220,7 +228,7 @@ export default {
     deleteMessage(message) {
       // API를 호출해서 해당 메시지를 삭제합니다.
       // 성공적으로 삭제되면 this.settingRecvList()를 호출합니다.
-      axios.get('api/deleteMessage', {
+      axios.get('api/deleteAlarm', {
         params: {
           id: message.id
         }
@@ -234,15 +242,32 @@ export default {
 
       setTimeout(() => this.settingRecvList(), 100)
     },
-    alarmLength() {
-      if(this.recvList != null) {
-        this.count = this.recvList.filter(element => "new" === element.state).length
-      }
-      this.setCount(this.count)
+    allDeleteMessage(){
+      axios.get('api/allDeleteAlarm',{
+        params: {
+          name: this.$store.state.login.name
+        }
+      }).then(response => {
+        if (response.status === 200) {
+          console.log('삭제 성공')
+        } else {
+          console.log('삭제 실패')
+        }
+      })
+
+      setTimeout(() => this.settingRecvList(), 100)
     },
-    showDetails(message) {
-      this.selectedMessage = message;
+    alarmLength() {
+      if (this.recvList != null) {
+        this.count = this.recvList.filter(element => "new" === element.state).length
+      } else{
+        this.count = 0
+      }
+      this.setAlarmCount(this.count)
+    },
+    showDetails() {
       this.showDetailsModal = true;
+      this.setModal(this.showDetailsModal);
     }
   }
 }
@@ -260,13 +285,16 @@ export default {
   border-spacing: 0 10px;
 }
 
-.message-modal {
-  z-index: 1050;
+#deleteButton {
+  font-size: 10px;
+  top: -65px;
+  right: -30px;
+  position: relative;
 }
 
-.message-modal-header {
-  background-color: #f0f0f0;
-  font-weight: bold;
-  font-size: 1.2rem;
+#allDelete {
+  font-size: 10px;
+  right: -25px;
+  position: relative;
 }
 </style>

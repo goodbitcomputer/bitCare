@@ -13,4 +13,5 @@ public interface MessageDAO {
     public void insert(MessageDTO messageDTO);
     public void update(MessageDTO messageDTO);
     public void delete(int id);
+    public void allDelete(String name);
 }

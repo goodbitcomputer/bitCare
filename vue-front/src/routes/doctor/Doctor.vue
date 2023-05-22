@@ -39,11 +39,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-body * {
+.container {
   font-family: 'Pretendard-Regular';
   font-size: 13px;
-}
-.container {
   padding-top: 20px;
   //display: flex;
 }

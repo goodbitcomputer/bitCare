@@ -4,22 +4,19 @@
       <table class="table message-table">
         <thead>
         <tr>
-          <th>발신자</th>
-          <th>수신 일자</th>
+          <th>수신자</th>
+          <th>발신 일자</th>
           <th></th>
         </tr>
         </thead>
         <tbody>
         <tr v-for="message in recvList" :key="message.id">
-          <td>{{ message.sender }}</td>
+          <td>{{ message.receiver }}</td>
           <td>{{ formatDate(message.entryDate) }}</td>
           <td>
             <div>
               <button type="button" @click="showDetails(message)">
                 자세히 보기
-              </button>
-              <button type="button" class="btn btn-danger btn-sm" @click="deleteMessage(message)">
-                삭제
               </button>
             </div>
           </td>
@@ -197,15 +194,15 @@ export default {
     /* DB 데이터 가져오기 */
     settingRecvList() {
       // Axios를 사용하여 RESTful API 호출
-      axios.get('/api/receiveMessageList')
+      axios.get('/api/sendMessageList')
           .then(response => {
             console.log(response.data);
             // 세션 데이터 사용 예시
             if (response.data && response.data.isLoggedIn) {
               this.isLogin = true
-              let receiveList = JSON.parse(JSON.stringify(response.data.receiveList));
-              console.log(receiveList)
-              this.recvList = receiveList
+              let sendList = JSON.parse(JSON.stringify(response.data.sendList));
+              console.log(sendList)
+              this.recvList = sendList
               this.setMessage(this.recvList)
               this.alarmLength()
               console.log(this.recvList)
@@ -216,23 +213,6 @@ export default {
           .catch(error => {
             console.error('세션 데이터를 가져오는 중 에러 발생: ', error);
           });
-    },
-    deleteMessage(message) {
-      // API를 호출해서 해당 메시지를 삭제합니다.
-      // 성공적으로 삭제되면 this.settingRecvList()를 호출합니다.
-      axios.get('api/deleteMessage', {
-        params: {
-          id: message.id
-        }
-      }).then(response => {
-        if (response.status === 200) {
-          console.log('삭제 성공')
-        } else {
-          console.log('삭제 실패')
-        }
-      })
-
-      setTimeout(() => this.settingRecvList(), 100)
     },
     alarmLength() {
       if(this.recvList != null) {

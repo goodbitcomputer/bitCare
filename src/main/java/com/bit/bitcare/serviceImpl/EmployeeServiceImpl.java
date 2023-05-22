@@ -130,6 +130,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
             data.put("logIn", "success");
             data.put("role", logIn.getRole());
+            data.put("name", logIn.getName());
         }else{
             data.put("logIn", "failed");
         }
@@ -197,6 +198,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
             data.put("logIn", "success");
             data.put("role", logIn.getRole());
+            data.put("name", logIn.getName());
         } else {
             SecurityContextHolder.clearContext();
             data.put("logIn", "failed");

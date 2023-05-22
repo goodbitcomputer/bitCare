@@ -15,19 +15,26 @@
           <router-link to="/doctor" class="nav-item nav-link">Doctor</router-link>
         </b-navbar-nav>
         <b-navbar-nav class="ml-auto">
-          <b-button type="button" class="nav-item nav-link" id="alarm" @click="showDetails()">
-            <div v-if="getCount > 0">
-              <span v-if="state==='new'" class="note-new">{{ getCount }}</span>
-              <span v-else class="note-num">{{ getCount }}</span>
+          <b-button type="button" class="nav-item nav-link" id="alarm">
+            <div v-if="this.$store.state.alarm.alarmCount > 0">
+              <span v-if="state==='new'" class="note-new">{{ this.$store.state.alarm.alarmCount }}</span>
+              <span v-else class="note-num">{{ this.$store.state.alarm.alarmCount }}</span>
               <b-icon-bell-fill title="새로운 알람!" id="notification"></b-icon-bell-fill>
             </div>
             <div v-else>
               <b-icon-bell title="알람"></b-icon-bell>
             </div>
           </b-button>
+
+          <b-button type="button" class="nav-item nav-link" id="message" @click="showDetails()">
+            <div>
+              <b-icon-messenger title="쪽지함" id="notification"></b-icon-messenger>
+            </div>
+          </b-button>
+
           <router-link to="/admin" class="nav-item nav-link">
             <div>
-              <b-icon-person-fill title="계정"></b-icon-person-fill>
+              <b-icon-person-fill style="width: 24px; height: 24px;" title="계정"></b-icon-person-fill>
             </div>
           </router-link>
         </b-navbar-nav>
@@ -59,21 +66,33 @@
           </p>
           <p>
             <b-button type="button" id="alarmSideBar" @click="showDetails()">
-              <span v-if=" count > 0">
-                쪽지 <span class="badge badge-danger">{{ count }}</span>
+              <span v-if=" this.$store.state.alarm.alarmCount > 0">
+                알람 <span class="badge badge-danger">{{ this.$store.state.alarm.alarmCount }}</span>
               </span>
               <span v-else>
-                쪽지
+                알람
               </span>
             </b-button>
           </p>
         </div>
       </b-sidebar>
     </div>
+    <b-popover
+        custom-class="wide-popover"
+        fallback-placement="clockwise"
+        target="alarm"
+        placement="bottom"
+        width="320"
+        height="500"
+        triggers="hover focus blur">
+      <div id="alarmList">
+        <Alarm/>
+      </div>
+    </b-popover>
     <div>
-      <b-modal v-model="showDetailsModal" id="modal" size="lg" title="쪽지">
-        <div id="alarmList">
-          <MessageAlarm/>
+      <b-modal v-model="this.$store.state.alarm.showModal" id="modal" size="lg" title="쪽지" @hidden="closeModal">
+        <div id="messageList">
+          <Message/>
         </div>
       </b-modal>
     </div>
@@ -92,41 +111,44 @@ import {mapMutations, mapState,} from 'vuex';
 import axios from "axios";
 import SockJS from "sockjs-client";
 import Stomp from "webstomp-client";
-import MessageAlarm from "@/routes/alarm/Alarm.vue";
+import Message from "@/routes/message/Message.vue";
+import Alarm from "@/routes/alarm/Alarm.vue"
 
 export default {
-  components: {MessageAlarm},
+  components: {Message,Alarm},
   data() {
     return {
-      count: this.count,
+      count: this.messageCount,
       stompClient: null,
-      recvList: this.messageList,
+      recvList: this.alarmList,
       receiver: "",
       message: "",
       sender: "",
       state: "",
       message_file: "",
-      showDetailsModal: false,
+      showDetailsModal: this.showModal,
       isLogin: false
     }
   },
   created() {
-    this.recvList = this.messageList;
+    this.count = this.messageCount;
+    this.recvList = this.alarmList;
     this.getSessionLogIn();
     this.settingRecvList();
+    this.alarmLength();
     // App.vue가 생성되면 소켓 연결을 시도합니다.
     setTimeout(() => this.connect(), 100)
   },
   computed: {
     ...mapState('alarm',
-        ['messageList', 'count']
-    ),
-    getCount(){
-      return this.$store.state.alarm.count
-    }
+        ['alarmList','messageList', 'messageCount', 'alarmCount', 'showModal']
+    )
   },
   methods: {
     ...mapMutations('alarm', {
+      setAlarm: 'setAlarm',
+      setAlarmCount: 'setAlarmCount',
+      setModal: 'setModal',
       setMessage: 'setMessage',
       setCount: 'setCount',
     }),
@@ -167,8 +189,13 @@ export default {
               console.log('구독으로 받은 메시지 입니다.', res.body);
               // 받은 데이터를 json으로 파싱하고 리스트에 넣어줍니다.
               this.state = JSON.parse(res.body).state
+              if(this.alarmList != null) {
+                this.recvList = this.alarmList
+              }else{
+                this.recvList = []
+              }
               this.recvList.push(JSON.parse(res.body))
-              this.setMessage(this.recvList)
+              this.setAlarm(this.recvList)
               this.alarmLength()
               setTimeout(() => this.state = "", 1501)
             });
@@ -185,7 +212,7 @@ export default {
       if(this.recvList != null) {
         this.count = this.recvList.filter(element => "new" === element.state).length
       }
-      this.setCount(this.count)
+      this.setAlarmCount(this.count)
     },
     /* DB 데이터 가져오기 */
     settingRecvList() {
@@ -199,7 +226,7 @@ export default {
               let receiveList = JSON.parse(JSON.stringify(response.data.receiveList))
               console.log(receiveList)
               this.recvList = receiveList
-              this.setMessage(this.recvList)
+              this.setAlarm(this.recvList)
               console.log(this.recvList)
               this.alarmLength()
             } else {
@@ -212,6 +239,11 @@ export default {
     },
     showDetails() {
       this.showDetailsModal = true;
+      this.setModal(this.showDetailsModal);
+    },
+    closeModal() {
+      this.showDetailsModal = false;
+      this.setModal(this.showDetailsModal);
     }
   }
 }
@@ -228,6 +260,8 @@ a {
   text-decoration: none;
   color: var(--text-color);
 }
+
+.wide-popover { max-width: 320px; }
 
 .b-navbar {
   position: sticky;
@@ -370,7 +404,7 @@ a {
   position: relative;
 }
 
-#alarm {
+#message, #alarm {
   background-color: var(--background-color);
   border: none;
   outline: none;
@@ -392,6 +426,10 @@ a {
 }
 
 #alarmList {
-  height: 50vh; overflow-y: auto;
+  height: 480px; overflow-y: auto;
+}
+
+#messageList {
+  height: 480px; overflow-y: auto;
 }
 </style>

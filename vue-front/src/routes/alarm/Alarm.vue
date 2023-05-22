@@ -1,21 +1,19 @@
 <template>
-  <div>
-    <SendMessage/>
-  </div>
+  <Alarm/>
 </template>
 
 <script>
-//import MessageList from "@/components/alarm/MessageList.vue";
-import SendMessage from "@/components/alarm/SendMessage.vue";
+import Alarm from "@/components/alarm/AlarmList.vue";
 export default {
   name: "MessageAlarm",
   components: {
-    SendMessage,
-    //MessageList
+    Alarm
   }
 }
 </script>
 
 <style scoped>
+body * {
 
+}
 </style>

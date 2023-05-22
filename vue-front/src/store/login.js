@@ -4,15 +4,18 @@
 // import Vuex from 'vuex';
 
 export default {
-// 현재 파일(movie.js)을 Store 모듈로 활용하려면 다음 옵션이 필요합니다.
     namespaced: true,
 
     state: {
-        role : "ROLE_ADMIN"
+        role : "ROLE_ADMIN",
+        name : "admin"
     },
     getters: {
         getRole(state){
             return state.role
+        },
+        getHasName(state){
+            return state.name
         }
     },
     mutations: {
@@ -20,6 +23,10 @@ export default {
             console.log(state.role)
             return state.role = role;
         },
+        setName : function (state, name){
+            console.log(state.name)
+            return state.name = name;
+        }
     },
     actions: {
 
