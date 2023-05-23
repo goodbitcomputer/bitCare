@@ -1,9 +1,9 @@
 <template>
   <div class="temp">
     <NavBar/>
-    <Home v-if="false"/>
-    <PatientList v-if="false"/>
-    <PatientHistoryList v-if="false"/>
+    <Home v-if="true"/>
+    <PatientList v-if="true"/>
+    <PatientHistoryList v-if="true"/>
     <PatientHistory v-if="true"/>
     <Waiting v-if="false"/>
 

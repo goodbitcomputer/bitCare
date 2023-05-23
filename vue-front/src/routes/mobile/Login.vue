@@ -37,6 +37,7 @@
 import "/public/assets/css/style.scss";
 import NavBar from "@/components/mobile/NavBar.vue";
 import axios from "axios";
+import {mapMutations} from "vuex";
 // import axios from "axios";
 
 export default {
@@ -77,20 +78,45 @@ export default {
     //     console.log(error);
     //   });
     // },
-    autoLogin() {
+    ...mapMutations('login', {
+      setRole: 'setRole',
+      setName: 'setName'
+    }),
+    autoLogin(){
+      axios.get('/api/login')
+          .then(response => {
+            console.log(response.data)
+            // 세션 데이터 사용 예시
+            if (response.data && response.data.isLoggedIn) {
+              let logIn = JSON.parse(JSON.stringify(response.data.logIn))
+              console.log('현재 로그인된 사용자: ' + logIn.name)
+              console.log(logIn.role)
+              this.setName(logIn.name)
+              this.setRole(logIn.role)
+              console.log(this.recvList)
+              this.$router.push('/')
+            } else{
+              this.setName('admin')
+              this.setRole('ROLE_ADMIN')
+            }
+          })
+          .catch(error => {
+            console.error('세션 데이터를 가져오는 중 에러 발생: ', error)
+          })
+
       axios.post('/autoLogin', {}
       ).then((response) => {
         if (response.status === 200) {
           if (response.data.logIn === 'success') {
-            this.$store.state.alarm.alarmList = []
-            this.$store.state.login.role = response.data.role
-            this.$router.push('/mobile/doctor')
+            this.setRole(response.data.role)
+            this.setName(response.data.name)
+            this.$router.push('/')
           } else {
             console.log(response.data)
           }
         }
       }).catch((err) => {
-        this.loginError = true;
+        this.loginError = true
         throw new Error(err)
       })
     },
@@ -105,15 +131,15 @@ export default {
       }).then((response) => {
         if (response.status === 200) {
           if (response.data.logIn === 'success') {
-            this.$store.state.alarm.alarmList = []
-            this.$store.state.login.role = response.data.role
-            this.$router.push('/mobile/doctor')
+            this.setRole(response.data.role)
+            this.setName(response.data.name)
+            this.$router.push('/')
           } else {
             console.log(response.data)
           }
         }
       }).catch((err) => {
-        this.loginError = true;
+        this.loginError = true
         throw new Error(err)
       })
     }

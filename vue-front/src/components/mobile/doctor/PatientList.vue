@@ -95,10 +95,7 @@ export default {
 
 #mobile-doctor:before {
   content: "";
-<<<<<<< HEAD
   background: rgba(0, 0, 0, 0.2);
-=======
->>>>>>> origin/mobile-camera
   position: absolute;
   bottom: 0;
   top: 0;
