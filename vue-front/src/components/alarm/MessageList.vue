@@ -15,7 +15,7 @@
           <td>{{ formatDate(message.entryDate) }}</td>
           <td>
             <div>
-              <button type="button" @click="showDetails(message)">
+              <button type="button" @click="showDetails(message.id)">
                 자세히 보기
               </button>
               <button type="button" class="btn btn-danger btn-sm" @click="deleteMessage(message)">
@@ -28,8 +28,8 @@
       </table>
     </div>
     <div>
-      <b-modal v-model="showDetailsModal" size="lg" title="쪽지 내용">
-        <div v-html="selectedMessage.content"></div>
+      <b-modal v-model="this.$store.state.alarm.messageModal" size="lg" title="쪽지 내용" @hidden="closeModal">
+        <div v-html="this.$store.state.alarm.selectedMessage.content"></div>
       </b-modal>
     </div>
   </div>
@@ -98,13 +98,15 @@ export default {
   },
   computed: {
     ...mapState('alarm',
-        ['messageList', 'messageCount']
+        ['messageList', 'messageCount','messageModal','selectedMessage']
     ),
   },
   methods: {
     ...mapMutations('alarm', {
       setMessage: 'setMessage',
-      setCount: 'setCount'
+      setCount: 'setCount',
+      setMessageModal: 'setMessageModal',
+      setSelectedMessage: 'setSelectedMessage'
     }),
     formatDate(dateString) {
       const date = new Date(dateString);
@@ -240,9 +242,25 @@ export default {
       }
       this.setCount(this.count)
     },
-    showDetails(message) {
-      this.selectedMessage = message;
+    showDetails(messageId) {
       this.showDetailsModal = true;
+      axios.get('api/receiveMessage', {
+        params: {
+          id: messageId
+        }
+      }).then(response => {
+        if (response.status === 200) {
+          this.setSelectedMessage(response.data.receiveMessage)
+        } else {
+          console.log('메시지 불러오기 실패')
+        }
+      })
+      this.setMessageModal(this.showDetailsModal);
+    },
+    closeModal() {
+      this.showDetailsModal = false;
+      this.setMessageModal(this.showDetailsModal);
+
     }
   }
 }

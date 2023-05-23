@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * ---------------------------------------------------------------------------
  * 2023.05.16
- *
+ * <p>
  * AlarmServiceImpl
  * AlarmService 인터페이스에 대한 구현체
  * SimpleMessagingTemplate, AlarmDAO, EmployeeDAO, MessageDAO, ObjectMapper 객체 사용
@@ -33,7 +33,7 @@ import java.util.Map;
  * 3. deleteAlarm : Alarm 의 id를 전달받아 삭제시키는 메소드
  * ---------------------------------------------------------------------------
  * 2023.05.22
- *
+ * <p>
  * 메소드 목록 추가
  * 4. allDeleteAlarm : 로그인한 사용자의 name 을 전달받아 전체 알람을 삭제시키는 메소드
  * 5. getReceiveMessageList : 클라이언트 접속자의 받은 메세지 리스트를 MessageDAO 를 통해 List 객체로 변환 후 리턴하는 메소드
@@ -49,15 +49,17 @@ public class AlarmServiceImpl implements AlarmService {
     private final EmployeeDAO employeeDAO;
     private final MessageDAO messageDAO;
     private final ObjectMapper objectMapper;
-    public AlarmServiceImpl(SimpMessagingTemplate simpMessagingTemplate, AlarmDAO alarmDAO, EmployeeDAO employeeDAO, MessageDAO messageDAO, ObjectMapper objectMapper){
+
+    public AlarmServiceImpl(SimpMessagingTemplate simpMessagingTemplate, AlarmDAO alarmDAO, EmployeeDAO employeeDAO, MessageDAO messageDAO, ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
         this.simpMessagingTemplate = simpMessagingTemplate;
         this.alarmDAO = alarmDAO;
         this.employeeDAO = employeeDAO;
         this.messageDAO = messageDAO;
     }
+
     @Override
-    public void SocketHandler(String receive, MessageDTO messageDTO, AlarmDTO alarmDTO){
+    public void SocketHandler(String receive, MessageDTO messageDTO, AlarmDTO alarmDTO) {
         int id = alarmDTO.getId();
         // vo에서 getter로 userName을 가져옵니다.
         String sender = messageDTO.getSender();
@@ -66,9 +68,9 @@ public class AlarmServiceImpl implements AlarmService {
         String messageFile = messageDTO.getMessageFile();
         String state = messageDTO.getState();
         String type;
-        if(messageDTO.getReceiver() != null){
+        if (messageDTO.getReceiver() != null) {
             type = "message";
-        } else{
+        } else {
             type = "announcement";
         }
 
@@ -78,11 +80,11 @@ public class AlarmServiceImpl implements AlarmService {
         AlarmDTO alarm = new AlarmDTO(id, sender, receiver, content, type, alarmDTO.getEntryDate(), state);
         alarmDAO.insert(alarm);
         // 반환
-        simpMessagingTemplate.convertAndSend("/send/"+receiver, alarm);
+        simpMessagingTemplate.convertAndSend("/send/" + receiver, alarm);
     }
 
     @Override
-    public ResponseEntity<String> getReceiveList(HttpServletRequest request) throws IOException{
+    public ResponseEntity<String> getReceiveList(HttpServletRequest request) throws IOException {
         HttpSession session = request.getSession();
         EmployeeDTO employeeDTO = (EmployeeDTO) session.getAttribute("logIn");
         System.out.println(employeeDTO);
@@ -90,7 +92,7 @@ public class AlarmServiceImpl implements AlarmService {
 
         // JSON 데이터 생성
         Map<String, Object> data = new HashMap<>();
-        if(isLoggedIn) {
+        if (isLoggedIn) {
             List<AlarmDTO> receiveList = alarmDAO.selectByReceiver(employeeDTO.getName());
             data.put("isLoggedIn", isLoggedIn);
             if (receiveList.isEmpty()) {
@@ -110,7 +112,7 @@ public class AlarmServiceImpl implements AlarmService {
     }
 
     @Override
-    public ResponseEntity<String> getReceiveMessageList(HttpServletRequest request) throws IOException{
+    public ResponseEntity<String> getReceiveMessageList(HttpServletRequest request) throws IOException {
         HttpSession session = request.getSession();
         EmployeeDTO employeeDTO = (EmployeeDTO) session.getAttribute("logIn");
         System.out.println(employeeDTO);
@@ -118,7 +120,7 @@ public class AlarmServiceImpl implements AlarmService {
 
         // JSON 데이터 생성
         Map<String, Object> data = new HashMap<>();
-        if(isLoggedIn) {
+        if (isLoggedIn) {
             List<MessageDTO> receiveList = messageDAO.selectByReceiver(employeeDTO.getName());
             data.put("isLoggedIn", isLoggedIn);
             if (receiveList.isEmpty()) {
@@ -138,7 +140,29 @@ public class AlarmServiceImpl implements AlarmService {
     }
 
     @Override
-    public ResponseEntity<String> getSendMessageList(HttpServletRequest request) throws IOException{
+    public ResponseEntity<String> getReceiveMessage(int messageId) throws IOException {
+
+        // JSON 데이터 생성
+        Map<String, Object> data = new HashMap<>();
+
+        MessageDTO receiveMessage = messageDAO.selectOne(messageId);
+        if (receiveMessage == null) {
+            data.put("receiveMessage", null);
+        } else {
+            data.put("receiveMessage", receiveMessage);
+        }
+
+        // JSON 문자열 생성
+        String json = objectMapper.writeValueAsString(data);
+
+        // HTTP 응답 생성
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(json);
+    }
+
+    @Override
+    public ResponseEntity<String> getSendMessageList(HttpServletRequest request) throws IOException {
         HttpSession session = request.getSession();
         EmployeeDTO employeeDTO = (EmployeeDTO) session.getAttribute("logIn");
         System.out.println(employeeDTO);
@@ -146,7 +170,7 @@ public class AlarmServiceImpl implements AlarmService {
 
         // JSON 데이터 생성
         Map<String, Object> data = new HashMap<>();
-        if(isLoggedIn) {
+        if (isLoggedIn) {
             List<MessageDTO> receiveList = messageDAO.selectBySender(employeeDTO.getName());
             data.put("isLoggedIn", isLoggedIn);
             if (receiveList.isEmpty()) {
@@ -166,22 +190,22 @@ public class AlarmServiceImpl implements AlarmService {
     }
 
     @Override
-    public void deleteAlarm(int alarmId){
+    public void deleteAlarm(int alarmId) {
         alarmDAO.delete(alarmId);
     }
 
     @Override
-    public void allDeleteAlarm(String name){
+    public void allDeleteAlarm(String name) {
         alarmDAO.allDelete(name);
     }
 
     @Override
-    public void deleteMessage(int alarmId){
+    public void deleteMessage(int alarmId) {
         messageDAO.delete(alarmId);
     }
 
     @Override
-    public void allDeleteMessage(String name){
+    public void allDeleteMessage(String name) {
         messageDAO.allDelete(name);
     }
 }

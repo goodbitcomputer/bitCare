@@ -9,11 +9,13 @@ export default {
 
     state: {
         showModal: false,
+        messageModal: false,
         isDeleted: false,
         messageCount: 0,
         messageList: [],
         alarmCount: 0,
-        alarmList: []
+        alarmList: [],
+        selectedMessage: {}
     },
     getters: {
         getCount(state){
@@ -39,6 +41,12 @@ export default {
         },
         setModal : function (state, showModal) {
             return state.showModal = showModal;
+        },
+        setMessageModal : function (state, messageModal) {
+            return state.messageModal = messageModal;
+        },
+        setSelectedMessage : function (state, selectedMessage) {
+            return state.selectedMessage = selectedMessage;
         }
     },
     actions: {

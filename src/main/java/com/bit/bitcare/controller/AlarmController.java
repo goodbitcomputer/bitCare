@@ -49,6 +49,19 @@ public class AlarmController {
 
     /**
      * ---------------------------------------------------------------------------
+     * 2023.05.23
+     *
+     * getReceiveMessage
+     * /api/receiveList 에 대한 Get 요청시 alarmService.getReceiveMessage 메소드를 실행한 뒤 결과값 리턴
+     * alarmService.getReceiveMessage 메소드에선 Parameter 값으로 받은 id로 메시지를 리턴함
+     */
+    @GetMapping("/api/receiveMessage")
+    public ResponseEntity<String> getReceiveMessage(@RequestParam int id) throws IOException {
+        return alarmService.getReceiveMessage(id);
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
      * 2023.05.22
      *
      * getReceiveList

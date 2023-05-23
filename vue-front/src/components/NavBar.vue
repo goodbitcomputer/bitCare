@@ -141,7 +141,7 @@ export default {
   },
   computed: {
     ...mapState('alarm',
-        ['alarmList','messageList', 'messageCount', 'alarmCount', 'showModal']
+        ['alarmList','messageList', 'messageCount', 'alarmCount', 'showModal','messageModal']
     )
   },
   methods: {
@@ -149,6 +149,7 @@ export default {
       setAlarm: 'setAlarm',
       setAlarmCount: 'setAlarmCount',
       setModal: 'setModal',
+      setMessageModal: 'setMessageModal',
       setMessage: 'setMessage',
       setCount: 'setCount',
     }),
@@ -244,6 +245,7 @@ export default {
     closeModal() {
       this.showDetailsModal = false;
       this.setModal(this.showDetailsModal);
+      this.setMessageModal(this.showDetailsModal);
     }
   }
 }

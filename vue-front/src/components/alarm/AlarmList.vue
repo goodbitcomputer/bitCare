@@ -19,7 +19,7 @@
             <div>{{ typeString(message.type) }}</div>
             <div>{{ formatDate(message.entryDate) }}</div>
             <div>
-              <button type="button" @click="showDetails()">
+              <button type="button" @click="showDetails(message.id)">
                 자세히 보기
               </button>
               <button type="button" class="btn btn-danger btn-sm" id="deleteButton" @click="deleteMessage(message)">
@@ -99,14 +99,16 @@ export default {
   },
   computed: {
     ...mapState('alarm',
-        ['alarmList', 'alarmCount', "showModal"]
+        ['alarmList', 'alarmCount', 'showModal', 'selectedMessage', 'messageModal']
     ),
   },
   methods: {
     ...mapMutations('alarm', {
       setAlarm: 'setAlarm',
       setAlarmCount: 'setAlarmCount',
-      setModal: 'setModal'
+      setModal: 'setModal',
+      setMessageModal: 'setMessageModal',
+      setSelectedMessage: 'setSelectedMessage'
     }),
     formatDate(dateString) {
       const date = new Date(dateString);
@@ -265,9 +267,22 @@ export default {
       }
       this.setAlarmCount(this.count)
     },
-    showDetails() {
+    showDetails(messageId) {
+      axios.get('api/receiveMessage', {
+        params: {
+          id: messageId
+        }
+      }).then(response => {
+        if (response.status === 200) {
+          console.log(response.data.receiveMessage)
+          this.setSelectedMessage(response.data.receiveMessage)
+        } else {
+          console.log('메시지 불러오기 실패')
+        }
+      })
       this.showDetailsModal = true;
       this.setModal(this.showDetailsModal);
+      this.setMessageModal(this.showDetailsModal);
     }
   }
 }
