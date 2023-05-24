@@ -20,11 +20,9 @@ export default {
     },
     mutations: {
         setRole : function (state, role) {
-            console.log(state.role)
             return state.role = role;
         },
         setName : function (state, name){
-            console.log(state.name)
             return state.name = name;
         }
     },

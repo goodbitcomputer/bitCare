@@ -4,11 +4,11 @@
     <header id="footer" class="fixed-bottom d-flex align-items-center">
       <div id="main-box" class="container ">
 
-        <div class="col text-center"><b-img src="/assets/mobile/img/home_house_icon2.png"/></div>
-        <div class="col text-center"><b-img src="/assets/mobile/img/persons_icon2.png"/></div>
-        <div class="col text-center"><b-img src="/assets/mobile/img/person_icon2.png"/></div>
-        <div class="col text-center"><b-img src="/assets/mobile/img/comment_message_icon2.png"/></div>
-        <div class="col text-center"><b-img src="/assets/mobile/img/dots_icon2.png"/></div>
+        <button class="col text-center" @click="NextBtn(1)"><b-img src="/assets/mobile/img/home_house_icon2.png"/></button>
+        <button class="col text-center" @click="NextBtn(2)"><b-img src="/assets/mobile/img/persons_icon2.png"/></button>
+        <button class="col text-center" @click="NextBtn(3)"><b-img src="/assets/mobile/img/person_icon2.png"/></button>
+        <button class="col text-center" @click="NextBtn(4)"><b-img src="/assets/mobile/img/comment_message_icon2.png"/></button>
+        <button class="col text-center" @click="NextBtn(5)"><b-img src="/assets/mobile/img/dots_icon2.png"/></button>
         <!-- Uncomment below if you prefer to use an image logo -->
         <!-- <a href="index.html" class="logo me-auto me-lg-0"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
 
@@ -24,9 +24,20 @@
 </template>
 
 <script>
+import {mapMutations} from "vuex";
+
 export default {
   name: "NavBar",
   mounted() {
+
+  },
+  methods: {
+    ...mapMutations('mobileDoctor', {
+      setNextStep: 'setNextStep',
+    }),
+    NextBtn(item) {
+      this.setNextStep(item);
+    },
 
   }
 }

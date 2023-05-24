@@ -20,16 +20,16 @@ export default {
   },
   computed: {
     ...mapState('mobileDoctor',
-        ['nextStep']
+        ['cameraNextStep']
     ),
     cameraByStep() {
-      return this.nextStep===1 ? true : false;
+      return this.cameraNextStep===1 ? true : false;
     },
     galleryByStep() {
-      return this.nextStep===2 ? true : false;
+      return this.cameraNextStep===2 ? true : false;
     },
     photoDetailByStep() {
-      return this.nextStep===3 ? true : false;
+      return this.cameraNextStep===3 ? true : false;
     },
   }
 }

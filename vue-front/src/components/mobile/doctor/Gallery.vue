@@ -94,9 +94,8 @@ export default {
   methods: {
     ...mapMutations('mobileDoctor', {
       setNewCameraList: 'setNewCameraList',
-      setNextStep: 'setNextStep',
+      setCameraNextStep: 'setCameraNextStep',
       setPhoto: 'setPhoto',
-      addSelectCameraList: 'addSelectCameraList'
     }),
     divHeightFix() {
       let div = document.getElementById('gallery-box');
@@ -110,11 +109,11 @@ export default {
       }
     },
     cameraBtn() {
-      this.setNextStep(1);
+      this.setCameraNextStep(1);
     },
     photoSelect(item) {
       this.setPhoto(item);
-      this.setNextStep(3);
+      this.setCameraNextStep(3);
     },
     selectBtn(item) {
       if (item.storeSelect === false) {

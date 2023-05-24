@@ -3,23 +3,26 @@
     <div class="border-box">
       <span style="font-size: 1.2em; font-weight: 700">진료 기록</span>
     </div>
-    <div class="Patient-box border-box">
+    <div class="empty-box border-box" v-if="true">
+      <img src="@/assets/img/empty-box.png">
+    </div>
+    <div class="Patient-box border-box" v-if="false">
 
       <div style="border-right: 1px solid #DBDFE5;">
         <div style="display: flex;align-items: center;">
-          <span class="font-weight-bold">박은희</span>
-          <span style="flex-grow: 1">cn.6</span>
+          <span class="font-weight-bold">{{ this.waitingData.name }}</span>
+          <span style="flex-grow: 1">cn.{{ this.waitingData.patientId }}</span>
           <button>...</button>
         </div>
         <div class="patient-info">
-          <span>50904-2******</span>
-          <span>70세</span>
-          <span>여</span>
-          <span>010-1234-5678</span>
+          <span>{{ identityNumberMsg }}</span>
+          <span>{{ ageMsg }}세</span>
+          <span>{{ this.waitingData.gender }}</span>
+          <span>{{ phonePadMsg }}</span>
         </div>
         <div style="border-top: 1px solid #DBDFE5;">
           <p class="font-weight-bold">접수메모</p>
-          <p></p>
+          <p>{{ this.waitingData.symptom }}</p>
         </div>
       </div>
       <div style="flex-grow: 1">
@@ -33,11 +36,12 @@
 
 <script>
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import {mapState} from "vuex";
 
 export default {
   name: "DoctorPatient",
-  mounted() {
 
+  mounted() {
     ClassicEditor.create(document.querySelector('#editor'), {
       contentCss: this.contentCss,
       toolbar: [
@@ -62,6 +66,7 @@ export default {
     }).catch((error) => {
       console.error(error);
     });
+
   },
 
   data() {
@@ -83,6 +88,34 @@ export default {
         }
       `;
   },
+  computed: {
+    ...mapState('doctor',
+        ['waitingData']
+    ),
+    // 주민번호
+    identityNumberMsg() {
+      let str1 = this.waitingData.identityNumber.slice(0, 6);
+      let str2 = this.waitingData.identityNumber.slice(6, 7);
+      str1 = str1 + "-" + str2 + "******";
+      return str1;
+    },
+    // 휴대폰번호
+    phonePadMsg() {
+      let newStr = this.waitingData.phoneNumber.replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3").replace(/(-{1,2})$/g, "");
+      return newStr;
+    },
+    // 나이
+    ageMsg() {
+      let dateTemp = new Date(this.waitingData.birth)
+      let dateNow = new Date();
+
+      let tempYear = dateTemp.getFullYear();
+      let nowYear = dateNow.getFullYear();
+      let age = parseInt(nowYear) - parseInt(tempYear) + 1;
+      return age;
+    },
+  },
+  methods: {}
 
 }
 
@@ -90,6 +123,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.empty-box {
+  height: 150px;
+}
+.empty-box img{
+  margin: 0 auto;
+}
 .Patient-box {
   display: flex;
 }

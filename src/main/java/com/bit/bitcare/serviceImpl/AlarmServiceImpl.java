@@ -87,7 +87,6 @@ public class AlarmServiceImpl implements AlarmService {
     public ResponseEntity<String> getReceiveList(HttpServletRequest request) throws IOException {
         HttpSession session = request.getSession();
         EmployeeDTO employeeDTO = (EmployeeDTO) session.getAttribute("logIn");
-        System.out.println(employeeDTO);
         boolean isLoggedIn = (employeeDTO != null);
 
         // JSON 데이터 생성
@@ -115,7 +114,6 @@ public class AlarmServiceImpl implements AlarmService {
     public ResponseEntity<String> getReceiveMessageList(HttpServletRequest request) throws IOException {
         HttpSession session = request.getSession();
         EmployeeDTO employeeDTO = (EmployeeDTO) session.getAttribute("logIn");
-        System.out.println(employeeDTO);
         boolean isLoggedIn = (employeeDTO != null);
 
         // JSON 데이터 생성
@@ -165,7 +163,6 @@ public class AlarmServiceImpl implements AlarmService {
     public ResponseEntity<String> getSendMessageList(HttpServletRequest request) throws IOException {
         HttpSession session = request.getSession();
         EmployeeDTO employeeDTO = (EmployeeDTO) session.getAttribute("logIn");
-        System.out.println(employeeDTO);
         boolean isLoggedIn = (employeeDTO != null);
 
         // JSON 데이터 생성

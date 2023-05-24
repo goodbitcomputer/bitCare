@@ -24,19 +24,15 @@ export default {
     },
     mutations: {
         setAlarm : function (state, items) {
-            console.log(state.alarmList)
             return state.alarmList = items;
         },
         setAlarmCount : function (state, items) {
-            console.log(state.alarmCount)
             return state.alarmCount = items;
         },
         setMessage : function (state, items) {
-            console.log(state.messageList)
             return state.messageList = items;
         },
         setCount : function (state, messageCount) {
-            console.log(state.messageCount)
             return state.messageCount = messageCount;
         },
         setModal : function (state, showModal) {

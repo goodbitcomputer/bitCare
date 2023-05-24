@@ -1,11 +1,11 @@
 <template>
   <div class="temp">
     <NavBar/>
-    <Home v-if="true"/>
-    <PatientList v-if="true"/>
-    <PatientHistoryList v-if="true"/>
-    <PatientHistory v-if="true"/>
-    <Waiting v-if="false"/>
+    <Home v-if="homeByStep"/>
+    <PatientList v-if="patientListByStep"/>
+    <PatientHistoryList v-if="patientHistoryByStep"/>
+    <PatientHistory v-if="messageByStep"/>
+    <Waiting v-if="settingByStep"/>
 
     <Footer/>
   </div>
@@ -20,6 +20,7 @@ import PatientList from "@/components/mobile/doctor/PatientList.vue";
 import PatientHistoryList from "@/components/mobile/doctor/PatientHistoryList.vue";
 import PatientHistory from "@/components/mobile/doctor/PatientHistory.vue";
 import Waiting from "@/components/mobile/doctor/Wating.vue";
+import {mapState} from "vuex";
 
 export default {
   name: "MobileDoctor",
@@ -31,6 +32,26 @@ export default {
     PatientHistoryList,
     PatientHistory,
     Waiting,
+  },
+  computed: {
+    ...mapState('mobileDoctor',
+        ['nextStep']
+    ),
+    homeByStep() {
+      return this.nextStep===1 ? true : false;
+    },
+    patientListByStep() {
+      return this.nextStep===2 ? true : false;
+    },
+    patientHistoryByStep() {
+      return this.nextStep===3 ? true : false;
+    },
+    messageByStep() {
+      return this.nextStep===4 ? true : false;
+    },
+    settingByStep() {
+      return this.nextStep===5 ? true : false;
+    },
   }
 }
 </script>

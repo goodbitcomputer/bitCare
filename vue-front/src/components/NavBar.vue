@@ -10,7 +10,7 @@
       <!-- 부트스트랩의 일부, 요소를 숨기거나 나타내게 할 수 있음 -->
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav>
-          <router-link to="/" class="nav-item nav-link">Home</router-link>
+          <router-link to="/home" class="nav-item nav-link">Home</router-link>
           <router-link to="/nurse" class="nav-item nav-link">Nurse</router-link>
           <router-link to="/doctor" class="nav-item nav-link">Doctor</router-link>
         </b-navbar-nav>
@@ -50,7 +50,7 @@
       >
         <div class="px-3 py-2">
           <p>
-            <router-link to="/" id="alarmSideBar">Home</router-link>
+            <router-link to="/home" id="alarmSideBar">Home</router-link>
           </p>
           <p>
             <router-link to="/nurse" id="alarmSideBar">Nurse</router-link>
@@ -59,7 +59,7 @@
             <router-link to="/doctor" id="alarmSideBar">Doctor</router-link>
           </p>
           <p>
-            <router-link to="/" id="alarmSideBar">환자 정보</router-link>
+            <router-link to="/home" id="alarmSideBar">환자 정보</router-link>
           </p>
           <p>
             <router-link to="/nurse" id="alarmSideBar">의료진 정보</router-link>
@@ -161,16 +161,13 @@ export default {
             // 세션 데이터 사용 예시
             if (response.data && response.data.isLoggedIn) {
               let logIn = JSON.parse(JSON.stringify(response.data.logIn));
-              console.log('현재 로그인된 사용자: ' + logIn.name);
-              console.log(logIn.role)
               this.receiver = logIn.name;
-              console.log(this.recvList)
             } else{
               this.$router.push('/login')
             }
           })
           .catch(error => {
-            console.error('세션 데이터를 가져오는 중 에러 발생: ', error);
+            console.log(error);
           });
     },
     connect() {
@@ -178,16 +175,13 @@ export default {
       let options = {debug: false, protocols: Stomp.VERSIONS.supportedProtocols()};
       let socket = new SockJS(serverURL);
       this.stompClient = Stomp.over(socket, options);
-      console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)
       this.stompClient.connect({},
           () => {
             // 소켓 연결 성공
             this.connected = true;
-            console.log('소켓 연결 성공');
             // 서버의 메시지 전송 endpoint를 구독합니다.
             // 이런형태를 pub sub 구조라고 합니다.
             this.stompClient.subscribe("/send/" + this.receiver, res => {
-              console.log('구독으로 받은 메시지 입니다.', res.body);
               // 받은 데이터를 json으로 파싱하고 리스트에 넣어줍니다.
               this.state = JSON.parse(res.body).state
               if(this.alarmList != null) {
@@ -203,8 +197,8 @@ export default {
           },
           (error) => {
             // 소켓 연결 실패
+            console.log(error);
             this.connected = false
-            console.log('소켓 연결 실패', error);
           }
       );
     },
@@ -220,18 +214,13 @@ export default {
       // Axios를 사용하여 RESTful API 호출
       axios.get('/api/receiveList')
           .then(response => {
-            console.log(response.data);
             // 세션 데이터 사용 예시
             if (response.data && response.data.isLoggedIn) {
               this.isLogin = true
               let receiveList = JSON.parse(JSON.stringify(response.data.receiveList))
-              console.log(receiveList)
               this.recvList = receiveList
               this.setAlarm(this.recvList)
-              console.log(this.recvList)
               this.alarmLength()
-            } else {
-              console.log('로그인되어 있지 않습니다.');
             }
           })
           .catch(error => {

@@ -35,7 +35,7 @@ export default {
   },
   methods: {
     ...mapMutations('mobileDoctor', {
-      setNextStep: 'setNextStep',
+      setCameraNextStep: 'setCameraNextStep',
       setPhoto: 'setPhoto',
     }),
     divFix() {
@@ -57,7 +57,7 @@ export default {
       }
     },
     galleryBtn() {
-      this.setNextStep(2);
+      this.setCameraNextStep(2);
     },
     selectBtn() {
       if(this.photo.storeSelect ===false){
@@ -65,7 +65,7 @@ export default {
       }else{
         this.photo.storeSelect = false;
       }
-      this.setNextStep(2);
+      this.setCameraNextStep(2);
     }
   }
 }

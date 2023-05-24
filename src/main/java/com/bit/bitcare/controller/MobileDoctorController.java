@@ -1,11 +1,14 @@
 package com.bit.bitcare.controller;
 
+import com.bit.bitcare.awsS3.AwsS3;
+import com.bit.bitcare.awsS3.AwsS3Service;
 import com.bit.bitcare.model.DeptDTO;
 import com.bit.bitcare.model.PatientDTO;
 import com.bit.bitcare.service.MobileService;
 import com.bit.bitcare.serviceImpl.MobileServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +29,8 @@ import java.util.UUID;
 @RequestMapping("/mobile/doctor")
 public class MobileDoctorController {
     private MobileService mobileService;
+    @Autowired
+    private AwsS3Service awsS3Service;
 
     public MobileDoctorController(MobileServiceImpl mobileService) {
         this.mobileService = mobileService;
@@ -43,47 +48,19 @@ public class MobileDoctorController {
     @PostMapping("/photoSave_proc")
     public String photoSave(@RequestPart(value="uploadFiles", required = true) MultipartFile[] files, HttpServletRequest request ) throws IOException {
 //        System.out.println("file: "+ file);
-        for(MultipartFile file : files){
-            System.out.println("file: "+ file);
-
-            // 파일 값 받기
-//        MultipartFile multipartFile = request.getFile("file");
-            /* 파일 이름 변경 */
-            UUID uuid = UUID.randomUUID();
-            String filename = uuid + "_" + file.getOriginalFilename();
+        for(MultipartFile multipartFile : files) {
 
 
-//            Path dir = Paths.get(request.getSession().getServletContext().getRealPath("/resources/upload"));
-//
-//            System.out.println(dir);
+            AwsS3 awsS3 = awsS3Service.upload(multipartFile,"imgUpload");
 
-            Path dir = new ClassPathResource("uploads").getFile().toPath();
-            dir = Paths.get(dir.toString()+"/history_1");
+            System.out.println("aws key: " +awsS3.getKey());
+            System.out.println("aws path: " +awsS3.getPath());
 
-            try {
-                // 디렉토리 생성
-                Files.createDirectory(dir);
+            AwsS3 removeS3 = new AwsS3();
 
-                System.out.println(dir + " 디렉토리가 생성되었습니다.");
+            removeS3.setKey(awsS3.getKey());
 
-            } catch (FileAlreadyExistsException e) {
-                System.out.println("디렉토리가 이미 존재합니다");
-            } catch (NoSuchFileException e) {
-                System.out.println("디렉토리 경로가 존재하지 않습니다");
-            }catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            File f = new File(dir.toRealPath() + filename);
-
-
-            System.out.println(filename);
-            System.out.println(f.getPath());
-            f.deleteOnExit();
-            f.createNewFile();
-            /* 실제 폴더에 파일 업로드 */
-            file.transferTo(f);
-//        productDTO.setImg("/resources/upload/"+filename);
+            awsS3Service.remove(removeS3);
 
         }
 

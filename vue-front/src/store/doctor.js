@@ -8,6 +8,12 @@ export default {
     namespaced: true,
 
     state: {
+        waitingData: "",    // waiting에서 선택된 환자 데이터
+
+
+
+
+
         // write 상병데이터
         writeSbList: [],    // historyWrite
         sbList: [],         // sbModal
@@ -18,6 +24,15 @@ export default {
     },
     getters: {},
     mutations: {
+        setWaitingData: (state, item) => {
+            state.waitingData= item;
+            console.log(state.waitingData);
+        },
+
+
+
+
+
         // modal에서 historyWrite로 상병테이블 추가
         addWriteSbList: (state, items) => {
             state.writeSbList= [...items];

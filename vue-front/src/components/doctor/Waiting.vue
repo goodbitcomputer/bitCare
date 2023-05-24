@@ -3,30 +3,87 @@
     <div class="border-box">
       <span style="font-size: 1.2em; font-weight: 700">대기 환자</span>
     </div>
-    <div class="waiting-info-box border-box">
+    <div class="waiting-info-box">
 
 
-      <div>
-        <span class="font-weight-bold">박은희 </span>
-        <span>외래진료</span>
+      <div class="border-box" v-for="(item) in waitingList" :key="item.id">
+        <div @click="setWaitingData(item)">
+          <div>
+            <span class="font-weight-bold">{{ item.name }} </span>
+            <span>외래진료</span>
+          </div>
+          <div class="patient-info">
+            <span>cn.{{ item.patientId }} </span>
+            <span>{{ dateMsg(item.birth) }} </span>
+            <span>{{ ageMsg(item.birth) }}세 </span>
+            <span>{{ item.gender }}</span>
+            <span class="font-weight-bold">{{ item.state }}</span>
+          </div>
+          <div>
+            <span>{{ item.symptom }}</span>
+          </div>
+        </div>
       </div>
-      <div class="patient-info">
-        <span>cn.6 </span>
-        <span>1951.09.04 </span>
-        <span>70세 </span>
-        <span>여</span>
-        <button>진료중</button>
-      </div>
-      <div>
-        <span>감기증상, 약처방위해 내원</span>
-      </div>
+
     </div>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+import {mapMutations} from "vuex";
+
 export default {
-  name: "DoctorWait"
+  name: "DoctorWait",
+  data() {
+    return {
+      waitingList: [],
+    }
+  },
+  mounted() {
+    this.getWaitingData();
+  },
+  computed: {},
+  methods: {
+    ...mapMutations('doctor', {
+      setWaitingData: 'setWaitingData'
+    }),
+    dateMsg(item) {
+      let dateTemp = new Date(item)
+      let year = dateTemp.getFullYear();
+      let month = dateTemp.getMonth() + 1;
+      if (month < 10) {
+        month = "0" + month;
+      }
+      let date = dateTemp.getDate();
+
+      return year + "." + month + "." + date;
+    },
+    ageMsg(item) {
+      let dateTemp = new Date(item)
+      let dateNow = new Date();
+
+      let tempYear = dateTemp.getFullYear();
+      let nowYear = dateNow.getFullYear();
+      let age = parseInt(nowYear) - parseInt(tempYear) + 1;
+      return age;
+    },
+    setWaitingList(items) {
+      this.waitingList = [];
+      items.forEach((item) => {
+        this.waitingList.push(item);
+      })
+    },
+    // waiting data reset_logic
+    getWaitingData() {
+      return axios.get('/doctor/getWaitingData', {}).then(response => {
+        let list = response.data;
+        this.setWaitingList(list);
+      }).catch(function (error) {
+        console.log(error);
+      });
+    },
+  }
 }
 </script>
 
@@ -35,7 +92,8 @@ export default {
   position: static !important;
   display: block !important;
 }
-.waiting-info-box span, p{
+
+.waiting-info-box span, p {
   white-space: nowrap;
 }
 

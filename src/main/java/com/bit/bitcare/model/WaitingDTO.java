@@ -12,6 +12,7 @@ public class WaitingDTO {
     String symptom;
     Date entryDate;
     Date reservationDate;
+    String state;
 
     /*
      * ------------------------------------------------------------

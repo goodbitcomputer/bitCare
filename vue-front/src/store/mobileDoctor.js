@@ -5,7 +5,8 @@ export default {
     namespaced: true,
 
     state: {
-        nextStep: 1,    // 1: camera, 2: gallery
+        nextStep: 1,    // 1: home, 2: patientList, 3: patientHistory, 4: message, 5: setting
+        cameraNextStep: 1,    // 1: camera, 2: gallery, 3: photoDetail
         localStream:'',
         userCameraList: [],
         newCameraList: [],
@@ -17,6 +18,9 @@ export default {
     mutations: {
         setNextStep: (state, item) => {
             state.nextStep = item;
+        },
+        setCameraNextStep: (state, item) => {
+            state.cameraNextStep = item;
         },
         setNewCameraList: (state, item) => {
             state.newCameraList.push(item);

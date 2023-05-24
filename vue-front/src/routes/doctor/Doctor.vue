@@ -1,6 +1,6 @@
 <template>
   <div>
-    <NavBar/>
+<!--    <NavBar/>-->
     <div class="container">
       <div class="waiting border-box">
         <waiting/>
@@ -24,12 +24,12 @@ import Patient from "@/components/doctor/Patient.vue";
 import Physical from "@/components/doctor/Physical.vue";
 import History from "@/components/doctor/History.vue";
 import HistoryWrite from "@/components/doctor/HistoryWrite.vue";
-import NavBar from "@/components/NavBar.vue";
+// import NavBar from "@/components/NavBar.vue";
 
 export default {
   name: "DoctorView",
   components: {
-    NavBar,
+    // NavBar,
     Waiting,
     Patient,
     Physical,

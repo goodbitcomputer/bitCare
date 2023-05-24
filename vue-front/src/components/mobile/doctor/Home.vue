@@ -1,7 +1,7 @@
 <template>
   <!-- ======= Hero Section ======= -->
   <section id="hero" class="d-flex align-items-center">
-    <div class="container pt-0" data-aos="zoom-in" data-aos-delay="100">
+    <div id="mobileDoctor-box"  class="container pt-0" data-aos="zoom-in" data-aos-delay="100">
       <div class="page-box justify-content-center">
         <div class="logo-box d-flex align-items-center" data-aos="zoom-in"
              data-aos-delay="200">
@@ -19,7 +19,7 @@
                 <h1>백지영님 <span>환영합니다.</span></h1>
               </div>
               <div class="btns">
-                <a class="btn-menu animated fadeInUp scrollto">대기환자</a>
+                <a class="btn-menu animated fadeInUp scrollto" @click="NextBtn(2)">대기환자</a>
               </div>
             </div>
           </div>
@@ -33,10 +33,18 @@
 </template>
 
 <script>
+import {mapMutations} from "vuex";
+
 export default {
   name: "MobileHome",
 
   methods: {
+    ...mapMutations('mobileDoctor', {
+      setNextStep: 'setNextStep',
+    }),
+    NextBtn(item) {
+      this.setNextStep(item);
+    },
     registerBtn() {
       this.$store.commit('mobile/initState');
       this.$router.push('/mobile/register');

@@ -3,11 +3,9 @@ package com.bit.bitcare.serviceImpl;
 import com.bit.bitcare.dao.DiagnoseDAO;
 import com.bit.bitcare.dao.DiseaseDAO;
 import com.bit.bitcare.dao.EmployeeDAO;
+import com.bit.bitcare.dao.WaitingDAO;
 import com.bit.bitcare.lucene.DiseaseIndexer;
-import com.bit.bitcare.model.DiagnoseDTO;
-import com.bit.bitcare.model.DiseaseDTO;
-import com.bit.bitcare.model.EmployeeDTO;
-import com.bit.bitcare.model.UserCustomDetails;
+import com.bit.bitcare.model.*;
 import com.bit.bitcare.service.DoctorService;
 import com.bit.bitcare.service.EmployeeService;
 import com.google.gson.JsonArray;
@@ -19,7 +17,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Service
@@ -28,11 +29,13 @@ public class DoctorServiceImpl implements DoctorService {
     private DiseaseIndexer diseaseIndexer;
     private final DiseaseDAO diseaseDAO;
     private final DiagnoseDAO diagnoseDAO;
+    private final WaitingDAO waitingDAO;
 
-    public DoctorServiceImpl(DiagnoseDAO diagnoseDAO, DiseaseDAO diseaseDAO, DiseaseIndexer diseaseIndexer) {
+    public DoctorServiceImpl(WaitingDAO waitingDAO, DiagnoseDAO diagnoseDAO, DiseaseDAO diseaseDAO, DiseaseIndexer diseaseIndexer) {
         this.diseaseIndexer = diseaseIndexer;
         this.diseaseDAO = diseaseDAO;
         this.diagnoseDAO = diagnoseDAO;
+        this.waitingDAO = waitingDAO;
     }
 
     // 상병(더미)테이블 search
@@ -80,5 +83,18 @@ public class DoctorServiceImpl implements DoctorService {
 
         return list;
     }
+
+    @Override
+    public List<WaitingDTO> getWaitingData(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        EmployeeDTO logIn = (EmployeeDTO) session.getAttribute("logIn");
+
+        List<WaitingDTO> list = waitingDAO.selectAllByDept(logIn.getDeptId());
+
+        return list;
+    }
+
+
+
 }
 
