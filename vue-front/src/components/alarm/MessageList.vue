@@ -5,13 +5,15 @@
         <thead>
         <tr>
           <th>발신자</th>
+          <th></th>
           <th>수신 일자</th>
           <th></th>
         </tr>
         </thead>
         <tbody>
-        <tr v-for="message in recvList" :key="message.id">
+        <tr v-for="message in this.$store.state.alarm.messageList" :key="message.id">
           <td>{{ message.sender }}</td>
+          <td>{{ formatState(message.receiveState) }}</td>
           <td>{{ formatDate(message.entryDate) }}</td>
           <td>
             <div>
@@ -29,32 +31,18 @@
     </div>
     <div>
       <b-modal v-model="this.$store.state.alarm.messageModal" size="lg" title="쪽지 내용" @hidden="closeModal">
+        <div>
+          <h2>
+            {{ this.$store.state.alarm.selectedMessage.sender }}
+            <button type="button" class="btn btn-primary btn-sm">
+              답장
+            </button>
+          </h2>
+        </div>
         <div v-html="this.$store.state.alarm.selectedMessage.content"></div>
       </b-modal>
     </div>
   </div>
-  <!--  <div>-->
-  <!--    <h1>-->
-  <!--      유저이름: {{ sender }}-->
-  <!--    </h1>-->
-
-  <!--    받는이: <input-->
-  <!--      v-model="receiver"-->
-  <!--      type="text">-->
-
-  <!--    내용: <input-->
-  <!--      v-model="message"-->
-  <!--      type="text"-->
-  <!--      @keyup="sendMessage">-->
-
-  <!--    <div-->
-  <!--        v-for="(item, idx) in recvList"-->
-  <!--        :key="idx">-->
-
-  <!--      <h3>{{ item.receiver }} to {{ item.sender }}</h3>-->
-  <!--      <h3>내용: {{ item.content }}</h3>-->
-  <!--    </div>-->
-  <!--  </div>-->
 </template>
 
 <script>
@@ -83,7 +71,8 @@ export default {
         {key: 'content', label: '내용'},
         {key: 'entryDate', label: '수신 일자'},
         {key: 'action', label: '작업'}
-      ]
+      ],
+      readMessage: "",
     }
   },
   name: "MessageList",
@@ -98,7 +87,7 @@ export default {
   },
   computed: {
     ...mapState('alarm',
-        ['messageList', 'messageCount','messageModal','selectedMessage']
+        ['messageList', 'messageCount', 'messageModal', 'selectedMessage']
     ),
   },
   methods: {
@@ -117,6 +106,13 @@ export default {
       const minutes = String(date.getMinutes()).padStart(2, '0');
       const seconds = String(date.getSeconds()).padStart(2, '0');
       return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    },
+    formatState(stateString){
+      if(stateString === 'new'){
+        return 'new!'
+      }else{
+        return ''
+      }
     },
     getSessionLogIn() {
       // Axios를 사용하여 RESTful API 호출
@@ -222,7 +218,7 @@ export default {
     deleteMessage(message) {
       // API를 호출해서 해당 메시지를 삭제합니다.
       // 성공적으로 삭제되면 this.settingRecvList()를 호출합니다.
-      axios.get('api/deleteMessage', {
+      axios.get('api/deleteReceiveMessage', {
         params: {
           id: message.id
         }
@@ -237,7 +233,7 @@ export default {
       setTimeout(() => this.settingRecvList(), 100)
     },
     alarmLength() {
-      if(this.recvList != null) {
+      if (this.recvList != null) {
         this.count = this.recvList.filter(element => "new" === element.state).length
       }
       this.setCount(this.count)
@@ -250,17 +246,37 @@ export default {
         }
       }).then(response => {
         if (response.status === 200) {
-          this.setSelectedMessage(response.data.receiveMessage)
+          this.readMessage = response.data.receiveMessage
+          this.setSelectedMessage(this.readMessage)
         } else {
           console.log('메시지 불러오기 실패')
         }
       })
       this.setMessageModal(this.showDetailsModal);
+      setTimeout(() => this.readOn(this.readMessage), 100)
+      this.readMessage = "";
+    },
+    readOn(message) {
+      this.connect()
+      setTimeout(() => this.read(message), 100)
+    },
+    read(message) {
+      console.log("read message:" + message.id);
+      if (this.stompClient && this.stompClient.connected) {
+        const msg = {
+          connectType: "read",
+          id: message.id
+        };
+        this.stompClient.send("/app/receive/" + message.sender, JSON.stringify(msg), {});
+      }
+      console.log("전송 취소 요청 완료. 소켓 연결 해제")
+      setTimeout(() => this.stompClient.disconnect(), 100)
+      this.messageContent = ''
+      setTimeout(() => this.settingRecvList(), 100)
     },
     closeModal() {
       this.showDetailsModal = false;
       this.setMessageModal(this.showDetailsModal);
-
     }
   }
 }

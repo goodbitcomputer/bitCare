@@ -4,10 +4,7 @@ import com.bit.bitcare.model.EmployeeDTO;
 import com.bit.bitcare.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -85,5 +82,31 @@ public class LoginController {
     @PostMapping("/auth")
     public ResponseEntity<String> auth(@RequestBody EmployeeDTO employeeDTO, boolean rememberMe, HttpServletRequest request, HttpServletResponse response) throws IOException, IllegalBlockSizeException, NoSuchPaddingException, BadPaddingException, NoSuchAlgorithmException, InvalidKeyException {
         return employeeService.auth(employeeDTO,request,response,rememberMe);
+    }
+
+    /**---------------------------------------------------------------------------
+     * 2023.05.25
+     *
+     * /api/selectAll
+     * /api/selectAll 에 대한 Get 요청시 employeeService.selectAll 메소드를 실행
+     * employeeService.selectAll 메소드에선 모든 직원의 정보를 리턴
+     */
+    @GetMapping("/api/selectAll")
+    public ResponseEntity<String> selectAll() throws IOException {
+        // 모든 직원의 정보를 받아옴
+        return employeeService.selectAll();
+    }
+
+    /**---------------------------------------------------------------------------
+     * 2023.05.26
+     *
+     * /api/updateEmployee
+     * /api/updateEmployee 에 대한 Get 요청시 employeeService.update 메소드를 실행
+     * requestParam 으로 받은 EmployeeDTO 의 id 값과 role 을 통해 계정의 권한을 바꿈
+     */
+    @GetMapping("/api/updateEmployee")
+    public void deleteAlarm(@RequestParam int id, @RequestParam String role) throws IOException {
+        // 권한 변경
+        employeeService.update(id,role);
     }
 }

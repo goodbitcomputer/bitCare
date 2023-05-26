@@ -18,10 +18,10 @@ import java.util.List;
 public interface EmployeeService {
     public ResponseEntity<String> autoLogin(HttpServletRequest request) throws IOException;
     public ResponseEntity<String> auth(EmployeeDTO attempt, HttpServletRequest request, HttpServletResponse response, boolean rememberMe) throws IOException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException;
-    public List<EmployeeDTO> selectAll();
+    public ResponseEntity<String> selectAll() throws JsonProcessingException;
     public boolean validate(String username);
     public EmployeeDTO selectOne(int id);
-    public void update(EmployeeDTO employeeDTO);
+    public void update(int employeeId, String role);
     public void delete(int id);
     public boolean register(EmployeeDTO attempt);
     public ResponseEntity<String> getLogInInfo(HttpServletRequest request) throws IOException;

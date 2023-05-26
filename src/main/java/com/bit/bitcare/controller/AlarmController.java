@@ -119,13 +119,27 @@ public class AlarmController {
      * ---------------------------------------------------------------------------
      * 2023.05.22
      *
-     * allDeleteMessage
-     * /api/allDeleteMessage 에 대한 Get 요청시 alarmService.allDeleteMessage 메소드를 실행
-     * alarmService.deleteMessage 메소드에선 모든 알림 삭제 로직을 실행함
+     * deleteReceiveMessage
+     * /api/deleteReceiveMessage 에 대한 Get 요청시 alarmService.deleteReceiveMessage 메소드를 실행
+     * alarmService.deleteReceiveMessage 메소드에선 알림 삭제 로직을 실행함
      */
-    @GetMapping("/api/allDeleteMessage")
-    public void allDeleteMessage(@RequestParam String name) throws IOException {
+    @GetMapping("/api/deleteReceiveMessage")
+    public void deleteReceiveMessage(@RequestParam int id) throws IOException {
         // 선택 메세지 삭제
-        alarmService.allDeleteMessage(name);
+        alarmService.deleteReceiveMessage(id);
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * 2023.05.22
+     *
+     * allDeleteReceiveMessage
+     * /api/allDeleteReceiveMessage 에 대한 Get 요청시 alarmService.allDeleteReceiveMessage 메소드를 실행
+     * alarmService.allDeleteReceiveMessage 메소드에선 모든 알림 삭제 로직을 실행함
+     */
+    @GetMapping("/api/allDeleteReceiveMessage")
+    public void allDeleteReceiveMessage(@RequestParam String name) throws IOException {
+        // 선택 메세지 삭제
+        alarmService.allDeleteReceiveMessage(name);
     }
 }

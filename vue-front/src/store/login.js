@@ -8,7 +8,8 @@ export default {
 
     state: {
         role : "ROLE_ADMIN",
-        name : "admin"
+        name : "admin",
+        list : [],
     },
     getters: {
         getRole(state){
@@ -24,7 +25,11 @@ export default {
         },
         setName : function (state, name){
             return state.name = name;
-        }
+        },
+        setList : function (state, list){
+            console.log(state.list)
+            return state.list = list;
+        },
     },
     actions: {
 

@@ -141,13 +141,15 @@ export default {
   },
   computed: {
     ...mapState('alarm',
-        ['alarmList','messageList', 'messageCount', 'alarmCount', 'showModal','messageModal']
+        ['alarmList','messageList', 'messageCount', 'alarmCount', 'sendList', 'sendCount', 'showModal','messageModal']
     )
   },
   methods: {
     ...mapMutations('alarm', {
       setAlarm: 'setAlarm',
       setAlarmCount: 'setAlarmCount',
+      setSendList: 'setSendList',
+      setSendCount: 'setSendCount',
       setModal: 'setModal',
       setMessageModal: 'setMessageModal',
       setMessage: 'setMessage',
@@ -183,16 +185,18 @@ export default {
             // 이런형태를 pub sub 구조라고 합니다.
             this.stompClient.subscribe("/send/" + this.receiver, res => {
               // 받은 데이터를 json으로 파싱하고 리스트에 넣어줍니다.
-              this.state = JSON.parse(res.body).state
-              if(this.alarmList != null) {
-                this.recvList = this.alarmList
+              if((res.body !== 'cancel') && (res.body !=='read')) {
+                this.state = JSON.parse(res.body).state
+                if (this.alarmList != null) {
+                  this.recvList = this.alarmList
+                } else {
+                  this.recvList = []
+                }
+                this.settingRecvList()
+                setTimeout(() => this.state = "", 1501)
               }else{
-                this.recvList = []
+                  this.settingRecvList()
               }
-              this.recvList.push(JSON.parse(res.body))
-              this.setAlarm(this.recvList)
-              this.alarmLength()
-              setTimeout(() => this.state = "", 1501)
             });
           },
           (error) => {
@@ -209,6 +213,12 @@ export default {
       }
       this.setAlarmCount(this.count)
     },
+    sendLength() {
+      if(this.recvList != null) {
+        this.count = this.recvList.filter(element => "new" === element.state).length
+      }
+      this.setSendCount(this.count)
+    },
     /* DB 데이터 가져오기 */
     settingRecvList() {
       // Axios를 사용하여 RESTful API 호출
@@ -221,6 +231,46 @@ export default {
               this.recvList = receiveList
               this.setAlarm(this.recvList)
               this.alarmLength()
+            }
+          })
+          .catch(error => {
+            console.error('세션 데이터를 가져오는 중 에러 발생: ', error);
+          });
+
+      axios.get('/api/receiveMessageList')
+          .then(response => {
+            console.log(response.data);
+            // 세션 데이터 사용 예시
+            if (response.data && response.data.isLoggedIn) {
+              this.isLogin = true
+              let receiveList = JSON.parse(JSON.stringify(response.data.receiveList));
+              console.log(receiveList)
+              this.setMessage(receiveList)
+              if(receiveList != null) {
+                this.count = receiveList.filter(element => "new" === element.state).length
+              }
+              this.setCount(this.count)
+              console.log(receiveList)
+            } else {
+              console.log('로그인되어 있지 않습니다.');
+            }
+          })
+          .catch(error => {
+            console.error('세션 데이터를 가져오는 중 에러 발생: ', error);
+          });
+
+      axios.get('/api/sendMessageList')
+          .then(response => {
+            console.log(response.data);
+            // 세션 데이터 사용 예시
+            if (response.data && response.data.isLoggedIn) {
+              this.isLogin = true
+              let sendList = JSON.parse(JSON.stringify(response.data.sendList));
+              this.setSendList(sendList)
+              this.sendLength()
+              console.log(sendList)
+            } else {
+              console.log('로그인되어 있지 않습니다.');
             }
           })
           .catch(error => {

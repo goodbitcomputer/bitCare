@@ -7,50 +7,68 @@
 
     <!-- 받은 메세지 목록 -->
     <select id="selectByReceiver" parameterType="String" resultType="messageDTO">
-        SELECT `message`.* , `alarm`.`entry_date` FROM `message`
-        inner join `alarm` on `message`.`content`=`alarm`.`content`
-        where `message`.`receiver`= #{logInName}
-        order by `alarm`.`entry_date` desc
+        SELECT * FROM `message`
+        where `receiver`= #{logInName} and `receive_state` != 'delete'
+        order by `entry_date` desc
     </select>
 
     <!-- 보낸 메세지 목록 -->
     <select id="selectBySender" parameterType="String" resultType="messageDTO">
-        SELECT `message`.* , `alarm`.`entry_date` FROM `message`
-        inner join `alarm` on `message`.`content`=`alarm`.`content`
-        where `message`.`sender`= #{logInName}
-        order by `alarm`.`entry_date` desc
+        SELECT * FROM `message`
+        where `sender`= #{logInName} and `send_state` != 'delete'
+        order by `entry_date` desc
     </select>
 
     <!-- 메세지 선택 -->
     <select id="selectOne" parameterType="int" resultType="messageDTO">
-        SELECT `message`.* , `alarm`.`entry_date` FROM `message`
-        inner join `alarm` on `message`.`content`=`alarm`.`content`
-        where `message`.`id`= #{id}
-        order by `alarm`.`entry_date` desc
+        SELECT * FROM `message`
+        where `id`= #{id} and `receive_state` != 'delete'
     </select>
 
     <!-- 메세지 생성 -->
     <insert id="insert" parameterType="messageDTO" useGeneratedKeys="true" keyProperty="id">
-        insert into `message`(sender,receiver,content,message_file,state)
-        values(#{sender}, #{receiver}, #{content}, #{messageFile}, #{state})
+        insert into `message`(sender,receiver,content,message_file,receive_state,send_state,entry_date)
+        values(#{sender}, #{receiver}, #{content}, #{messageFile}, #{receiveState}, #{sendState}, now())
     </insert>
 
     <!-- 메세지 상태 변경 -->
     <update id="update" parameterType="messageDTO">
         UPDATE `message`
-        SET state=#{state}
+        SET receive_state=#{receiveState}
         WHERE id=#{id}
     </update>
 
-    <!-- 메시지 삭제 -->
+    <!-- 발송취소(전달 메시지 삭제) -->
     <delete id="delete" parameterType="int">
         DELETE FROM `message`
         WHERE id= #{id}
     </delete>
 
-    <!-- 전체 메시지 삭제 -->
-    <delete id="allDelete" parameterType="string">
-        DELETE FROM `message`
+    <!-- 받은 메시지 삭제 -->
+    <delete id="deleteReceive" parameterType="int">
+        UPDATE `message`
+        SET receive_state='delete'
+        WHERE id= #{id}
+    </delete>
+
+    <!-- 받은 메시지 전체 삭제 -->
+    <delete id="allDeleteReceive" parameterType="string">
+        UPDATE `message`
+        SET receive_state='delete'
+        WHERE name= #{name}
+    </delete>
+
+    <!-- 보낸 메시지 삭제 -->
+    <delete id="deleteSend" parameterType="int">
+        UPDATE `message`
+        SET send_state='delete'
+        WHERE id= #{id}
+    </delete>
+
+    <!-- 보낸 메시지 전체 삭제 -->
+    <delete id="allDeleteSend" parameterType="string">
+        UPDATE `message`
+        SET send_state='delete'
         WHERE name= #{name}
     </delete>
 </mapper>

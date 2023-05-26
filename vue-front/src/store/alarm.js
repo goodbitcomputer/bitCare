@@ -13,6 +13,8 @@ export default {
         isDeleted: false,
         messageCount: 0,
         messageList: [],
+        sendCount: 0,
+        sendList: [],
         alarmCount: 0,
         alarmList: [],
         selectedMessage: {}
@@ -34,6 +36,12 @@ export default {
         },
         setCount : function (state, messageCount) {
             return state.messageCount = messageCount;
+        },
+        setSendList : function (state, sendList) {
+            return state.sendList = sendList;
+        },
+        setSendCount : function (state, sendCount) {
+            return state.sendCount = sendCount;
         },
         setModal : function (state, showModal) {
             return state.showModal = showModal;
