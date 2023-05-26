@@ -27,13 +27,6 @@ public class HomeController {
     public String showIndex() throws IOException {
         System.out.println("여긴 테스트 구역");
 
-        
-        List<EmployeeDTO> employeeList = employeeService.selectAll();
-
-        for(EmployeeDTO u : employeeList) {
-            System.out.println(u);
-        }
-
         return "index.html";
 
 

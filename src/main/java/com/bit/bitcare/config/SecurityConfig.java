@@ -23,8 +23,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import javax.sql.DataSource;
 import java.util.Arrays;
 
-
-
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {

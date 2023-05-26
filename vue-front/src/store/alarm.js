@@ -13,6 +13,8 @@ export default {
         isDeleted: false,
         messageCount: 0,
         messageList: [],
+        sendCount: 0,
+        sendList: [],
         alarmCount: 0,
         alarmList: [],
         selectedMessage: {}
@@ -24,20 +26,22 @@ export default {
     },
     mutations: {
         setAlarm : function (state, items) {
-            console.log(state.alarmList)
             return state.alarmList = items;
         },
         setAlarmCount : function (state, items) {
-            console.log(state.alarmCount)
             return state.alarmCount = items;
         },
         setMessage : function (state, items) {
-            console.log(state.messageList)
             return state.messageList = items;
         },
         setCount : function (state, messageCount) {
-            console.log(state.messageCount)
             return state.messageCount = messageCount;
+        },
+        setSendList : function (state, sendList) {
+            return state.sendList = sendList;
+        },
+        setSendCount : function (state, sendCount) {
+            return state.sendCount = sendCount;
         },
         setModal : function (state, showModal) {
             return state.showModal = showModal;

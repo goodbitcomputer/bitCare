@@ -22,7 +22,7 @@
               <button type="button" @click="showDetails(message.id)">
                 자세히 보기
               </button>
-              <button type="button" class="btn btn-danger btn-sm" id="deleteButton" @click="deleteMessage(message)">
+              <button type="button" class="btn btn-danger btn-sm" id="deleteButton" @click="deleteMessage(message.id)">
                 삭제
               </button>
             </div>
@@ -39,28 +39,6 @@
       </table>
     </div>
   </div>
-  <!--  <div>-->
-  <!--    <h1>-->
-  <!--      유저이름: {{ sender }}-->
-  <!--    </h1>-->
-
-  <!--    받는이: <input-->
-  <!--      v-model="receiver"-->
-  <!--      type="text">-->
-
-  <!--    내용: <input-->
-  <!--      v-model="message"-->
-  <!--      type="text"-->
-  <!--      @keyup="sendMessage">-->
-
-  <!--    <div-->
-  <!--        v-for="(item, idx) in recvList"-->
-  <!--        :key="idx">-->
-
-  <!--      <h3>{{ item.receiver }} to {{ item.sender }}</h3>-->
-  <!--      <h3>내용: {{ item.content }}</h3>-->
-  <!--    </div>-->
-  <!--  </div>-->
 </template>
 
 <script>
@@ -85,6 +63,7 @@ export default {
       count: 0,
       selectedMessage: "",
       showDetailsModal: this.showModal,
+      readMessage: "",
     }
   },
   name: "AlarmList",
@@ -99,13 +78,15 @@ export default {
   },
   computed: {
     ...mapState('alarm',
-        ['alarmList', 'alarmCount', 'showModal', 'selectedMessage', 'messageModal']
+        ['alarmList', 'alarmCount', 'messageList', 'messageCount', 'showModal', 'selectedMessage', 'messageModal']
     ),
   },
   methods: {
     ...mapMutations('alarm', {
       setAlarm: 'setAlarm',
       setAlarmCount: 'setAlarmCount',
+      setMessage: 'setMessage',
+      setCount: 'setCount',
       setModal: 'setModal',
       setMessageModal: 'setMessageModal',
       setSelectedMessage: 'setSelectedMessage'
@@ -192,9 +173,13 @@ export default {
             this.stompClient.subscribe("/send/" + this.sender, res => {
               console.log('구독으로 받은 메시지 입니다.', res.body)
               // 받은 데이터를 json으로 파싱하고 리스트에 넣어줍니다.
-              this.recvList.push(JSON.parse(res.body))
-              this.setAlarm(this.recvList)
-              this.setAlarmCount(this.count)
+              if(res.body==="cancel"){
+                this.settingRecvList()
+              }else {
+                this.recvList.push(JSON.parse(res.body))
+                this.setAlarm(this.recvList)
+                this.setAlarmCount(this.count)
+              }
             });
           },
           (error) => {
@@ -226,13 +211,35 @@ export default {
           .catch(error => {
             console.error('세션 데이터를 가져오는 중 에러 발생: ', error);
           });
+
+      axios.get('/api/receiveMessageList')
+          .then(response => {
+            console.log(response.data);
+            // 세션 데이터 사용 예시
+            if (response.data && response.data.isLoggedIn) {
+              this.isLogin = true
+              let receiveList = JSON.parse(JSON.stringify(response.data.receiveList));
+              console.log(receiveList)
+              this.setMessage(receiveList)
+              if(receiveList != null) {
+                this.count = receiveList.filter(element => "new" === element.state).length
+              }
+              this.setCount(this.count)
+              console.log(receiveList)
+            } else {
+              console.log('로그인되어 있지 않습니다.');
+            }
+          })
+          .catch(error => {
+            console.error('세션 데이터를 가져오는 중 에러 발생: ', error);
+          });
     },
-    deleteMessage(message) {
+    deleteMessage(messageId) {
       // API를 호출해서 해당 메시지를 삭제합니다.
       // 성공적으로 삭제되면 this.settingRecvList()를 호출합니다.
       axios.get('api/deleteAlarm', {
         params: {
-          id: message.id
+          id: messageId
         }
       }).then(response => {
         if (response.status === 200) {
@@ -273,17 +280,40 @@ export default {
           id: messageId
         }
       }).then(response => {
-        if (response.status === 200) {
+        if (response.status === 200 && response.data.receiveMessage != null) {
           console.log(response.data.receiveMessage)
-          this.setSelectedMessage(response.data.receiveMessage)
+          this.readMessage = response.data.receiveMessage
+          this.setSelectedMessage(this.readMessage)
+          this.showDetailsModal = true;
+          this.setModal(this.showDetailsModal);
+          this.setMessageModal(this.showDetailsModal);
         } else {
-          console.log('메시지 불러오기 실패')
+          alert('삭제된 메시지입니다.')
+          this.deleteMessage(messageId)
         }
       })
-      this.showDetailsModal = true;
-      this.setModal(this.showDetailsModal);
-      this.setMessageModal(this.showDetailsModal);
-    }
+
+      setTimeout(() => this.readOn(this.readMessage),100)
+      this.readMessage = "";
+    },
+    readOn(message) {
+      this.connect()
+      setTimeout(() => this.read(message),100)
+    },
+    read(message){
+      console.log("read message:" + message.id);
+      if (this.stompClient && this.stompClient.connected) {
+        const msg = {
+          connectType: "read",
+          id: message.id
+        };
+        this.stompClient.send("/app/receive/" + message.sender, JSON.stringify(msg), {});
+      }
+      console.log("전송 취소 요청 완료. 소켓 연결 해제")
+      setTimeout(() => this.stompClient.disconnect(), 100)
+      this.messageContent = ''
+      setTimeout(() => this.settingRecvList(), 100)
+    },
   }
 }
 </script>

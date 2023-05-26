@@ -17,15 +17,17 @@
 
     <select id="selectAll" resultType="employeeDTO">
         SELECT * FROM employee
+        where `role` != 'ROLE_MASTER'
     </select>
 
     <update id="update" parameterType="employeeDTO">
         UPDATE `employee` SET
         password = #{password},
         phone_number = #{phoneNumber},
-        dept_id = #{dept_id},
+        dept_id = #{deptId},
         profile_image = #{profileImage},
-        detail = #{detail}
+        detail = #{detail},
+        role = #{role}
         WHERE
         id = #{id}
     </update>

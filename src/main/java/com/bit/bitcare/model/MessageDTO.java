@@ -13,6 +13,7 @@ public class MessageDTO {
     String receiver;
     String content;
     String messageFile;
-    String state;
+    String receiveState;
+    String sendState;
     Date entryDate;
 }
