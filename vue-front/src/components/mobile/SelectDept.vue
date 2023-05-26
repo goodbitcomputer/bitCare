@@ -37,7 +37,6 @@
 
 <script>
 import axios from "axios";
-
 const Swal = window.Swal;
 import {mapMutations, mapState} from "vuex";
 
@@ -84,8 +83,6 @@ export default {
       if (this.deptId !== "" && this.symptom !== "") {
         this.setDeptId(this.deptId);
         this.setSymptom(this.symptom);
-        console.log(this.$store.state.mobile.patientId);
-        console.log(typeof this.$store.state.mobile.patientId);
         this.register();
         this.setNextStep(6);
       } else if (this.deptId === "") {

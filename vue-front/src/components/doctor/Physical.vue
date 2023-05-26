@@ -2,29 +2,31 @@
   <div class="border-box">
     <span class="font-weight-bold">신체계측/바이탈</span>
     <div class="table-wrapper">
-      <b-table hover :items="cbItems" :fields="fields" small>
+      <b-table hover :items="physicalData" :fields="fields" small>
         <template #cell(height)="data">
-          <b-form-input type="number" v-model="data.item.height"></b-form-input>
+          <b-form-input class="physical-input" type="number" v-model="data.item.height"></b-form-input>
         </template>
         <template #cell(weight)="data">
-          <b-form-input type="number" v-model="data.item.weight"></b-form-input>
+          <b-form-input class="physical-input" type="number" v-model="data.item.weight"></b-form-input>
         </template>
         <template #cell(bpSystolic)="data">
-          <b-form-input type="number" v-model="data.item.bpSystolic"></b-form-input>
+          <b-form-input class="physical-input" type="number" v-model="data.item.bpSystolic"></b-form-input>
         </template>
         <template #cell(bpDiastolic)="data">
-          <b-form-input type="number" v-model="data.item.bpDiastolic"></b-form-input>
+          <b-form-input class="physical-input" type="number" v-model="data.item.bpDiastolic"></b-form-input>
         </template>
         <template #cell(temperature)="data">
-          <b-form-input type="number" v-model="data.item.temperature"></b-form-input>
+          <b-form-input class="physical-input" type="number" v-model="data.item.temperature"></b-form-input>
         </template>
       </b-table>
     </div>
-    {{cbItems}}
   </div>
 </template>
 
 <script>
+
+import {mapState} from "vuex";
+
 export default {
   name: "DoctorPhysical",
   data() {
@@ -37,12 +39,13 @@ export default {
         {key: 'bpDiastolic', label: '혈압(이완)'},
         {key: 'temperature', label: '체온'},
       ],
-      cbItems: [
-        {height: "", weight: "", bpSystolic: "", bpDiastolic: "", temperature: ""},
-      ],
+
     }
   },
   computed: {
+    ...mapState('doctor',
+      ['physicalData']
+    ),
     msg() {
       return this.cbItems;
     }
@@ -51,5 +54,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.physical-input{
+  margin:0 auto;
+}
 </style>

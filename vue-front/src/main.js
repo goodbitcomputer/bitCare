@@ -10,7 +10,7 @@
 // }).$mount('#app')
 
 
-
+Vue.config.devtools = true
 
 
 import Vue from 'vue'

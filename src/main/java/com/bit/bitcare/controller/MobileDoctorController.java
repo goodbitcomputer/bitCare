@@ -60,7 +60,8 @@ public class MobileDoctorController {
 
             removeS3.setKey(awsS3.getKey());
 
-            awsS3Service.remove(removeS3);
+// 이미지 삭제
+//            awsS3Service.remove(removeS3);
 
         }
 

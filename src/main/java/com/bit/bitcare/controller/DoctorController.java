@@ -1,9 +1,9 @@
 package com.bit.bitcare.controller;
 
-import com.bit.bitcare.lucene.DiseaseIndexer;
 import com.bit.bitcare.model.*;
 import com.bit.bitcare.service.DoctorService;
 import com.bit.bitcare.serviceImpl.DoctorServiceImpl;
+import com.bit.bitcare.vo.doctor.UpsertVO;
 import com.google.gson.JsonObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 
@@ -69,5 +67,26 @@ public class DoctorController {
     public List<WaitingDTO> getWaitingData(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         return doctorService.getWaitingData(request);
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/historyUpsert_proc", method = RequestMethod.POST)
+    public String historyUpsert_proc(@RequestBody UpsertVO requestData, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        return doctorService.historyUpsert(requestData, request).toString();
+    }
+
+    @ResponseBody
+    @PostMapping("/getHistoryList")
+    public List<HistoryDTO> getHistoryList(@RequestBody Map<String, Object> requestData, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int patientId = Integer.parseInt(requestData.get("patientId").toString());
+        return doctorService.getHistoryList(patientId);
+    }
+    @ResponseBody
+    @PostMapping("/getHistoryAddData")
+    public String getHistoryAddData(@RequestBody Map<String, Object> requestData, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int historyId = Integer.parseInt(requestData.get("historyId").toString());
+        return doctorService.getHistoryAddData(historyId).toString();
+    }
+
+
 
 }

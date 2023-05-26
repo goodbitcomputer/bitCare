@@ -2,12 +2,14 @@
   <div class="history-box border-box">
     <div>
       <!--      history 리스트-->
-      <div class="border-box">
-        <div>
-          <span>2022.01.06</span>
-        </div>
-        <div>
-          <span>초진</span>
+      <div class="border-box" v-for="(item) in historyList" :key="item.id">
+        <div @click="selectHistoryBtn(item)">
+          <div>
+            <span>{{ dateMsg(item.entryDate) }}</span>
+          </div>
+          <div>
+            <span>{{ item.visit }}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -15,9 +17,9 @@
       <!--      진료기록title-->
       <div>
         <span>진료기록</span>
-        <span>[2022.01.06]</span>
+        <span>[{{ dateMsg(selectHistoryData.entryDate) }}]</span>
       </div>
-<!--      신체계측/바이탈-->
+      <!--      신체계측/바이탈-->
       <div>
         <span class="font-weight-bold">신체계측/바이탈</span>
         <div class="table-wrapper">
@@ -37,21 +39,42 @@
       </div>
       <!--      의사정보-->
       <div class="doctor-info">
-        <span>건강보험</span>
-        <span>초진</span>
+        <span>{{ selectHistoryData.visit }}</span>
         <span>외래진료</span>
-        <span>내과</span>
-        <span>백지영</span>
+        <span>{{ selectHistoryData.dept }}</span>
+        <span>{{ selectHistoryData.name }}</span>
       </div>
       <!--      진료기록 상세정보-->
+      <!--      이미지 list-->
+      <div class="border-box">
+        <span class="font-weight-bold">이미지</span>
+        <div class="img-list-box">
+          <swiper :options="swiperOptions" ref="swiper">
+            <swiper-slide v-for="(slide, index) in slides" :key="index">
+              <!-- 슬라이드 내용 -->
+              <img :src="slide.imagePath" alt="Slide Image">
+            </swiper-slide>
+
+            <!-- 네비게이션 버튼 -->
+            <div class="swiper-button-prev" slot="button-prev"></div>
+            <div class="swiper-button-next" slot="button-next"></div>
+          </swiper>
+        </div>
+        <!--          <b-button class="btn col mt-1" variant="primary">촬영 부위 선택</b-button>-->
+        <div class="imageCategory-box">
+
+        </div>
+      </div>
+
+
       <div>
         <span class="font-weight-bold">증상</span>
         <div style="padding: 5px; border: 1px solid #DBDFE5; border-radius: 5px;">
-          <p>이틀전부터 목 불편함. 목이 칼칼하다. 헛기침</p>
+          {{ selectHistoryData.symptomDetail }}
         </div>
 
       </div>
-<!--      상병-->
+      <!--      상병-->
       <div>
         <span class="font-weight-bold">상병</span>
         <div>
@@ -77,7 +100,7 @@
           </div>
         </div>
       </div>
-<!--      처방-->
+      <!--      처방-->
       <div>
         <span class="font-weight-bold">처방</span>
         <div>
@@ -103,12 +126,20 @@
 </template>
 
 <script>
+import {mapState} from "vuex";
+import axios from "axios";
+
 export default {
   name: "DoctorHistory",
 
   // Note `isActive` is left out and will not appear in the rendered table
   data() {
     return {
+      selectHistoryData: "",
+      selectSbList: [],
+      selectCbList: [],
+      selectImgList: [],
+
       // 신체계측/바이탈 테이블 로직
       pyFields: [
         {key: 'height', label: '키'},
@@ -117,9 +148,7 @@ export default {
         {key: 'bpDiastolic', label: '혈압(이완)'},
         {key: 'temperature', label: '체온'},
       ],
-      pyItems: [
-        {height: '178', weight: '73', bpSystolic: '128', bpDiastolic: "87", temperature: "36.5"},
-      ],
+      pyItems: [],
 
       // 상병 테이블 로직
       sbFields: [
@@ -139,11 +168,47 @@ export default {
       // cbFields: ["sb", "code", "name"],
       cbItems: [
         {code: '645700880', name: '세토펜정80밀리그램(어쩌구저쩌구ㅇㄴㅁㅇㅁㅇㄴㅁㅇㄴㅁ)', dose: '1', time: "1", days: "1"},
-        {code: '653403810', name: 'DickersonDickersonDickersonDickersonDickersonDickersonDickerson', dose: '1', time: "1", days: "1"},
+        {
+          code: '653403810',
+          name: 'DickersonDickersonDickersonDickersonDickersonDickersonDickerson',
+          dose: '1',
+          time: "1",
+          days: "1"
+        },
         {code: '653403812', name: '아르도민캡슐(에르도스도르도르말말마람람)', dose: '1', time: "1", days: "1"},
         {code: '645700883', name: '알게이트정(120밀리그람)', dose: '1', time: "1", days: "1"},
       ],
+
+      //   swiper
+      slides: [
+        {imagePath: '/assets/img/testimonials/testimonials-1.jpg'},
+        {imagePath: '/assets/img/testimonials/testimonials-1.jpg'},
+        {imagePath: '/assets/img/testimonials/testimonials-1.jpg'},
+        {imagePath: '/assets/img/testimonials/testimonials-1.jpg'},
+        {imagePath: '/assets/img/testimonials/testimonials-1.jpg'},
+        {imagePath: '/assets/img/testimonials/testimonials-1.jpg'},
+        {imagePath: '/assets/img/testimonials/testimonials-1.jpg'},
+      ],
+      swiperOptions: {
+        slidesPerView: 3, // 한번에 보여줄 슬라이드 개수
+        spaceBetween: 10, // 슬라이드 사이 여백
+        centeredSlides: true, // 1번 슬라이드가 가운데 보이기
+        // loop: true,
+        pagination: {
+          el: '.swiper-pagination'
+        },
+        // Swiper 설정
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
+      },
     }
+  },
+  computed: {
+    ...mapState('doctor',
+        ['historyList']
+    )
   },
   methods: {
     // 상병 테이블 로직
@@ -153,6 +218,72 @@ export default {
         return "font-weight-bold ellipsis"; // 굵은 글꼴 클래스 반환
       }
     },
+    dateMsg(item) {
+      let dateTemp = new Date(item)
+      let year = dateTemp.getFullYear();
+      let month = dateTemp.getMonth() + 1;
+      if (month < 10) {
+        month = "0" + month;
+      }
+      let date = dateTemp.getDate();
+
+      return year + "." + month + "." + date;
+    },
+    // 진료기록리스트에서 특정 진료기록 선택
+    selectHistoryBtn(item) {
+      axios.post('/doctor/getHistoryAddData', {
+        historyId: item.id,
+      }).then(response => {
+        let diseaseList = JSON.parse(response.data.diseaseList);
+        let diagnoseList = JSON.parse(response.data.diagnoseList);
+        let imgList = JSON.parse(response.data.imgList);
+        console.log(diseaseList);
+        console.log(diagnoseList);
+        console.log(imgList);
+        this.setSelectSbList(diseaseList);
+        this.setSelectCbList(diagnoseList);
+        this.setSelectImgList(imgList);
+      }).catch(function (error) {
+        console.log(error);
+      });
+
+      this.setHistoryData(item);
+      this.pyItems = [];
+      this.pyItems.push({
+        height: item.height,
+        weight: item.weight,
+        bpSystolic: item.bpSystolic,
+        bpDiastolic: item.bpDiastolic,
+        temperature: item.temperature
+      });
+
+    },
+    // 선택된 진료기록데이터 저장
+    setHistoryData(item) {
+      this.selectHistoryData = item;
+    },
+    setSelectSbList(item) {
+      this.selectSbList = item;
+      this.sbItems = [];
+      item.forEach((i)=>{
+        this.sbItems.push({sb: i.degree, code: i.code, name: i.name});
+      })
+    },
+    setSelectCbList(item) {
+      this.selectCbList = item;
+      this.cbItems = [];
+      item.forEach((i)=>{
+        this.cbItems.push({code: i.code, name: i.name, dose: i.dose, time: i.time, days: i.days});
+      })
+    },
+    setSelectImgList(item) {
+      this.selectImgList = item;
+      this.slides = [];
+      item.forEach((i)=>{
+        this.slides.push({imagePath: i.imagePath})
+      })
+    },
+
 
 
   },
@@ -169,16 +300,19 @@ b-table * * {
 .history-box {
   display: flex;
 }
+
 // 의사정보 box
 .doctor-info {
   //text-align: center;
 }
+
 .doctor-info span {
   font-size: 12px;
   font-weight: 600;
   // 글자 줄바꿈 안되게 함.
   white-space: nowrap;
 }
+
 .doctor-info span:after {
   display: inline-block;
   content: '';
@@ -236,12 +370,24 @@ b-table * * {
   flex-grow: 1;
 }
 
-</style>
-<style>
-.hidden_header {
-  display: none;
+// swiper
+.img-list-box .swiper-container {
+  /* calc- 계산해주는 함수 */
+  width: calc(100px * 3 + 20px);
+  /*height: 100px;*/
+  /*position: absolute;*/
+  /*top: 40px;*/
+  left: 50%;
+  margin-left: calc((100px * 3 + 20px) / -2);
+
+  overflow: hidden;
 }
-.table-body-box{
-  padding: 0;
+
+.img-list-box .swiper-slide img {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
 }
+
+
 </style>

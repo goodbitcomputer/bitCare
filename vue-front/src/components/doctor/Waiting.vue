@@ -2,12 +2,14 @@
   <div>
     <div class="border-box">
       <span style="font-size: 1.2em; font-weight: 700">대기 환자</span>
+      <div class="util d-flex">
+        <button class="border-box col">진료대기</button>
+        <button class="border-box col">진료완료</button>
+      </div>
     </div>
     <div class="waiting-info-box">
-
-
       <div class="border-box" v-for="(item) in waitingList" :key="item.id">
-        <div @click="setWaitingData(item)">
+        <div @click="selectPatientBtn(item)">
           <div>
             <span class="font-weight-bold">{{ item.name }} </span>
             <span>외래진료</span>
@@ -31,7 +33,7 @@
 
 <script>
 import axios from "axios";
-import {mapMutations} from "vuex";
+import {mapActions, mapMutations} from "vuex";
 
 export default {
   name: "DoctorWait",
@@ -48,6 +50,14 @@ export default {
     ...mapMutations('doctor', {
       setWaitingData: 'setWaitingData'
     }),
+    ...mapActions('doctor', {
+      getHistoryList: 'getHistoryList'
+    }),
+    selectPatientBtn(item) {
+      this.setWaitingData(item);
+      this.getHistoryList(item.patientId);
+    },
+
     dateMsg(item) {
       let dateTemp = new Date(item)
       let year = dateTemp.getFullYear();
@@ -88,6 +98,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.util button {
+  background: rgba(12, 11, 9, 0.7);
+  color: white;
+}
+
 #sidebar-1 {
   position: static !important;
   display: block !important;

@@ -7,7 +7,12 @@
 
     <!-- 환자(patient_id)의 진료 기록(history) 목록 -->
     <select id="selectByPatientId" parameterType="int" resultType="historyDTO">
-        SELECT * FROM `history`
+        SELECT history.*, dept.dept, employee.name
+        FROM `history`
+        LEFT JOIN employee
+        ON history.employee_id = employee.id
+        LEFT JOIN dept
+        ON history.dept_id = dept.id
         WHERE patient_id = #{patientId}
     </select>
 
@@ -29,9 +34,9 @@
     </delete>
 
     <!-- 진료 기록(history) 생성 -->
-    <insert id="insert" parameterType="historyDTO">
-        insert into `history`(employeeId,patientId,deptId,memo,bpSystolic,bpDiastolic,height,weight,temperature,symptomDetail,entryDate,visit)
-        values(#{employeeId}, #{patientId}, #{deptId}, #{memo}, #{bpSystolic}, #{dpDiastolic}, #{height}, #{weight}, #{temperature}, #{symptomDetail}, now(), #{visit})
+    <insert id="insert" parameterType="historyDTO" useGeneratedKeys="true" keyProperty="id">
+        insert into `history`(employee_id,patient_id,dept_id,memo,bp_systolic,bp_diastolic,height,weight,temperature,symptom_detail,entry_date,visit)
+        values(#{employeeId}, #{patientId}, #{deptId}, #{memo}, #{bpSystolic}, #{bpDiastolic}, #{height}, #{weight}, #{temperature}, #{symptomDetail}, now(), #{visit})
     </insert>
 
 </mapper>

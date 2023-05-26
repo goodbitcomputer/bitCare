@@ -80,7 +80,7 @@ export default new VueRouter({
       path: '/nurse',
       component: Nurse,
       meta: {
-        roles: ['ROLE_NURSE']
+        roles: ['ROLE_NURSE', 'ROLE_ADMIN']
       },
       beforeEnter: function(to, from, next) {
         let roleStatus = store.state.login.role // 권한 상태

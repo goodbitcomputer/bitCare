@@ -13,8 +13,8 @@
 
     <!-- 진료 기록의 상병부분(history_disease) insert -->
     <insert id="insert" parameterType="historyDiseaseDTO">
-        insert into `history_disease`(history_id,degree,symbol,name)
-        values(#{historyId}, #{degree}, #{symbol}, #{name})
+        insert into `history_disease`(history_id,degree,code,name)
+        values(#{historyId}, #{degree}, #{code}, #{name})
     </insert>
 
 </mapper>

@@ -67,7 +67,7 @@ btn {
 // md
 //@media (min-width: 768px) { ... }
 // lg
-@media (min-width: 992px) {
+@media (min-width: 1200px) {
   .container {
     padding-top: 20px;
     display: flex;

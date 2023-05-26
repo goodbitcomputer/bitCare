@@ -177,7 +177,6 @@ export default {
     },
     addCheck(item) {
       let isCheck = this.sbList.some(obj => obj.id == item.id);
-      console.log(isCheck);
       return isCheck;
     },
 

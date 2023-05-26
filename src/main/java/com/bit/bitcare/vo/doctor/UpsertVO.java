@@ -1,13 +1,10 @@
-package com.bit.bitcare.model;
+package com.bit.bitcare.vo.doctor;
 
 import lombok.Data;
 
-import java.util.Date;
-
 @Data
-public class HistoryDTO {
+public class UpsertVO {
     int id;
-    int employeeId;
     int patientId;
     int deptId;
     String memo;
@@ -17,8 +14,7 @@ public class HistoryDTO {
     int weight;
     int temperature;
     String symptomDetail;
-    Date entryDate;
     String visit;
-    String dept;
-    String name;
+    DiseaseVO[] writeSbList;
+    DiagnoseVO[] writeCbList;
 }
