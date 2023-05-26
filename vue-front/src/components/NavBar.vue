@@ -276,6 +276,46 @@ export default {
           .catch(error => {
             console.error('세션 데이터를 가져오는 중 에러 발생: ', error);
           });
+
+      axios.get('/api/receiveMessageList')
+          .then(response => {
+            console.log(response.data);
+            // 세션 데이터 사용 예시
+            if (response.data && response.data.isLoggedIn) {
+              this.isLogin = true
+              let receiveList = JSON.parse(JSON.stringify(response.data.receiveList));
+              console.log(receiveList)
+              this.setMessage(receiveList)
+              if(receiveList != null) {
+                this.count = receiveList.filter(element => "new" === element.state).length
+              }
+              this.setCount(this.count)
+              console.log(receiveList)
+            } else {
+              console.log('로그인되어 있지 않습니다.');
+            }
+          })
+          .catch(error => {
+            console.error('세션 데이터를 가져오는 중 에러 발생: ', error);
+          });
+
+      axios.get('/api/sendMessageList')
+          .then(response => {
+            console.log(response.data);
+            // 세션 데이터 사용 예시
+            if (response.data && response.data.isLoggedIn) {
+              this.isLogin = true
+              let sendList = JSON.parse(JSON.stringify(response.data.sendList));
+              this.setSendList(sendList)
+              this.sendLength()
+              console.log(sendList)
+            } else {
+              console.log('로그인되어 있지 않습니다.');
+            }
+          })
+          .catch(error => {
+            console.error('세션 데이터를 가져오는 중 에러 발생: ', error);
+          });
     },
     showDetails() {
       this.showDetailsModal = true;

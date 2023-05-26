@@ -129,7 +129,7 @@ export default new VueRouter({
       path: '/doctor/editor',
       component: ImageEditor,
       meta: {
-        roles: ['ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_NURSE']
+        roles: ['ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_NURSE', 'ROLE_MASTER']
       }
     },
     {
@@ -143,7 +143,7 @@ export default new VueRouter({
       path: '/mobile/login/',
       component: MobileLogin,
       meta: {
-        roles: ['ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_NURSE']
+        roles: ['ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_NURSE', 'ROLE_MASTER']
       }
     },
     {
