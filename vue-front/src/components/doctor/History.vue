@@ -226,7 +226,6 @@ export default {
         month = "0" + month;
       }
       let date = dateTemp.getDate();
-
       return year + "." + month + "." + date;
     },
     // 진료기록리스트에서 특정 진료기록 선택
