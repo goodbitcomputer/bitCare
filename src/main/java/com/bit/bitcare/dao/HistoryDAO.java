@@ -12,4 +12,5 @@ public interface HistoryDAO {
     public List<HistoryDTO> selectAll();
     public void delete(int id);
     public void insert(HistoryDTO historyDTO);
+    public void update(HistoryDTO historyDTO);
 }

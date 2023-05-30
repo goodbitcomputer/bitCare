@@ -1,112 +1,48 @@
 <template>
   <div class="history-box border-box">
-    <div>
-      <!--      history 리스트-->
-      <div class="border-box" v-for="(item) in historyList" :key="item.id">
-        <div @click="selectHistoryBtn(item)">
-          <div>
-            <span>{{ dateMsg(item.entryDate) }}</span>
-          </div>
-          <div>
-            <span>{{ item.visit }}</span>
-          </div>
-        </div>
+    <div class="border-box d-flex">
+      <span style="font-size: 1.2em; font-weight: 700; flex-grow: 1">진료 기록</span>
+      <span style="cursor:pointer" @click="refreshBtn">새로고침</span>
+    </div>
+    <!--      history 리스트-->
+    <div class="empty-list-box border-box" v-if="isListEmpty">
+      <div class="empty-img-box">
+        <img src="@/assets/img/empty-box.png">
       </div>
     </div>
-    <div class="history-detail-box border-box">
-      <!--      진료기록title-->
-      <div>
-        <span>진료기록</span>
-        <span>[{{ dateMsg(selectHistoryData.entryDate) }}]</span>
-      </div>
-      <!--      신체계측/바이탈-->
-      <div>
-        <span class="font-weight-bold">신체계측/바이탈</span>
-        <div class="table-wrapper">
-          <b-table hover :items="pyItems" :fields="pyFields" small>
-            <template #cell(code)="data">
-              <div class="">
-                {{ data.value }}
-              </div>
-            </template>
-            <template #cell(name)="data">
-              <div class="ellipsis-name">
-                {{ data.value }}
-              </div>
-            </template>
-          </b-table>
-        </div>
-      </div>
-      <!--      의사정보-->
-      <div class="doctor-info">
-        <span>{{ selectHistoryData.visit }}</span>
-        <span>외래진료</span>
-        <span>{{ selectHistoryData.dept }}</span>
-        <span>{{ selectHistoryData.name }}</span>
-      </div>
-      <!--      진료기록 상세정보-->
-      <!--      이미지 list-->
-      <div class="border-box">
-        <span class="font-weight-bold">이미지</span>
-        <div class="img-list-box">
-          <swiper :options="swiperOptions" ref="swiper">
-            <swiper-slide v-for="(slide, index) in slides" :key="index">
-              <!-- 슬라이드 내용 -->
-              <img :src="slide.imagePath" alt="Slide Image">
-            </swiper-slide>
-
-            <!-- 네비게이션 버튼 -->
-            <div class="swiper-button-prev" slot="button-prev"></div>
-            <div class="swiper-button-next" slot="button-next"></div>
-          </swiper>
-        </div>
-        <!--          <b-button class="btn col mt-1" variant="primary">촬영 부위 선택</b-button>-->
-        <div class="imageCategory-box">
-
-        </div>
-      </div>
-
-
-      <div>
-        <span class="font-weight-bold">증상</span>
-        <div style="padding: 5px; border: 1px solid #DBDFE5; border-radius: 5px;">
-          {{ selectHistoryData.symptomDetail }}
-        </div>
-
-      </div>
-      <!--      상병-->
-      <div>
-        <span class="font-weight-bold">상병</span>
-        <div>
-          <div class="table-wrapper">
-            <b-table hover :items="sbItems" :fields="sbFields"
-                     :tbody-tr-class="rowClass" small>
-              <template #cell(sb)="data">
-                <div class="ellipsis-sb td-box-sb">
-                  {{ data.value }}
-                </div>
-              </template>
-              <template #cell(code)="data">
-                <div class="ellipsis-code td-box-code">
-                  {{ data.value }}
-                </div>
-              </template>
-              <template #cell(name)="data">
-                <div class="ellipsis-name td-box-name">
-                  {{ data.value }}
-                </div>
-              </template>
-            </b-table>
+    <div class="d-flex" v-if="!isListEmpty">
+      <div class="waiting-list-box">
+        <div class="border-box" v-for="(item) in historyList" :key="item.id">
+          <div @click="selectHistoryBtn(item)">
+            <div>
+              <span>{{ dateMsg(item.entryDate) }}</span>
+            </div>
+            <div>
+              <span>{{ item.dept }}</span>
+            </div>
+            <div>
+              <span>{{ item.visit }}</span>
+            </div>
           </div>
         </div>
       </div>
-      <!--      처방-->
-      <div>
-        <span class="font-weight-bold">처방</span>
+      <div class="empty-box border-box flex-grow-1" v-if="isSelectEmpty">
+        <div class="empty-img-box">
+          <img src="@/assets/img/empty-box.png">
+        </div>
+      </div>
+      <div class="history-detail-box border-box" v-if="!isSelectEmpty">
+        <!--      진료기록title-->
+        <div class="d-flex">
+          <span>진료기록</span>
+          <span class="flex-grow-1">[{{ dateMsg(selectHistoryData.entryDate) }}]</span>
+          <span style="cursor:pointer" @click="updateBtn" v-if="isCheckUpdate">편집</span>
+        </div>
+        <!--      신체계측/바이탈-->
         <div>
+          <span class="font-weight-bold">신체계측/바이탈</span>
           <div class="table-wrapper">
-            <b-table hover :items="cbItems" thead-class="hidden_header"
-                     :tbody-tr-class="rowClass" small>
+            <b-table hover :items="pyItems" :fields="pyFields" small>
               <template #cell(code)="data">
                 <div class="">
                   {{ data.value }}
@@ -120,13 +56,97 @@
             </b-table>
           </div>
         </div>
+        <!--      의사정보-->
+        <div class="doctor-info">
+          <span>{{ selectHistoryData.visit }}</span>
+          <span>외래진료</span>
+          <span>{{ selectHistoryData.dept }}</span>
+          <span>{{ selectHistoryData.name }}</span>
+        </div>
+        <!--      진료기록 상세정보-->
+        <!--      이미지 list-->
+        <div class="border-box">
+          <span class="font-weight-bold">이미지</span>
+          <div class="img-list-box">
+            <swiper :options="swiperOptions" ref="swiper">
+              <swiper-slide v-for="(slide, index) in slides" :key="index">
+                <!-- 슬라이드 내용 -->
+                <img :src="slide.imagePath" alt="Slide Image">
+              </swiper-slide>
+
+              <!-- 네비게이션 버튼 -->
+              <div class="swiper-button-prev" slot="button-prev"></div>
+              <div class="swiper-button-next" slot="button-next"></div>
+            </swiper>
+          </div>
+          <!--          <b-button class="btn col mt-1" variant="primary">촬영 부위 선택</b-button>-->
+          <div class="imageCategory-box">
+
+          </div>
+        </div>
+
+
+        <div>
+          <span class="font-weight-bold">증상</span>
+          <div style="padding: 5px; border: 1px solid #DBDFE5; border-radius: 5px;"
+               v-html="selectHistoryData.symptomDetail">
+          </div>
+
+        </div>
+        <!--      상병-->
+        <div>
+          <span class="font-weight-bold">상병</span>
+          <div>
+            <div class="table-wrapper">
+              <b-table hover :items="sbItems" :fields="sbFields"
+                       :tbody-tr-class="rowClass" small>
+                <template #cell(sb)="data">
+                  <div class="ellipsis-sb td-box-sb">
+                    {{ data.value }}
+                  </div>
+                </template>
+                <template #cell(code)="data">
+                  <div class="ellipsis-code td-box-code">
+                    {{ data.value }}
+                  </div>
+                </template>
+                <template #cell(name)="data">
+                  <div class="ellipsis-name td-box-name">
+                    {{ data.value }}
+                  </div>
+                </template>
+              </b-table>
+            </div>
+          </div>
+        </div>
+        <!--      처방-->
+        <div>
+          <span class="font-weight-bold">처방</span>
+          <div>
+            <div class="table-wrapper">
+              <b-table hover :items="cbItems" thead-class="hidden_header"
+                       :tbody-tr-class="rowClass" small>
+                <template #cell(code)="data">
+                  <div class="">
+                    {{ data.value }}
+                  </div>
+                </template>
+                <template #cell(name)="data">
+                  <div class="ellipsis-name">
+                    {{ data.value }}
+                  </div>
+                </template>
+              </b-table>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import {mapState} from "vuex";
+import {mapActions, mapMutations, mapState} from "vuex";
 import axios from "axios";
 
 export default {
@@ -135,6 +155,7 @@ export default {
   // Note `isActive` is left out and will not appear in the rendered table
   data() {
     return {
+      // 선택된 히스토리데이터
       selectHistoryData: "",
       selectSbList: [],
       selectCbList: [],
@@ -156,39 +177,15 @@ export default {
         {key: 'code', label: '코드', sortable: true},
         {key: 'name', label: '명칭', sortable: true},
       ],
-      sbItems: [
-        {sb: '주상병', code: 'Dickerson', name: 'Macdonaldsdsadassssssssssssssssdadadsadsadsasadasdd'},
-        {sb: '부상병', code: 'Larsen', name: 'Shaw'},
-        {sb: '부상병', code: 'Geneva', name: 'Wilson'},
-        {sb: '부상병', code: 'Jami', name: 'Carney'}
-      ],
+      sbItems: [],
       specialData: "주상병", // 특정 속성 데이터
 
       // 처방 테이블 로직
       // cbFields: ["sb", "code", "name"],
-      cbItems: [
-        {code: '645700880', name: '세토펜정80밀리그램(어쩌구저쩌구ㅇㄴㅁㅇㅁㅇㄴㅁㅇㄴㅁ)', dose: '1', time: "1", days: "1"},
-        {
-          code: '653403810',
-          name: 'DickersonDickersonDickersonDickersonDickersonDickersonDickerson',
-          dose: '1',
-          time: "1",
-          days: "1"
-        },
-        {code: '653403812', name: '아르도민캡슐(에르도스도르도르말말마람람)', dose: '1', time: "1", days: "1"},
-        {code: '645700883', name: '알게이트정(120밀리그람)', dose: '1', time: "1", days: "1"},
-      ],
+      cbItems: [],
 
       //   swiper
-      slides: [
-        {imagePath: '/assets/img/testimonials/testimonials-1.jpg'},
-        {imagePath: '/assets/img/testimonials/testimonials-1.jpg'},
-        {imagePath: '/assets/img/testimonials/testimonials-1.jpg'},
-        {imagePath: '/assets/img/testimonials/testimonials-1.jpg'},
-        {imagePath: '/assets/img/testimonials/testimonials-1.jpg'},
-        {imagePath: '/assets/img/testimonials/testimonials-1.jpg'},
-        {imagePath: '/assets/img/testimonials/testimonials-1.jpg'},
-      ],
+      slides: [],
       swiperOptions: {
         slidesPerView: 3, // 한번에 보여줄 슬라이드 개수
         spaceBetween: 10, // 슬라이드 사이 여백
@@ -205,12 +202,40 @@ export default {
       },
     }
   },
+  mounted() {
+    // historyPage의 historyData 초기화
+    this.$EventBus.$on('initHistory', () => {
+      this.selectHistoryData = "";
+    });
+    // historyPage 새로고침
+    this.$EventBus.$on('refresh', () => {
+      this.refreshBtn();
+    });
+  },
   computed: {
     ...mapState('doctor',
-        ['historyList']
-    )
+        ['historyList', 'waitingData']
+    ),
+    // 진료기록 리스트가 있는지 확인
+    isListEmpty() {
+      return this.historyList.length === 0 ? true : false;
+    },
+    // 진료기록 데이터가 있는지 확인
+    isSelectEmpty() {
+      return this.selectHistoryData === "" ? true : false;
+    },
+    // 대기환자 진료부서id와 진료기록 진료부서id가 같은지 비교
+    isCheckUpdate() {
+      return this.selectHistoryData.deptId === this.waitingData.deptId ? true : false;
+    }
   },
   methods: {
+    ...mapMutations('doctor', {
+      historyDataToWrite: 'historyDataToWrite',
+    }),
+    ...mapActions('doctor', {
+      getHistoryList: 'getHistoryList'
+    }),
     // 상병 테이블 로직
     rowClass(item) {
       // 해당 행의 name 속성이 specialData와 일치하는지 확인
@@ -226,7 +251,6 @@ export default {
         month = "0" + month;
       }
       let date = dateTemp.getDate();
-
       return year + "." + month + "." + date;
     },
     // 진료기록리스트에서 특정 진료기록 선택
@@ -237,9 +261,6 @@ export default {
         let diseaseList = JSON.parse(response.data.diseaseList);
         let diagnoseList = JSON.parse(response.data.diagnoseList);
         let imgList = JSON.parse(response.data.imgList);
-        console.log(diseaseList);
-        console.log(diagnoseList);
-        console.log(imgList);
         this.setSelectSbList(diseaseList);
         this.setSelectCbList(diagnoseList);
         this.setSelectImgList(imgList);
@@ -263,42 +284,92 @@ export default {
       this.selectHistoryData = item;
     },
     setSelectSbList(item) {
-      this.selectSbList = item;
+      this.selectSbList = [];
       this.sbItems = [];
-      item.forEach((i)=>{
+      let degree = (degreeItem) => {
+        return degreeItem === "주상병" ? true : false;
+      }
+      item.forEach((i) => {
+        this.selectSbList.push({main: degree(i.degree), code: i.code, name: i.name, historyId: i.historyId})
         this.sbItems.push({sb: i.degree, code: i.code, name: i.name});
       })
     },
     setSelectCbList(item) {
       this.selectCbList = item;
       this.cbItems = [];
-      item.forEach((i)=>{
+      item.forEach((i) => {
         this.cbItems.push({code: i.code, name: i.name, dose: i.dose, time: i.time, days: i.days});
       })
     },
     setSelectImgList(item) {
       this.selectImgList = item;
       this.slides = [];
-      item.forEach((i)=>{
+      item.forEach((i) => {
         this.slides.push({imagePath: i.imagePath})
       })
     },
+    updateBtn() {
+      let writeObj = {
+        history: this.selectHistoryData,
+        sbList: this.selectSbList,
+        cbList: this.selectCbList,
+        imgList: this.selectImgList,
+      }
+      this.historyDataToWrite(writeObj);
+    },
 
-
-
+    //   새로고침 버튼
+    refreshBtn() {
+      // 히스토리 리스트 db에서 받아오기
+      this.getHistoryList(this.waitingData.patientId);
+      // 선택한 진료기록 초기화
+      this.selectHistoryData = "";
+      this.selectSbList = [];
+      this.selectCbList = [];
+      this.selectImgList = [];
+      this.pyItems = [];
+      this.sbItems = [];
+      this.cbItems = [];
+      this.slides = [];
+    }
   },
 
 }
 </script>
 
 <style lang="scss" scoped>
+.empty-list-box {
+  height: 140px;
+  display: flex;
+  flex-grow: 1;
+  width: inherit;
+}
+
+.empty-box {
+  height: 140px;
+  display: flex;
+}
+
+.empty-img-box {
+  width: 70px;
+  margin: 0 auto;
+  display: flex;
+  vertical-align: middle;
+  justify-content: center;
+}
+
+.empty-img-box img {
+  width: inherit;
+  object-fit: contain;
+}
+
 b-table * * {
   padding: 0 !important;
   margin: 0 !important;
 }
 
 .history-box {
-  display: flex;
+  //display: flex;
 }
 
 // 의사정보 box

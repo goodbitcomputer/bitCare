@@ -4,9 +4,9 @@
     <Home v-if="homeByStep"/>
     <PatientList v-if="patientListByStep"/>
     <PatientHistoryList v-if="patientHistoryByStep"/>
-    <PatientHistory v-if="messageByStep"/>
+    <PatientHistory v-if="false"/>
+    <MobileMessage v-if="messageByStep"/>
     <Waiting v-if="settingByStep"/>
-
     <Footer/>
   </div>
 </template>
@@ -20,11 +20,13 @@ import PatientList from "@/components/mobile/doctor/PatientList.vue";
 import PatientHistoryList from "@/components/mobile/doctor/PatientHistoryList.vue";
 import PatientHistory from "@/components/mobile/doctor/PatientHistory.vue";
 import Waiting from "@/components/mobile/doctor/Wating.vue";
+import MobileMessage from "@/components/mobile/doctor/Message.vue";
 import {mapState} from "vuex";
 
 export default {
   name: "MobileDoctor",
   components: {
+    MobileMessage,
     NavBar,
     Footer,
     Home,

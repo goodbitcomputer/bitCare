@@ -92,7 +92,17 @@ public class DoctorServiceImpl implements DoctorService {
         HttpSession session = request.getSession();
         EmployeeDTO logIn = (EmployeeDTO) session.getAttribute("logIn");
 
-        List<WaitingDTO> list = waitingDAO.selectAllByDept(logIn.getDeptId());
+        List<WaitingDTO> list = waitingDAO.selectWaitByDept(logIn.getDeptId());
+
+        return list;
+    }
+
+    @Override
+    public List<WaitingDTO> getWaitingCmopletedData(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        EmployeeDTO logIn = (EmployeeDTO) session.getAttribute("logIn");
+
+        List<WaitingDTO> list = waitingDAO.selectCompletedByDept(logIn.getDeptId());
 
         return list;
     }
@@ -105,10 +115,13 @@ public class DoctorServiceImpl implements DoctorService {
 
         try {
             EmployeeDTO logIn = (EmployeeDTO) session.getAttribute("logIn");
-
             HistoryDTO historyDTO = new HistoryDTO();
+            if(requestData.getId() == -1) {
+                historyDTO.setId(requestData.getId());
+            }else{
+                historyDTO = historyDAO.selectOne(requestData.getId());
+            }
 
-            historyDTO.setId(requestData.getId());
             historyDTO.setEmployeeId(logIn.getId());
             historyDTO.setPatientId(requestData.getPatientId());
             historyDTO.setDeptId(requestData.getDeptId());
@@ -121,11 +134,26 @@ public class DoctorServiceImpl implements DoctorService {
             historyDTO.setSymptomDetail(requestData.getSymptomDetail());
             historyDTO.setVisit(requestData.getVisit());
 
-            historyDAO.insert(historyDTO);
-
-
-            List<HistoryDiseaseDTO> diseaseList = new ArrayList<>();
-            List<HistoryDiagnoseDTO> diagnoseList = new ArrayList<>();
+            System.out.println(historyDTO);
+            if(historyDTO.getId() ==-1) {
+                historyDAO.insert(historyDTO);
+            }else{
+                System.out.println(historyDTO.getId());
+                historyDAO.update(historyDTO);
+//                업데이트시 히스토리관련 상병테이블 초기화
+                List<HistoryDiseaseDTO> diseaseList = historyDiseaseDAO.selectByHistoryId(historyDTO.getId());
+                System.out.println("diseaseList: "+diseaseList);
+                for(HistoryDiseaseDTO diseaseDTO : diseaseList){
+                    historyDiseaseDAO.delete(diseaseDTO.getId());
+                }
+//                업데이트시 히스토리관련 처방테이블 초기화
+                List<HistoryDiagnoseDTO> diagnoseList = historyDiagnoseDAO.selectByHistoryId(historyDTO.getId());
+                System.out.println("diagnoseList: "+diagnoseList);
+                for(HistoryDiagnoseDTO diagnoseDTO : diagnoseList){
+                    historyDiagnoseDAO.delete(diagnoseDTO.getId());
+                }
+            }
+            
             // 상병 히스토리id 넣어야함
             for (DiseaseVO item : requestData.getWriteSbList()) {
                 HistoryDiseaseDTO diseaseDTO = new HistoryDiseaseDTO();
@@ -134,7 +162,7 @@ public class DoctorServiceImpl implements DoctorService {
                 diseaseDTO.setName(item.getName());
                 diseaseDTO.setDegree(item.getMain() ? "주상병" : "부상병");
 
-//            diseaseList.add(diseaseDTO);
+                System.out.println(diseaseDTO);
                 historyDiseaseDAO.insert(diseaseDTO);
             }
 
@@ -148,9 +176,10 @@ public class DoctorServiceImpl implements DoctorService {
                 diagnoseDTO.setTime(item.getTime());
                 diagnoseDTO.setDays(item.getDays());
 
-//            diagnoseList.add(diagnoseDTO);
+                System.out.println(diagnoseDTO);
                 historyDiagnoseDAO.insert(diagnoseDTO);
             }
+
             result.addProperty("status", "success");
         } catch (Exception e) {
             result.addProperty("status", "fail");
@@ -160,12 +189,7 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public List<HistoryDTO> getHistoryList(int patientId) {
-        List<HistoryDTO> list = historyDAO.selectByPatientId(patientId);
-
-        for (HistoryDTO h : list) {
-            System.out.println(h);
-        }
-        return list;
+        return historyDAO.selectByPatientId(patientId);
     }
 
     @Override
@@ -218,6 +242,11 @@ public class DoctorServiceImpl implements DoctorService {
 
 
         return result;
+    }
+
+    @Override
+    public void completedWaiting(WaitingDTO waitingDTO) {
+        waitingDAO.update(waitingDTO);
     }
 
 

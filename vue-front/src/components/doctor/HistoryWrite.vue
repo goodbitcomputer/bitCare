@@ -3,119 +3,126 @@
     <div class="border-box">
       <span style="font-size: 1.2em; font-weight: 700">진료 기록 작성</span>
     </div>
-    <div class="border-box">
-      <b-dropdown size="sm" :text="visit" class="m-0">
-        <b-dropdown-item-button @click="visitBtn('초진')">초진</b-dropdown-item-button>
-        <b-dropdown-item-button @click="visitBtn('재진')">재진</b-dropdown-item-button>
-      </b-dropdown>
-    </div>
-    <!--    증상-->
-    <div class="border-box">
-      <div class="d-flex">
-        <span class="font-weight-bold flex-grow-1">증상</span>
-        <button @click="editorBtn">편집</button>
+    <div class="empty-list-box border-box" v-if="isSelectEmpty">
+      <div class="empty-img-box">
+        <img src="@/assets/img/empty-box.png">
       </div>
-      <div class="symptom-box">
-        <div class="symptomInfo-box">
-          <textarea ref="symptomEditor" id="symptomEditor" name="symptom"></textarea>
+    </div>
+    <div v-if="!isSelectEmpty">
+      <div class="border-box">
+        <b-dropdown size="sm" :text="visitMsg" class="m-0">
+          <b-dropdown-item-button @click="visitBtn('초진')">초진</b-dropdown-item-button>
+          <b-dropdown-item-button @click="visitBtn('재진')">재진</b-dropdown-item-button>
+        </b-dropdown>
+      </div>
+      <!--    증상-->
+      <div class="border-box">
+        <div class="d-flex">
+          <span class="font-weight-bold flex-grow-1">증상</span>
+          <button @click="editorBtn">편집</button>
         </div>
-        <div class="writeImg-box">
-          <div class="img-list-box">
-            <swiper :options="swiperOptions" ref="swiper">
-              <swiper-slide v-for="(slide, index) in writeSlides" :key="index">
-                <!-- 슬라이드 내용 -->
-                <img :src="slide.imagePath" alt="Slide Image">
-              </swiper-slide>
+        <div class="symptom-box">
+          <div class="symptomInfo-box">
+            <textarea ref="symptomEditor" id="symptomEditor" name="symptom"></textarea>
+          </div>
+          <div class="writeImg-box">
+            <div class="img-list-box">
+              <swiper :options="swiperOptions" ref="swiper">
+                <swiper-slide v-for="(slide, index) in writeImgList" :key="index">
+                  <!-- 슬라이드 내용 -->
+                  <img :src="slide.imagePath" alt="Slide Image">
+                </swiper-slide>
 
-              <!-- 네비게이션 버튼 -->
-              <div class="swiper-button-prev" slot="button-prev"></div>
-              <div class="swiper-button-next" slot="button-next"></div>
-            </swiper>
+                <!-- 네비게이션 버튼 -->
+                <div class="swiper-button-prev" slot="button-prev"></div>
+                <div class="swiper-button-next" slot="button-next"></div>
+              </swiper>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!--    상병-->
-    <div class="border-box">
-      <span class="font-weight-bold">상병</span>
-      <div>
-        <b-table class="text-nowrap" :items="writeSbList" :fields="sbFields" small>
-          <template #cell(main)="data">
-            <div class="text-center">
-              <input
-                  class="radio-btn"
-                  type="radio"
-                  v-model="data.item.main"
-                  :value="true"
-              >
-            </div>
-          </template>
-          <template #cell(sub)="data">
-            <div class="text-center">
-              <input
-                  class="radio-btn"
-                  type="radio"
-                  v-model="data.item.main"
-                  :value="false"
-              >
-            </div>
-          </template>
-          <template #cell(icon)="data">
-            <div class="text-center">
-              <b-icon
-                  icon="dash-circle" variant="danger"
-                  @click="removeWriteSbList(data.item)"
-              ></b-icon>
-            </div>
-          </template>
-          <template #cell(name)="data">
-            <div class="ellipsis-name td-box-name">
-              {{ data.value }}
-            </div>
-          </template>
-        </b-table>
-        <!--        상병추가모달-->
-        <writeSb-model/>
+      <!--    상병-->
+      <div class="border-box">
+        <span class="font-weight-bold">상병</span>
+        <div>
+          <b-table class="text-nowrap" :items="writeSbList" :fields="sbFields" small>
+            <template #cell(main)="data">
+              <div class="text-center">
+                <input
+                    class="radio-btn"
+                    type="radio"
+                    v-model="data.item.main"
+                    :value="true"
+                >
+              </div>
+            </template>
+            <template #cell(sub)="data">
+              <div class="text-center">
+                <input
+                    class="radio-btn"
+                    type="radio"
+                    v-model="data.item.main"
+                    :value="false"
+                >
+              </div>
+            </template>
+            <template #cell(icon)="data">
+              <div class="text-center">
+                <b-icon
+                    icon="dash-circle" variant="danger"
+                    @click="removeWriteSbList(data.item)"
+                ></b-icon>
+              </div>
+            </template>
+            <template #cell(name)="data">
+              <div class="ellipsis-name td-box-name">
+                {{ data.value }}
+              </div>
+            </template>
+          </b-table>
+          <!--        상병추가모달-->
+          <writeSb-model/>
+        </div>
       </div>
-    </div>
-    <!--    처방-->
-    <div class="border-box">
-      <span class="font-weight-bold">처방</span>
-      <div>
-        <b-table :items="writeCbList" :fields="cbFields" small>
-          <template #cell(dose)="data">
-            <input class="cb-input" type="number" v-model="data.item.dose">
-          </template>
-          <template #cell(time)="data">
-            <input class="cb-input" type="number" v-model="data.item.time">
-          </template>
-          <template #cell(days)="data">
-            <input class="cb-input" type="number" v-model="data.item.days">
-          </template>
+      <!--    처방-->
+      <div class="border-box">
+        <span class="font-weight-bold">처방</span>
+        <div>
+          <b-table :items="writeCbList" :fields="cbFields" small>
+            <template #cell(dose)="data">
+              <input class="cb-input" type="number" v-model="data.item.dose">
+            </template>
+            <template #cell(time)="data">
+              <input class="cb-input" type="number" v-model="data.item.time">
+            </template>
+            <template #cell(days)="data">
+              <input class="cb-input" type="number" v-model="data.item.days">
+            </template>
 
-          <template #cell(icon)="data">
-            <div class="text-center">
-              <b-icon
-                  icon="dash-circle" variant="danger"
-                  @click="removeWriteCbList(data.item)"
-              ></b-icon>
-            </div>
-          </template>
-          <template #cell(name)="data">
-            <div class="ellipsis-name td-box-name">
-              {{ data.value }}
-            </div>
-          </template>
-        </b-table>
-        <!--        상병추가모달-->
-        <writeCb-model/>
+            <template #cell(icon)="data">
+              <div class="text-center">
+                <b-icon
+                    icon="dash-circle" variant="danger"
+                    @click="removeWriteCbList(data.item)"
+                ></b-icon>
+              </div>
+            </template>
+            <template #cell(name)="data">
+              <div class="ellipsis-name td-box-name">
+                {{ data.value }}
+              </div>
+            </template>
+          </b-table>
+          <!--        상병추가모달-->
+          <writeCb-model/>
+        </div>
       </div>
-    </div>
-    <div class="d-flex justify-content-end">
-      <b-button class="w-25 m-1" variant="dark" @click="initBtn">초기화</b-button>
-      <b-button class="w-25 m-1" variant="secondary">저장</b-button>
-      <b-button class="w-25 m-1" variant="primary" @click="upsertBtn">진료 완료</b-button>
+      <div class="d-flex justify-content-end">
+        <b-button class="w-25 m-1" variant="dark" @click="initBtn">초기화</b-button>
+        <b-button class="w-25 m-1" variant="secondary" @click="upsertBtn">{{ isInsertOrUpdateCheck }}</b-button>
+        <b-button class="w-25 m-1" variant="primary" @click="completedBtn">진료 완료</b-button>
+      </div>
     </div>
   </div>
 </template>
@@ -124,7 +131,7 @@
 
 import WriteSbModel from "@/components/doctor/WriteSbModal.vue";
 import WriteCbModel from "@/components/doctor/WriteCbModal.vue";
-import {mapState, mapMutations} from 'vuex';
+import {mapState, mapMutations, mapActions} from 'vuex';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import axios from "axios";
 
@@ -141,8 +148,6 @@ export default {
     return {
       // 증상 에디터 데이터
       symptomEditor: "",
-      // 초진, 재진
-      visit: "초진",
 
       sbFields: [
         {key: 'main', label: '주상병'},
@@ -161,15 +166,6 @@ export default {
       ],
 
       //   swiper
-      writeSlides: [
-        {imagePath: '/assets/img/testimonials/testimonials-1.jpg'},
-        {imagePath: '/assets/img/testimonials/testimonials-1.jpg'},
-        {imagePath: '/assets/img/testimonials/testimonials-1.jpg'},
-        {imagePath: '/assets/img/testimonials/testimonials-1.jpg'},
-        {imagePath: '/assets/img/testimonials/testimonials-1.jpg'},
-        {imagePath: '/assets/img/testimonials/testimonials-1.jpg'},
-        {imagePath: '/assets/img/testimonials/testimonials-1.jpg'},
-      ],
       swiperOptions: {
         slidesPerView: 1, // 한번에 보여줄 슬라이드 개수
         spaceBetween: 10, // 슬라이드 사이 여백
@@ -184,7 +180,8 @@ export default {
           prevEl: '.swiper-button-prev',
         },
       },
-
+      // ckEditor 다시 나타날떄 유무 체크
+      ckeditor: 0,
 
       //login data
       login: '',
@@ -200,41 +197,37 @@ export default {
     //   this.setTest(this.items)
     // });
 
-    ClassicEditor.create(document.querySelector('#symptomEditor'), {
-      contentCss: this.contentCss,
-      toolbar: [
-        // 'heading',
-        // '|',
-        'bold',
-        'italic',
-        'link',
-        'bulletedList',
-        '|',
-        'undo',
-        'redo',
-        // '|',
-        // 'imageUpload',
-        // 'alignment',
-        // 'numberedList',
-        // 'imageInsert',
-        // 'blockQuote',
-        // '|',
-        // 'ckfinder',
-      ],
-    }).then(newEditor => {
-      this.symptomEditor = newEditor;
-      this.setSymptomEditor(newEditor);
-    }).catch((error) => {
-      console.error(error);
-    });
   },
-
+// 환자데이터가 활성화되면 ckeditor 세팅하기
+  updated() {
+    this.$nextTick(() => {
+      if (!this.isSelectEmpty) {
+        if (this.ckeditor == 0) {
+          this.ckeditorSetting();
+          this.ckeditor = this.ckeditor + 1;
+        }
+      } else {
+        this.ckeditor = 0;
+      }
+    })
+  },
   // vuex
   computed: {
     ...mapState('doctor',
-        ['sbList', 'writeSbList', 'writeCbList', 'waitingData', 'physicalData', 'memoEditor', 'writeSbList', 'writeCbList', 'historyId']
+        ['sbList', 'writeSbList', 'writeCbList', 'waitingData', 'physicalData', 'memoEditor', 'writeSbList', 'writeCbList', 'writeImgList', 'historyId', 'visit']
     ),
-
+    // 선택된 환자 데이터가 있는지 확인
+    isSelectEmpty() {
+      return this.waitingData === "" ? true : false;
+    },
+    isInsertOrUpdateCheck() {
+      return this.historyId === -1 ? "신규 저장" : "수정";
+    },
+    // 초진, 재진 드롭박스 텍스트 변경
+    visitMsg() {
+      if (this.visit === "초진") return "초진";
+      else return "재진";
+    },
   },
   methods: {
     ...mapMutations('doctor', {
@@ -244,14 +237,46 @@ export default {
       removeWriteCbList: 'removeWriteCbList',
       setSymptomEditor: 'setSymptomEditor',
       initWriteHistory: 'initWriteHistory',
+      setVisit: 'setVisit',
+      setWaitingData: 'setWaitingData',
     }),
-
+    ...mapActions('doctor', {
+      getHistoryList: 'getHistoryList'
+    }),
     initBtn() {
       this.initWriteHistory();
     },
-
+    ckeditorSetting() {
+      ClassicEditor.create(document.querySelector('#symptomEditor'), {
+        contentCss: this.contentCss,
+        toolbar: [
+          // 'heading',
+          // '|',
+          'bold',
+          'italic',
+          'link',
+          'bulletedList',
+          '|',
+          'undo',
+          'redo',
+          // '|',
+          // 'imageUpload',
+          // 'alignment',
+          // 'numberedList',
+          // 'imageInsert',
+          // 'blockQuote',
+          // '|',
+          // 'ckfinder',
+        ],
+      }).then(newEditor => {
+        this.symptomEditor = newEditor;
+        this.setSymptomEditor(newEditor);
+      }).catch((error) => {
+        console.error(error);
+      });
+    },
     visitBtn(item) {
-      this.visit = item;
+      this.setVisit(item);
     },
 
     // editorBtn
@@ -259,38 +284,11 @@ export default {
       this.$router.push('/doctor/editor');
     },
     upsertBtn() {
-      // console.log("ClassicEditor: "+this.symptomEditor.getData());
-
-      console.log(this.physicalData[0].bpSystolic);
-      console.log(this.physicalData[0].bpDiastolic);
-      console.log(this.physicalData[0].height);
-      console.log(this.physicalData[0].weight);
-      console.log(this.physicalData[0].temperature);
-      console.log(this.symptomEditor.getData());
-      console.log(this.memoEditor.getData());
-      console.log(this.visit);
-
       this.historyUpsertSend();
-
-
     },
 
     // 접수
     historyUpsertSend() {
-
-      let upsertData = new FormData();
-      upsertData.append('id', this.historyId);
-      upsertData.append('patientId', this.waitingData.patientId);
-      upsertData.append('deptId', this.waitingData.deptId);
-      upsertData.append('memo', this.memoEditor.getData());
-      upsertData.append('bpSystolic', this.physicalData[0].bpSystolic);
-      upsertData.append('bpDiastolic', this.physicalData[0].bpDiastolic);
-      upsertData.append('height', this.physicalData[0].height);
-      upsertData.append('weight', this.physicalData[0].weight);
-      upsertData.append('temperature', this.physicalData[0].temperature);
-      upsertData.append('symptomDetail', this.symptomEditor.getData());
-      upsertData.append('visit', this.visit);
-
       return axios.post('/doctor/historyUpsert_proc', {
             id: this.historyId,
             patientId: this.waitingData.patientId,
@@ -305,10 +303,9 @@ export default {
             visit: this.visit,
             writeSbList: this.writeSbList,
             writeCbList: this.writeCbList,
+            writeImgList: this.writeImgList,
           }, {},
       ).then(response => {
-        console.log(response.data.status);
-        console.log(typeof response.data.status)
         if (response.data.status === 'fail') {
           Swal.fire({
             icon: 'error',
@@ -321,6 +318,9 @@ export default {
         if (response.data.status === 'success') {
           // 환자데이터 초기화
           this.initWriteHistory();
+          // historyPage 새로고침
+          this.$EventBus.$emit('refresh');
+
           Swal.fire({
             icon: 'success',
             title: 'success',
@@ -332,14 +332,43 @@ export default {
       }).catch(function (error) {
         console.log(error);
       });
+    },
+    // 진료완료 버튼
+    completedBtn() {
+      let waitingData = this.waitingData;
+      waitingData.state = '진료완료';
+      console.log(waitingData);
 
-
-    }
+      axios.post('/doctor/completed_proc', waitingData).then(() => {
+        // historyPage의 historyData 초기화
+        this.$EventBus.$emit('completedRefresh');
+      }).catch(function (error) {
+        console.log(error);
+      });
+    },
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.empty-box {
+  height: 140px;
+  display: flex;
+}
+
+.empty-img-box {
+  width: 70px;
+  margin: 0 auto;
+  display: flex;
+  vertical-align: middle;
+  justify-content: center;
+}
+
+.empty-img-box img {
+  width: inherit;
+  object-fit: contain;
+}
+
 .symptom-box {
   display: flex;
 }

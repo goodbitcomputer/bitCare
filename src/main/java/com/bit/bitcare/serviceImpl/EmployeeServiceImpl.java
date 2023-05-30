@@ -95,7 +95,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public ResponseEntity<String> selectAll() throws JsonProcessingException {
+    public ResponseEntity<String> selectAll() throws JsonProcessingException
+    {
         Map<String, Object> data = new HashMap<>();
         List<EmployeeDTO> employeeList = employeeDAO.selectAll();
         for(EmployeeDTO i : employeeList){

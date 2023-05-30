@@ -16,6 +16,7 @@ export default {
             {height: "", weight: "", bpSystolic: "", bpDiastolic: "", temperature: ""},
         ],
         historyId: -1,
+        visit: "초진",
 
         // write 상병데이터
         writeSbList: [],    // historyWrite
@@ -24,22 +25,40 @@ export default {
 
         // write 처방데이터
         writeCbList: [],    // historyWrite
+        // write 이미지데이터
+        writeImgList: [],
 
 
+        // 히스토리 페이지
         // 히스토리 리스트
         historyList: [],
-
-
-        // 진료기록 detail
-        historyData: "",    // 선택된 진료기록
-        historyImgList: [], // 진료기록 img리스트
-        historySbList: [],  // 진료기록 상병리스트
-        historyCbList: [],  // 진료기록 처방리스트
-
 
     },
     getters: {},
     mutations: {
+        // 환자기록에서 편집 누를시 환자기록쓰기에 데이터 넘기기
+        historyDataToWrite: (state, {history, sbList, cbList, imgList}) => {
+            console.log(history);
+            console.log(sbList);
+            console.log(cbList);
+            console.log(imgList);
+
+            state.memoEditor.setData(history.memo);
+            state.symptomEditor.setData(history.symptomDetail);
+            state.physicalData = [{
+                height: history.height,
+                weight: history.weight,
+                bpSystolic: history.bpSystolic,
+                bpDiastolic: history.bpDiastolic,
+                temperature: history.temperature
+            },];
+            state.historyId = history.id;
+            state.visit = history.visit;
+            state.writeSbList = sbList;
+            state.writeCbList = cbList;
+            state.writeImgList = imgList;
+
+        },
         // writeData 초기화 기능
         initWriteHistory: (state) => {
             state.memoEditor.setData('');
@@ -50,6 +69,7 @@ export default {
             state.sbList = [];
             state.sbDummyList = [];
             state.writeCbList = [];
+            state.writeImgList = [];
         },
         // 환자 + writeData 초기화 기능
         initWriteHistoryPlus: (state) => {
@@ -62,8 +82,13 @@ export default {
             state.sbList = [];
             state.sbDummyList = [];
             state.writeCbList = [];
+            state.writeImgList = [];
         },
+        // waiting에서 선택된 환자 데이터 저장
+        setVisit: (state, item) => {
+            state.visit = item;
 
+        },
         // waiting에서 선택된 환자 데이터 저장
         setWaitingData: (state, item) => {
             state.waitingData = item;
@@ -77,7 +102,6 @@ export default {
         setMemoEditor: (state, item) => {
             state.memoEditor = item;
         },
-
         // modal에서 historyWrite로 상병테이블 추가
         addWriteSbList: (state, items) => {
             state.writeSbList = [...items];
@@ -131,6 +155,10 @@ export default {
             state.writeCbList = state.writeCbList.filter(param => param.id != item.id);
         },
 
+        // 히스토리 리스트 초기화
+        initHistoryList(state, ) {
+            state.historyList = [];
+        },
         // 히스토리 리스트 -----------------------------
         setHistoryList(state, items) {
             state.historyList = [];

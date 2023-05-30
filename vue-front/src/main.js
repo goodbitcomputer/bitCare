@@ -11,7 +11,8 @@
 
 
 Vue.config.devtools = true
-
+// EventBus 생성
+Vue.prototype.$EventBus = new Vue();
 
 import Vue from 'vue'
 import App from './App'

@@ -9,7 +9,9 @@ import java.util.List;
 public interface WaitingDAO {
     public WaitingDTO selectOne(int id);
     public List<WaitingDTO> selectAll();
-    public List<WaitingDTO> selectAllByDept(int deptId);
+    public List<WaitingDTO> selectWaitByDept(int deptId);
+    public List<WaitingDTO> selectCompletedByDept(int deptId);
     public void delete(int id);
     public void insert(WaitingDTO waitingDTO);
+    public void update(WaitingDTO waitingDTO);
 }

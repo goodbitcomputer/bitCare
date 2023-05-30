@@ -9,4 +9,5 @@ import java.util.List;
 public interface HistoryDiseaseDAO {
     public List<HistoryDiseaseDTO> selectByHistoryId(int historyId);
     public void insert(HistoryDiseaseDTO historyDiseaseDTO);
+    public void delete(int id);
 }

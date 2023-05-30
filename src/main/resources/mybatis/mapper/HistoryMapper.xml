@@ -14,6 +14,7 @@
         LEFT JOIN dept
         ON history.dept_id = dept.id
         WHERE patient_id = #{patientId}
+        ORDER BY history.id DESC;
     </select>
 
     <!-- 진료 기록 선택 -->
@@ -35,8 +36,29 @@
 
     <!-- 진료 기록(history) 생성 -->
     <insert id="insert" parameterType="historyDTO" useGeneratedKeys="true" keyProperty="id">
-        insert into `history`(employee_id,patient_id,dept_id,memo,bp_systolic,bp_diastolic,height,weight,temperature,symptom_detail,entry_date,visit)
-        values(#{employeeId}, #{patientId}, #{deptId}, #{memo}, #{bpSystolic}, #{bpDiastolic}, #{height}, #{weight}, #{temperature}, #{symptomDetail}, now(), #{visit})
+        insert into
+        `history`(employee_id,patient_id,dept_id,memo,bp_systolic,bp_diastolic,height,weight,temperature,symptom_detail,entry_date,visit)
+        values(#{employeeId}, #{patientId}, #{deptId}, #{memo}, #{bpSystolic}, #{bpDiastolic}, #{height}, #{weight},
+        #{temperature}, #{symptomDetail}, now(), #{visit})
     </insert>
+
+    <!-- 진료 기록(history) 수정-->
+    <update id="update" parameterType="historyDTO">
+        UPDATE `history` SET
+        employee_id = #{employeeId},
+        patient_id = #{patientId},
+        dept_id = #{deptId},
+        memo = #{memo},
+        bp_systolic = #{bpSystolic},
+        bp_diastolic = #{bpDiastolic},
+        height = #{height},
+        weight = #{weight},
+        temperature = #{temperature},
+        symptom_detail = #{symptomDetail},
+        entry_date = #{entryDate},
+        visit = #{visit}
+        WHERE
+        id = #{id}
+    </update>
 
 </mapper>
