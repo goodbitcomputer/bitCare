@@ -1,6 +1,8 @@
 package com.bit.bitcare.serviceImpl;
 
+import com.bit.bitcare.dao.DeptDAO;
 import com.bit.bitcare.dao.EmployeeDAO;
+import com.bit.bitcare.model.DeptDTO;
 import com.bit.bitcare.model.UserCustomDetails;
 import com.bit.bitcare.model.EmployeeDTO;
 import com.bit.bitcare.service.EmployeeService;
@@ -49,18 +51,37 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeDAO employeeDAO;
 
+    private final DeptDAO deptDAO;
+
     private final BCryptPasswordEncoder passwordEncoder; // password는 데이터베이스에 인코딩되어 저장되어야한다. (시큐리티에서 막음)
     private final EmployeeDetailService employeeDetailService;
     private final PersistentTokenRepositoryImpl persistentTokenRepository;
 
-    public EmployeeServiceImpl(ObjectMapper objectMapper, EmployeeDAO employeeDAO, BCryptPasswordEncoder passwordEncoder,
+    public EmployeeServiceImpl(ObjectMapper objectMapper, EmployeeDAO employeeDAO, DeptDAO deptDAO, BCryptPasswordEncoder passwordEncoder,
                                EmployeeDetailService employeeDetailService,
                                PersistentTokenRepositoryImpl persistentTokenRepository) {
         this.objectMapper = objectMapper;
         this.employeeDAO = employeeDAO;
+        this.deptDAO = deptDAO;
         this.passwordEncoder = passwordEncoder;
         this.employeeDetailService = employeeDetailService;
         this.persistentTokenRepository = persistentTokenRepository;
+    }
+
+    @Override
+    public ResponseEntity<String> getDeptAll() throws JsonProcessingException {
+        Map<String, Object> data = new HashMap<>();
+        List<DeptDTO> list = deptDAO.selectAll();
+
+        data.put("deptList",list);
+
+        // JSON 문자열 생성
+        String json = objectMapper.writeValueAsString(data);
+
+        // HTTP 응답 생성
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(json);
     }
 
     @Override
@@ -231,15 +252,25 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public boolean register(EmployeeDTO attempt) {
+    public ResponseEntity<String> register(EmployeeDTO attempt) throws IOException {
         attempt.setPassword(passwordEncoder.encode(attempt.getPassword()));
-        attempt.setRole("auth");
-        if (validate(attempt.getUsername())) {
+
+        Map<String, Object> data = new HashMap<>();
+
+        if(validate(attempt.getUsername())){
             employeeDAO.register(attempt);
-            return true;
-        } else {
-            return false;
+            data.put("register","success");
+        }else{
+            data.put("register","fail");
         }
+
+        // JSON 문자열 생성
+        String json = objectMapper.writeValueAsString(data);
+
+        // HTTP 응답 생성
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(json);
     }
 
     @Override

@@ -10,6 +10,8 @@ export default {
         role : "ROLE_ADMIN",
         name : "admin",
         list : [],
+        deptList : [],
+        registerModal : false,
     },
     getters: {
         getRole(state){
@@ -17,6 +19,9 @@ export default {
         },
         getHasName(state){
             return state.name
+        },
+        getDeptList(state){
+            return state.deptList
         }
     },
     mutations: {
@@ -30,6 +35,12 @@ export default {
             console.log(state.list)
             return state.list = list;
         },
+        setDeptList : function (state, deptList){
+            return state.deptList = deptList;
+        },
+        setRegisterModal : function (state, registerModal){
+            return state.registerModal = registerModal;
+        }
     },
     actions: {
 

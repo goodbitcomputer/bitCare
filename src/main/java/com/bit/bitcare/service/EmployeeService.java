@@ -1,5 +1,6 @@
 package com.bit.bitcare.service;
 
+import com.bit.bitcare.model.DeptDTO;
 import com.bit.bitcare.model.EmployeeDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 public interface EmployeeService {
+    public ResponseEntity<String> getDeptAll() throws JsonProcessingException;
     public ResponseEntity<String> autoLogin(HttpServletRequest request) throws IOException;
     public ResponseEntity<String> auth(EmployeeDTO attempt, HttpServletRequest request, HttpServletResponse response, boolean rememberMe) throws IOException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException;
     public ResponseEntity<String> selectAll() throws JsonProcessingException;
@@ -23,6 +25,6 @@ public interface EmployeeService {
     public EmployeeDTO selectOne(int id);
     public void update(int employeeId, String role);
     public void delete(int id);
-    public boolean register(EmployeeDTO attempt);
+    public ResponseEntity<String> register(EmployeeDTO attempt) throws IOException;
     public ResponseEntity<String> getLogInInfo(HttpServletRequest request) throws IOException;
 }
