@@ -152,7 +152,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 #sendButton {
   font-size: 15px;
   right: -30px;
@@ -160,7 +160,7 @@ export default {
 }
 
 #edit{
-  height: 300px !important;
-  overflow-y: auto !important;
+  height: 250px;
+  overflow-y: auto;
 }
 </style>

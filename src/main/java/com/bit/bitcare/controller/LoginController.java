@@ -87,7 +87,7 @@ public class LoginController {
     /**---------------------------------------------------------------------------
      * 2023.05.25
      *
-     * /api/selectAll
+     * selectAll
      * /api/selectAll 에 대한 Get 요청시 employeeService.selectAll 메소드를 실행
      * employeeService.selectAll 메소드에선 모든 직원의 정보를 리턴
      */
@@ -100,13 +100,37 @@ public class LoginController {
     /**---------------------------------------------------------------------------
      * 2023.05.26
      *
-     * /api/updateEmployee
+     * updateEmployee
      * /api/updateEmployee 에 대한 Get 요청시 employeeService.update 메소드를 실행
      * requestParam 으로 받은 EmployeeDTO 의 id 값과 role 을 통해 계정의 권한을 바꿈
      */
     @GetMapping("/api/updateEmployee")
-    public void deleteAlarm(@RequestParam int id, @RequestParam String role) throws IOException {
+    public void updateEmployee(@RequestParam int id, @RequestParam String role) throws IOException {
         // 권한 변경
         employeeService.update(id,role);
+    }
+
+    /**---------------------------------------------------------------------------
+     * 2023.05.30
+     *
+     * getDeptList
+     * /api/getDeptList 에 대한 Get 요청시 employeeService.getDeptAll 메소드를 실행
+     * deptList(진료과목 목록)을 리턴함
+     */
+    @GetMapping("/api/getDeptList")
+    public ResponseEntity<String> getDeptList() throws IOException {
+        return employeeService.getDeptAll();
+    }
+
+    /**---------------------------------------------------------------------------
+     * 2023.05.30
+     *
+     * register
+     * /api/getDeptList 에 대한 Post 요청시 employeeService.register 메소드를 실행
+     * 계정 추가 로직을 실행함
+     */
+    @PostMapping("/api/register")
+    public ResponseEntity<String> register(EmployeeDTO attempt) throws IOException {
+        return employeeService.register(attempt);
     }
 }

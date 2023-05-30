@@ -69,7 +69,12 @@ export default new VueRouter({
             roleName = '간호사'
           }
 
-          alert('해당 페이지에 접근 권한이 없습니다.\n접근권한을 가진 계정으로 로그인 하십시오.\n현재 로그인한 계정의 권한 : '+roleName)
+          window.Swal.fire({
+            icon: 'error',
+            title: 'error',
+            html: '해당 페이지에 접근 권한이 없습니다.<br>접근권한을 가진 계정으로 로그인 하십시오.<br>현재 로그인한 계정의 권한 : '+roleName,
+            timer: 3000
+          })
 
           next(from)
         } else {
@@ -93,7 +98,12 @@ export default new VueRouter({
             roleName = '간호사'
           }
 
-          alert('해당 페이지에 접근 권한이 없습니다.\n접근권한을 가진 계정으로 로그인 하십시오.\n현재 로그인한 계정의 권한 : '+roleName)
+          window.Swal.fire({
+            icon: 'error',
+            title: 'error',
+            html: '해당 페이지에 접근 권한이 없습니다.<br>접근권한을 가진 계정으로 로그인 하십시오.<br>현재 로그인한 계정의 권한 : '+roleName,
+            timer: 3000
+          })
 
           next(from)
         } else {
@@ -117,7 +127,12 @@ export default new VueRouter({
             roleName = '간호사'
           }
 
-          alert('해당 페이지에 접근 권한이 없습니다.\n접근권한을 가진 계정으로 로그인 하십시오.\n현재 로그인한 계정의 권한 : '+roleName)
+          window.Swal.fire({
+            icon: 'error',
+            title: 'error',
+            html: '해당 페이지에 접근 권한이 없습니다.<br>접근권한을 가진 계정으로 로그인 하십시오.<br>현재 로그인한 계정의 권한 : '+roleName,
+            timer: 3000
+          })
 
           next(from)
         } else {
@@ -150,14 +165,14 @@ export default new VueRouter({
       path: '/mobile/register/',
       component: MobileRegister,
       meta: {
-        roles: ['ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_NURSE']
+        roles: ['ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_NURSE', 'ROLE_MASTER']
       }
     },
     {
       path: '/mobile/doctor/',
       component: MobileDoctor,
       meta: {
-        roles: ['ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_NURSE']
+        roles: ['ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_NURSE', 'ROLE_MASTER']
       }
     },
     {
