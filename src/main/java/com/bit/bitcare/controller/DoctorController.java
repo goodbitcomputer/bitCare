@@ -67,7 +67,12 @@ public class DoctorController {
     public List<WaitingDTO> getWaitingData(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         return doctorService.getWaitingData(request);
     }
-
+    // 진료완료 버튼 로직
+    @ResponseBody
+    @GetMapping("/getWaitingCmopletedData")
+    public List<WaitingDTO> getWaitingCmopletedData(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        return doctorService.getWaitingCmopletedData(request);
+    }
     @ResponseBody
     @RequestMapping(value = "/historyUpsert_proc", method = RequestMethod.POST)
     public String historyUpsert_proc(@RequestBody UpsertVO requestData, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -85,6 +90,12 @@ public class DoctorController {
     public String getHistoryAddData(@RequestBody Map<String, Object> requestData, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int historyId = Integer.parseInt(requestData.get("historyId").toString());
         return doctorService.getHistoryAddData(historyId).toString();
+    }
+    @ResponseBody
+    @PostMapping("/completed_proc")
+    public void completed_proc(@RequestBody WaitingDTO waitingDTO, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println(waitingDTO);
+        doctorService.completedWaiting(waitingDTO);
     }
 
 

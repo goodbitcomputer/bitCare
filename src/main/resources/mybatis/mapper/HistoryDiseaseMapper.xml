@@ -9,6 +9,7 @@
     <select id="selectByHistoryId" parameterType="int" resultType="historyDiseaseDTO">
         select * from `history_disease`
         where history_id = #{historyId}
+        ORDER BY history_disease.degree DESC;
     </select>
 
     <!-- 진료 기록의 상병부분(history_disease) insert -->
@@ -16,5 +17,11 @@
         insert into `history_disease`(history_id,degree,code,name)
         values(#{historyId}, #{degree}, #{code}, #{name})
     </insert>
+
+    <!-- 진료 기록의 상병부분(history_disease) 삭제 -->
+    <delete id="delete" parameterType="int">
+        DELETE FROM `history_disease`
+        WHERE id= #{id}
+    </delete>
 
 </mapper>

@@ -32,12 +32,20 @@
     </select>
 
     <!-- 접수대기환자 by진료과목  -->
-    <select id="selectAllByDept" resultType="waitingDTO">
+    <select id="selectWaitByDept" resultType="waitingDTO">
         SELECT waiting.*, patient.name, patient.identity_number, patient.phone_number, patient.gender, patient.birth,
         patient.address_id FROM waiting
         LEFT JOIN patient
         ON waiting.patient_id = patient.id
-        WHERE waiting.dept_id = #{deptId};
+        WHERE waiting.dept_id = #{deptId} AND waiting.state = '대기중';
+    </select>
+    <!-- 접수대기환자 by진료과목  -->
+    <select id="selectCompletedByDept" resultType="waitingDTO">
+        SELECT waiting.*, patient.name, patient.identity_number, patient.phone_number, patient.gender, patient.birth,
+        patient.address_id FROM waiting
+        LEFT JOIN patient
+        ON waiting.patient_id = patient.id
+        WHERE waiting.dept_id = #{deptId} AND waiting.state = '진료완료';
     </select>
 
     <!-- 접수 처리(대기 목록 삭제) -->
@@ -51,5 +59,18 @@
         insert into `waiting`(patient_id,dept_id,symptom,entry_date,reservation_date)
         values(#{patientId}, #{deptId}, #{symptom}, now(), #{reservationDate})
     </insert>
+
+    <!-- 접수 대기 목록 수정-->
+    <update id="update" parameterType="historyDTO">
+        UPDATE `waiting` SET
+        patient_id = #{patientId},
+        dept_id = #{deptId},
+        symptom = #{symptom},
+        entry_date = #{entryDate},
+        reservation_date = #{reservationDate},
+        state = #{state}
+        WHERE
+        id = #{id}
+    </update>
 
 </mapper>

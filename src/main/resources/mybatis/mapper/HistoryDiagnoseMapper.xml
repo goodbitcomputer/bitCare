@@ -16,5 +16,10 @@
         insert into `history_diagnose`(history_id,code,name,dose,time,days)
         values(#{historyId},#{code}, #{name}, #{dose}, #{time}, #{days})
     </insert>
+    <!-- 진료 기록의 처방부분(history_diagnose) 삭제 -->
+    <delete id="delete" parameterType="int">
+        DELETE FROM `history_diagnose`
+        WHERE id= #{id}
+    </delete>
 
 </mapper>

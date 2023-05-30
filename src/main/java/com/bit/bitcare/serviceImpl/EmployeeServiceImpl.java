@@ -4,6 +4,7 @@ import com.bit.bitcare.dao.EmployeeDAO;
 import com.bit.bitcare.model.UserCustomDetails;
 import com.bit.bitcare.model.EmployeeDTO;
 import com.bit.bitcare.service.EmployeeService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -73,7 +74,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public ResponseEntity<String> selectAll() throws JsonProcessingException {
+    public ResponseEntity<String> selectAll() throws JsonProcessingException
+    {
         Map<String, Object> data = new HashMap<>();
         List<EmployeeDTO> employeeList = employeeDAO.selectAll();
         for(EmployeeDTO i : employeeList){

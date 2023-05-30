@@ -1,10 +1,13 @@
 <template>
   <div>
     <div class="border-box">
-      <span style="font-size: 1.2em; font-weight: 700">대기 환자</span>
+      <div class="d-flex">
+        <span class="flex-grow-1" style="font-size: 1.2em; font-weight: 700">대기 환자</span>
+        <span style="cursor:pointer" @click="waitingRefresh">새로고침</span>
+      </div>
       <div class="util d-flex">
-        <button class="border-box col">진료대기</button>
-        <button class="border-box col">진료완료</button>
+        <button class="border-box col" @click="waitingBtn">진료대기</button>
+        <button class="border-box col" @click="completedBtn">진료완료</button>
       </div>
     </div>
     <div class="waiting-info-box">
@@ -44,11 +47,16 @@ export default {
   },
   mounted() {
     this.getWaitingData();
+    // waitingList 새로고침
+    this.$EventBus.$on('completedRefresh', () => {
+      this.waitingRefresh();
+    });
   },
   computed: {},
   methods: {
     ...mapMutations('doctor', {
-      setWaitingData: 'setWaitingData'
+      setWaitingData: 'setWaitingData',
+      initHistoryList: 'initHistoryList'
     }),
     ...mapActions('doctor', {
       getHistoryList: 'getHistoryList'
@@ -56,6 +64,9 @@ export default {
     selectPatientBtn(item) {
       this.setWaitingData(item);
       this.getHistoryList(item.patientId);
+
+      // historyPage의 historyData 초기화
+      this.$EventBus.$emit('initHistory')
     },
 
     dateMsg(item) {
@@ -93,6 +104,30 @@ export default {
         console.log(error);
       });
     },
+    // 진료대기 버튼 로직
+    waitingBtn() {
+      return axios.get('/doctor/getWaitingData', {}).then(response => {
+        let list = response.data;
+        this.setWaitingList(list);
+      }).catch(function (error) {
+        console.log(error);
+      });
+    },
+    // 진료완료 버튼 로직
+    completedBtn() {
+      return axios.get('/doctor/getWaitingCmopletedData', {}).then(response => {
+        let list = response.data;
+        this.setWaitingList(list);
+      }).catch(function (error) {
+        console.log(error);
+      });
+    },
+    // 환자대기리스트 새로고침
+    waitingRefresh() {
+      this.getWaitingData();
+      this.setWaitingData("");
+      this.initHistoryList();
+    }
   }
 }
 </script>
