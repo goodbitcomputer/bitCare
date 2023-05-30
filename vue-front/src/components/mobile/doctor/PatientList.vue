@@ -39,9 +39,6 @@
         </div>
       </div>
 
-
-
-
     </div>
   </section><!-- End Hero -->
 
@@ -59,7 +56,6 @@ export default {
       let div = document.getElementById('patientList-box');
       let divHeight = div.offsetHeight;
       let windowHeight = window.innerHeight;
-
       if (divHeight < windowHeight) {
         div.style.height = '100vh';
       } else {
