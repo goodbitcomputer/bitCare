@@ -1,6 +1,6 @@
 <template>
   <div class="row justify-content-center">
-    <div class = "col-12">
+    <div class = "col-11">
       <table class="table table-primary table-hover">
         <thead>
         <tr>
@@ -9,6 +9,7 @@
           <th>현재 권한</th>
           <th>권한 설정</th>
           <th>설정 저장</th>
+          <th>계정 삭제</th>
         </tr>
         </thead>
         <tbody>
@@ -17,31 +18,47 @@
           <td>{{employee.username}}</td>
           <td>{{employee.role}}</td>
           <td>
-            <b-form-input v-model="role[index]" list="roles"/>
-            <b-datalist id="roles">
+            <b-select v-model="role[index]">
               <option v-for="role in roles" :key="role">{{role}}</option>
-            </b-datalist>
+            </b-select>
+<!--            </b-select>-->
+<!--            <b-form-input v-model="role[index]" list="roles"/>-->
+<!--            <b-datalist id="roles">-->
+<!--              <option v-for="role in roles" :key="role">{{role}}</option>-->
+<!--            </b-datalist>-->
           </td>
           <td>
             <button type="button" class="btn btn-primary btn-sm" @click="saveRole(employee,index)">저장</button>
           </td>
+          <td>
+            <button type="button" class="btn btn-danger btn-sm">삭제</button>
+          </td>
         </tr>
         </tbody>
       </table>
-      <button type="button" class="btn btn-primary btn-sm" >계정 추가</button>
+      <button type="button" class="btn btn-primary btn-sm" @click="showDetails()">계정 추가</button>
+    </div>
+    <div>
+      <b-modal v-model="this.$store.state.login.registerModal" id="modal" size="lg" title="계정 추가" @hidden="closeModal">
+        <div id="register">
+          <EmployeeRegister/>
+        </div>
+      </b-modal>
     </div>
   </div>
-
 </template>
 
 <script>
 import axios from "axios";
 import {mapMutations, mapState} from "vuex";
+import EmployeeRegister from "@/components/admin/EmployeeRegister.vue";
 
 export default {
   name: "AdminSetting",
+  components: {EmployeeRegister},
   data(){
     return {
+      showDetailsModal: false,
       role: [],
       roles: ['ROLE_DOCTOR', 'ROLE_NURSE']
     }
@@ -55,31 +72,41 @@ export default {
   },
   computed: {
     ...mapState('login',
-        ['list']
+        ['list', 'registerModal']
     )
   },
   methods: {
     ...mapMutations('login',{
-      setList: 'setList'
+      setList: 'setList',
+      setRegisterModal: 'setRegisterModal',
     }),
     saveRole(employee, index) {
       // API를 호출해서 해당 메시지를 삭제합니다.
       // 성공적으로 삭제되면 this.settingRecvList()를 호출합니다.
-      axios.get('api/updateEmployee', {
-        params: {
-          id: employee.id,
-          role: this.role[index]
-        }
-      }).then(response => {
-        if (response.status === 200) {
-          console.log('권한 변경 완료')
-        } else {
-          console.log('권한 변경 실패')
-        }
-      })
+      if(this.role[index]!=='ROLE_DOCTOR' && this.role[index]!=='ROLE_NURSE'){
+        window.Swal.fire({
+          icon: 'error',
+          title: 'error',
+          text: '권한을 선택해주세요.',
+          timer: 3000
+        })
+      }else {
+        axios.get('api/updateEmployee', {
+          params: {
+            id: employee.id,
+            role: this.role[index]
+          }
+        }).then(response => {
+          if (response.status === 200) {
+            console.log('권한 변경 완료')
+          } else {
+            console.log('권한 변경 실패')
+          }
+        })
 
-      this.role[index] = ''
-      setTimeout(() => this.getEmployeeList(), 100)
+        this.role[index] = ''
+        setTimeout(() => this.getEmployeeList(), 100)
+      }
     },
     getEmployeeList(){
       axios.get('/api/selectAll')
@@ -91,18 +118,26 @@ export default {
               let employeeList = JSON.parse(JSON.stringify(response.data.employeeList));
               this.setList(employeeList)
               console.log(employeeList)
-            } else {
-              console.log('로그인되어 있지 않습니다.');
             }
           })
           .catch(error => {
             console.error('세션 데이터를 가져오는 중 에러 발생: ', error);
           });
     },
+    showDetails() {
+      this.showDetailsModal = true;
+      this.setRegisterModal(this.showDetailsModal);
+    },
+    closeModal() {
+      this.showDetailsModal = false;
+      this.setRegisterModal(this.showDetailsModal);
+    },
   }
 }
 </script>
 
 <style scoped>
-
+#register {
+  height: 480px; overflow-y: auto;
+}
 </style>
