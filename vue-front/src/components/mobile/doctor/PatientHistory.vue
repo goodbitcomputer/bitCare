@@ -4,24 +4,24 @@
     <div id="mobileDoctor-box" class="container" data-aos="fade-up">
       <div class="util" data-aos="fade-up">
         <div class="title">
-          <span class="font-weight-bold">박은희</span>
-          <span>cn.6</span>
-          <span>1951.09.04</span>
-          <span>70세</span>
-          <span>여</span>
+          <span class="font-weight-bold">{{ this.waitingData.name }}</span>
+          <span>cn.{{ this.waitingData.patientId }}</span>
+          <span>{{ dateMsg(this.waitingData.birth) }}</span>
+          <span>{{ ageMsg(this.waitingData.birth) }}세</span>
+          <span>{{ this.waitingData.gender }}</span>
         </div>
       </div>
       <div class="history-detail-box border-box">
         <!--      진료기록title-->
         <div>
           <span>진료기록</span>
-          <span>[2022.01.06]</span>
+          <span>[{{ dateMsg(historyData.entryDate) }}]</span>
         </div>
         <!--      신체계측/바이탈-->
         <div class="border-box">
           <span class="font-weight-bold">신체계측/바이탈</span>
           <div class="table-wrapper">
-            <b-table hover :items="pyItems" :fields="pyFields" small>
+            <b-table hover :items="physicalData" :fields="pyFields" small>
               <template #cell(code)="data">
                 <div class="">
                   {{ data.value }}
@@ -37,11 +37,10 @@
         </div>
         <!--      의사정보-->
         <div class="doctor-info">
-          <span>건강보험</span>
-          <span>초진</span>
+          <span>{{ historyData.visit }}</span>
           <span>외래진료</span>
-          <span>내과</span>
-          <span>백지영</span>
+          <span>{{ historyData.dept }}</span>
+          <span>{{ historyData.name }}</span>
         </div>
 
 
@@ -51,9 +50,9 @@
           <span class="font-weight-bold">이미지</span>
           <div class="img-list-box">
             <swiper :options="swiperOptions" ref="swiper">
-              <swiper-slide v-for="(slide, index) in slides" :key="index">
+              <swiper-slide v-for="(slide, index) in imgList" :key="index">
                 <!-- 슬라이드 내용 -->
-                <img :src="slide.image" alt="Slide Image">
+                <img :src="slide.imagePath" alt="Slide Image">
               </swiper-slide>
 
               <!-- 네비게이션 버튼 -->
@@ -78,8 +77,8 @@
         <!--      증상-->
         <div class="border-box">
           <span class="font-weight-bold">증상</span>
-          <div style="padding: 5px; border: 1px solid #DBDFE5; border-radius: 5px;">
-            <p style="white-space: normal">이틀전부터 목 불편함. 목이 칼칼하다. 헛기침</p>
+          <div style="padding: 5px; border: 1px solid #DBDFE5; border-radius: 5px;"
+               v-html="historyData.symptomDetail">
           </div>
 
         </div>
@@ -88,7 +87,7 @@
           <span class="font-weight-bold">상병</span>
           <div>
             <div class="table-wrapper">
-              <b-table hover :items="sbItems" :fields="sbFields"
+              <b-table hover :items="sbList" :fields="sbFields"
                        :tbody-tr-class="rowClass" small>
                 <template #cell(sb)="data">
                   <div class="ellipsis-sb td-box-sb">
@@ -114,7 +113,7 @@
           <span class="font-weight-bold">처방</span>
           <div>
             <div class="table-wrapper">
-              <b-table hover :items="cbItems" thead-class="hidden_header"
+              <b-table hover :items="cbList" thead-class="hidden_header"
                        :tbody-tr-class="rowClass" small>
                 <template #cell(code)="data">
                   <div class="">
@@ -134,7 +133,7 @@
 
       <div class="d-flex">
         <button class="btn btn-primary col mr-2" @click="photography">사진촬영</button>
-        <button class="btn btn-primary col">전송</button>
+        <button class="btn btn-primary col" @click="saveBtn">전송</button>
       </div>
     </div>
   </section><!-- End Hero -->
@@ -145,6 +144,10 @@
 // import { Swiper, SwiperSlide } from "vue-awesome-swiper";
 // import 'swiper/swiper.scss';
 
+
+import {mapMutations, mapState} from "vuex";
+import axios from "axios";
+const Swal = window.Swal;
 
 export default {
   name: "MobileHome",
@@ -158,9 +161,7 @@ export default {
         {key: 'bpDiastolic', label: '혈압(이완)'},
         {key: 'temperature', label: '체온'},
       ],
-      pyItems: [
-        {height: '178', weight: '73', bpSystolic: '128', bpDiastolic: "87", temperature: "36.5"},
-      ],
+
 
       // 이미지
       imageList: [],
@@ -169,32 +170,15 @@ export default {
 
       // 상병 테이블 로직
       sbFields: [
-        {key: 'sb', label: '주/부', sortable: true},
+        {key: 'main', label: '주/부', sortable: true},
         {key: 'code', label: '코드', sortable: true},
         {key: 'name', label: '명칭', sortable: true},
       ],
-      sbItems: [
-        {sb: '주상병', code: 'Dickerson', name: 'Macdonaldsdsadassssssssssssssssdadadsadsadsasadasdd'},
-        {sb: '부상병', code: 'Larsen', name: 'Shaw'},
-        {sb: '부상병', code: 'Geneva', name: 'Wilson'},
-        {sb: '부상병', code: 'Jami', name: 'Carney'}
-      ],
+
       specialData: "주상병", // 특정 속성 데이터
 
       // 처방 테이블 로직
-      // cbFields: ["sb", "code", "name"],
-      cbItems: [
-        {code: '645700880', name: '세토펜정80밀리그램(어쩌구저쩌구ㅇㄴㅁㅇㅁㅇㄴㅁㅇㄴㅁ)', dose: '1', time: "1", days: "1"},
-        {
-          code: '653403810',
-          name: 'DickersonDickersonDickersonDickersonDickersonDickersonDickerson',
-          dose: '1',
-          time: "1",
-          days: "1"
-        },
-        {code: '653403812', name: '아르도민캡슐(에르도스도르도르말말마람람)', dose: '1', time: "1", days: "1"},
-        {code: '645700883', name: '알게이트정(120밀리그람)', dose: '1', time: "1", days: "1"},
-      ],
+
 
       /*
     * -----------------------------------------------------------------
@@ -203,15 +187,6 @@ export default {
     * -----------------------------------------------------------------
     */
       //   swiper
-      slides: [
-        {image: '/assets/img/testimonials/testimonials-1.jpg'},
-        {image: '/assets/img/testimonials/testimonials-1.jpg'},
-        {image: '/assets/img/testimonials/testimonials-1.jpg'},
-        {image: '/assets/img/testimonials/testimonials-1.jpg'},
-        {image: '/assets/img/testimonials/testimonials-1.jpg'},
-        {image: '/assets/img/testimonials/testimonials-1.jpg'},
-        {image: '/assets/img/testimonials/testimonials-1.jpg'},
-      ],
       swiperOptions: {
         slidesPerView: 3, // 한번에 보여줄 슬라이드 개수
         spaceBetween: 10, // 슬라이드 사이 여백
@@ -226,6 +201,8 @@ export default {
           prevEl: '.swiper-button-prev',
         },
       },
+
+      saveFileList: [],
     }
   },
   mounted() {
@@ -233,6 +210,9 @@ export default {
 
   },
   computed: {
+    ...mapState('mobileDoctor',
+        ['waitingData', 'historyData', 'sbList', 'cbList', 'imgList', 'physicalData', 'savePhotoList']
+    ),
     /*
     * -----------------------------------------------------------------
     * 2023.05.18 홍사범
@@ -245,6 +225,10 @@ export default {
     }
   },
   methods: {
+    ...mapMutations('mobileDoctor', {
+      setPhotoListToNewCameraList: 'setPhotoListToNewCameraList',
+      setNextStep: 'setNextStep',
+    }),
     divHeightFix() {
       let div = document.getElementById('mobileDoctor-box');
       let divHeight = div.offsetHeight;
@@ -255,6 +239,26 @@ export default {
       } else {
         div.style.height = 'auto';
       }
+    },
+    dateMsg(item) {
+      let dateTemp = new Date(item)
+      let year = dateTemp.getFullYear();
+      let month = dateTemp.getMonth() + 1;
+      if (month < 10) {
+        month = "0" + month;
+      }
+      let date = dateTemp.getDate();
+
+      return year + "." + month + "." + date;
+    },
+    ageMsg(item) {
+      let dateTemp = new Date(item)
+      let dateNow = new Date();
+
+      let tempYear = dateTemp.getFullYear();
+      let nowYear = dateNow.getFullYear();
+      let age = parseInt(nowYear) - parseInt(tempYear) + 1;
+      return age;
     },
     // 상병 테이블 로직
     rowClass(item) {
@@ -272,7 +276,43 @@ export default {
 
     // 사진촬영버튼
     photography() {
-      this.$router.push("/mobile/camera");
+      this.setPhotoListToNewCameraList(this.savePhotoList);
+      this.setNextStep(7);
+    },
+
+    // 저장 버튼
+    saveBtn() {
+      this.saveFileList = [];
+      this.savePhotoList.forEach((item)=>{
+        this.saveFileList.push(item.file)
+      })
+
+
+      let formData = new FormData();
+      // formData.append("files", this.saveFileList);
+      for (let i = 0; i < this.saveFileList.length; i++) {
+        console.log(this.saveFileList[i]);
+        formData.append("uploadFiles", this.saveFileList[i]);//키,값으로 append
+      }
+      return axios.post('/mobile/doctor/photoSave_proc', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then((response) => {
+        if (response.data === true) {
+          Swal.fire({
+            icon: 'success',
+            title: '성공 !!!',
+            text: 'file save',
+            showConfirmButton: false,
+            timer: 1000
+          }).then(() => {
+            // this.$router.push('m.home');
+          })
+        }
+      }).catch(function (error) {
+        console.log(error);
+      })
     }
 
   },
@@ -351,6 +391,21 @@ section {
   border-radius: 5px;
 }
 
+.doctor-info span {
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.doctor-info span:after {
+  display: inline-block;
+  content: '';
+  width: 1px;
+  height: 12px;
+  background: #b9b9b9;
+  margin: 0 3px 0px 3px;
+}
+
 .ellipsis-name {
   white-space: nowrap;
   overflow: hidden;
@@ -376,6 +431,7 @@ section {
     height: 200px;
     object-fit: contain;
   }
+
   .imageCategory-box {
     width: 500px;
     margin: 0 auto;
@@ -484,81 +540,6 @@ section {
     max-width: 20px; /* 요소의 최대 너비를 지정합니다. */
   }
 }
-
-/*image swiper */
-.img-list-box {
-  /*position: relative;*/
-  /*height: 100px;*/
-  width: 100%;
-  overflow: hidden;
-
-}
-
-.img-list-box .swiper-slide {
-  opacity: .5;
-  transition: opacity 1s;
-  /*position: relative;*/
-}
-
-.img-list-box .swiper-slide-active {
-  opacity: 1;
-}
-
-/*.img-list-box .swiper-pagination {*/
-/*  bottom: 40px;*/
-/*  left: 0;*/
-/*  right: 0;*/
-/*}*/
-
-/*.img-list-box .swiper-pagination .swiper-pagination-bullet {*/
-/*  background-color: transparent;*/
-/*  !*background-image: url("../images/promotion_slide_pager.png");*!*/
-/*  width: 12px;*/
-/*  height: 12px;*/
-/*  margin-right: 6px;*/
-/*  outline: none;*/
-/*}*/
-
-/*.img-list-box .swiper-pagination .swiper-pagination-bullet:last-child {*/
-/*  margin-right: 0;*/
-/*}*/
-
-/*.img-list-box .swiper-pagination .swiper-pagination-bullet-active {*/
-/*  !*background-image: url("../images/promotion_slide_pager_on.png");*!*/
-/*}*/
-
-/*.img-list-box .swiper-button-prev,*/
-/*.img-list-box .swiper-button-next {*/
-/*  width: 40px;*/
-/*  height: 40px;*/
-/*  border: 2px solid #333;*/
-/*  border-radius: 50%;*/
-/*  position: absolute;*/
-/*  top: 35px;*/
-/*  z-index: 1;*/
-/*  cursor: pointer;*/
-/*  outline: none;*/
-/*  display: flex;*/
-/*  justify-content: center;*/
-/*  align-items: center;*/
-/*  transition: .4s;*/
-/*}*/
-
-/*.img-list-box .swiper-prev {*/
-/*  left: 50%;*/
-/*  margin-left: -130px;*/
-/*}*/
-
-/*.img-list-box .swiper-next {*/
-/*  right: 50%;*/
-/*  margin-right: -130px;*/
-/*}*/
-
-/*.img-list-box .swiper-prev:hover,*/
-/*.img-list-box .swiper-next:hover {*/
-/*  background-color: #333;*/
-/*  color: #fff;*/
-/*}*/
 
 
 </style>

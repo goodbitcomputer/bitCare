@@ -1,13 +1,17 @@
 <template>
   <div class="temp">
-    <NavBar/>
+    <NavBar v-if="isNavFooter"/>
     <Home v-if="homeByStep"/>
     <PatientList v-if="patientListByStep"/>
-    <PatientHistoryList v-if="patientHistoryByStep"/>
-    <PatientHistory v-if="false"/>
+    <PatientHistoryList v-if="patientHistoryListByStep"/>
+    <PatientHistory v-if="patientHistoryByStep"/>
     <MobileMessage v-if="messageByStep"/>
     <Waiting v-if="settingByStep"/>
-    <Footer/>
+
+    <Camera v-if="cameraByStep"/>
+    <Gallery v-if="galleryByStep"/>
+    <PhotoDetail v-if="photoDetailByStep"/>
+    <Footer v-if="isNavFooter"/>
   </div>
 </template>
 
@@ -21,6 +25,11 @@ import PatientHistoryList from "@/components/mobile/doctor/PatientHistoryList.vu
 import PatientHistory from "@/components/mobile/doctor/PatientHistory.vue";
 import Waiting from "@/components/mobile/doctor/Wating.vue";
 import MobileMessage from "@/components/mobile/doctor/Message.vue";
+
+// 카메라
+import Camera from "@/components/mobile/doctor/Camera.vue";
+import Gallery from "@/components/mobile/doctor/Gallery.vue";
+import PhotoDetail from "@/components/mobile/doctor/PhotoDetail.vue";
 import {mapState} from "vuex";
 
 export default {
@@ -34,6 +43,10 @@ export default {
     PatientHistoryList,
     PatientHistory,
     Waiting,
+
+    Camera,
+    Gallery,
+    PhotoDetail
   },
   computed: {
     ...mapState('mobileDoctor',
@@ -45,14 +58,30 @@ export default {
     patientListByStep() {
       return this.nextStep===2 ? true : false;
     },
-    patientHistoryByStep() {
+    patientHistoryListByStep() {
       return this.nextStep===3 ? true : false;
     },
-    messageByStep() {
+    patientHistoryByStep() {
       return this.nextStep===4 ? true : false;
     },
-    settingByStep() {
+    messageByStep() {
       return this.nextStep===5 ? true : false;
+    },
+    settingByStep() {
+      return this.nextStep===6 ? true : false;
+    },
+    cameraByStep() {
+      return this.nextStep===7 ? true : false;
+    },
+    galleryByStep() {
+      return this.nextStep===8 ? true : false;
+    },
+    photoDetailByStep() {
+      return this.nextStep===9 ? true : false;
+    },
+
+    isNavFooter(){
+      return this.nextStep<7 ? true : false;
     },
   }
 }

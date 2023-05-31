@@ -7,14 +7,19 @@
 
     <!-- 환자(patient_id)의 진료 기록(history) 목록 -->
     <select id="selectByPatientId" parameterType="int" resultType="historyDTO">
-        SELECT history.*, dept.dept, employee.name
-        FROM `history`
+        SELECT a.*, dept.dept, employee.name, sorted_b.name as disease_name FROM history a
         LEFT JOIN employee
-        ON history.employee_id = employee.id
+        ON a.employee_id = employee.id
         LEFT JOIN dept
-        ON history.dept_id = dept.id
-        WHERE patient_id = #{patientId}
-        ORDER BY history.id DESC;
+        ON a.dept_id = dept.id
+        LEFT JOIN (
+        SELECT history_id, name FROM history_disease
+        GROUP BY history_id
+        ORDER BY degree desc
+        ) AS sorted_b
+        ON a.id = sorted_b.history_id
+        WHERE a.patient_id = #{patientId}
+        ORDER BY a.id DESC;
     </select>
 
     <!-- 진료 기록 선택 -->

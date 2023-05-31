@@ -173,7 +173,7 @@ export default {
 
       // 상병 테이블 로직
       sbFields: [
-        {key: 'sb', label: '주/부', sortable: true},
+        {key: 'main', label: '주/부', sortable: true},
         {key: 'code', label: '코드', sortable: true},
         {key: 'name', label: '명칭', sortable: true},
       ],
@@ -291,7 +291,7 @@ export default {
       }
       item.forEach((i) => {
         this.selectSbList.push({main: degree(i.degree), code: i.code, name: i.name, historyId: i.historyId})
-        this.sbItems.push({sb: i.degree, code: i.code, name: i.name});
+        this.sbItems.push({main: i.degree, code: i.code, name: i.name});
       })
     },
     setSelectCbList(item) {

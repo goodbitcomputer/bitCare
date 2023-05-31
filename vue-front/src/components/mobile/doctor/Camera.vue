@@ -349,7 +349,7 @@ export default {
   methods: {
     ...mapMutations('mobileDoctor', {
       setNewCameraList: 'setNewCameraList',
-      setCameraNextStep: 'setCameraNextStep',
+      setNextStep: 'setNextStep',
     }),
     initStream() {
       if (window.stream) {
@@ -366,7 +366,7 @@ export default {
       // this.localStream.removeTrack(vidTrack);
       this.initStream();
 
-      this.setCameraNextStep(2);
+      this.setNextStep(8);
     },
     takePicture() {
       const video = this.$refs.video;

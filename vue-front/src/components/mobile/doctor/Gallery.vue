@@ -9,8 +9,9 @@
       <button @click="gallerySave">저장</button>
     </div>
     <div class="slide-list-box" data-aos="zoom-in">
-      <swiper :options="swiperOptions" ref="swiper" >
-        <swiper-slide class="swiper-slide-active" v-for="(item, index) in this.selectList" :key="index" data-aos="zoom-in-left">
+      <swiper :options="swiperOptions" ref="swiper">
+        <swiper-slide class="swiper-slide-active" v-for="(item, index) in this.selectList" :key="index"
+                      data-aos="zoom-in-left">
           <!-- 슬라이드 내용 -->
           <div class="img-box">
             <img :src="item.url" alt="Slide Image">
@@ -39,14 +40,12 @@
 
 <script>
 import {mapMutations, mapState} from "vuex";
-import axios from "axios";
-const Swal = window.Swal;
+
 
 export default {
   name: "mobileGallery",
   data() {
     return {
-      saveFileList: [],
       swiperOptions: {
         initialSlide: 99999999,
         slidesPerView: 8, // 한번에 보여줄 슬라이드 개수
@@ -70,7 +69,7 @@ export default {
   },
   computed: {
     ...mapState('mobileDoctor',
-        ['newCameraList']
+        ['newCameraList', 'savePhotoList']
     ),
     selectList() {
       let list = [];
@@ -94,8 +93,9 @@ export default {
   methods: {
     ...mapMutations('mobileDoctor', {
       setNewCameraList: 'setNewCameraList',
-      setCameraNextStep: 'setCameraNextStep',
+      setNextStep: 'setNextStep',
       setPhoto: 'setPhoto',
+      setSavePhotoList: 'setSavePhotoList',
     }),
     divHeightFix() {
       let div = document.getElementById('gallery-box');
@@ -109,11 +109,11 @@ export default {
       }
     },
     cameraBtn() {
-      this.setCameraNextStep(1);
+      this.setNextStep(7);
     },
     photoSelect(item) {
       this.setPhoto(item);
-      this.setCameraNextStep(3);
+      this.setNextStep(9);
     },
     selectBtn(item) {
       if (item.storeSelect === false) {
@@ -122,42 +122,10 @@ export default {
         item.storeSelect = false;
       }
     },
-    setSaveFileList(){
-      this.saveFileList = [];
-      this.newCameraList.forEach((item) => {
-        if (item.storeSelect === true) {
-          this.saveFileList.push(item.file)
-        }
-      })
-    },
-    gallerySave() {
-      this.setSaveFileList();
 
-      let formData = new FormData();
-      // formData.append("files", this.saveFileList);
-      for (let i = 0; i < this.saveFileList.length; i++) {
-        console.log(this.saveFileList[i]);
-        formData.append("uploadFiles", this.saveFileList[i]);//키,값으로 append
-      }
-      return axios.post('/mobile/doctor/photoSave_proc', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      }).then((response) => {
-        if (response.data === true) {
-          Swal.fire({
-            icon: 'success',
-            title: '성공 !!!',
-            text: 'file save',
-            showConfirmButton: false,
-            timer: 1000
-          }).then(() => {
-            // this.$router.push('m.home');
-          })
-        }
-      }).catch(function (error) {
-        console.log(error);
-      })
+    gallerySave() {
+      this.setSavePhotoList(this.newCameraList);
+      this.setNextStep(4);
     },
   }
 }
@@ -216,11 +184,13 @@ export default {
   height: 100%;
   object-fit: cover;
 }
+
 .list-count {
   pointer-events: none;
   color: #FFCC00;
   margin: 5px;
 }
+
 @media (min-width: 995px ) {
   .photo {
     width: calc(100% / 5);

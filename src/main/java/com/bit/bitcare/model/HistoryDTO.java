@@ -21,4 +21,5 @@ public class HistoryDTO {
     String visit;
     String dept;
     String name;
+    String diseaseName;
 }
