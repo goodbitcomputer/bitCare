@@ -27,13 +27,13 @@
             @click="handleImageClick(image.url)"
             @dragstart="dragImage($event, image.url)"
         >
-          <img :src="image.url" class="image-list-box"/>
+          <img :src="image.url" class="image-list-box" />
           <div v-if="isSelected(image.url)" class="img-cover"></div>
           <p class="date">{{ getCurrentDate() }}</p>
           <div v-if="isSelected(image.url)" class="dropdown">
             <ul class="draggable-list">
               <li
-                  v-for="(image, index) in index"
+                  v-for="(image, index) in dropdownImages"
                   :key="index"
                   class="border-box img-select"
                   draggable="true"
@@ -47,11 +47,11 @@
           </div>
         </div>
       </div>
-      <br/>
+      <br />
     </div>
     <div class="flex-grow-1 d-flex editor-container border-box">
       <div v-if="showDiv" class="viewer d-flex align-items-center">
-        <img class="BI" src="@/assets/BI/BIW2.png"/>
+        <img class="BI" src="@/assets/BI/BIW2.png" />
         <img
             v-if="selectedViewerImage"
             :src="selectedViewerImage"
@@ -70,12 +70,11 @@
             :selectedImage="selectedEditorImage"
             class="tui-editor"
             @ready="onEditorReady"
-            @save="handleSaveImage"
             @update:image-list="updateImageList"
         />
         <div v-if="showDiv" class="editor-cover" @click="removeCover">
           <p class="editor-text" style="margin-bottom: 0">
-            편집할 이미지를 드래그 해주세요! <br/>
+            편집할 이미지를 드래그 해주세요! <br />
             뷰어 해제 (Click or F2)
           </p>
         </div>
@@ -85,7 +84,6 @@
 </template>
 
 <script>
-// import { fabric } from 'fabric';
 import ImageEditor from "@/components/doctor/editor/ImageEditor.vue";
 
 export default {
@@ -97,14 +95,14 @@ export default {
     return {
       showDiv: false,
       images: [
-        {url: "/assets/image/n0.jpg"},
-        {url: "/assets/image/n1.png"},
-        {url: "/assets/image/n2.png"},
-        {url: "/assets/image/n3.png"},
-        {url: "/assets/image/n4.png"},
-        {url: "/assets/image/n5.png"},
-        {url: "/assets/image/n6.png"},
-        {url: "/assets/image/n7.png"},
+        { url: "/assets/image/n0.jpg" },
+        { url: "/assets/image/n1.png" },
+        { url: "/assets/image/n2.png" },
+        { url: "/assets/image/n3.png" },
+        { url: "/assets/image/n4.png" },
+        { url: "/assets/image/n5.png" },
+        { url: "/assets/image/n6.png" },
+        { url: "/assets/image/n7.png" },
       ],
       selectedEditorImage: null,
       selectedViewerImage: null,
@@ -121,7 +119,7 @@ export default {
   methods: {
     getCurrentDate() {
       const today = new Date();
-      const options = {year: "numeric", month: "long", day: "numeric"};
+      const options = { year: "numeric", month: "long", day: "numeric" };
       return today.toLocaleDateString("ko-KR", options);
     },
     toggleImage(url) {
@@ -153,13 +151,6 @@ export default {
         this.toggleImage(url);
       }
     },
-    // handleImageClick(url) {
-    //   if (this.showDiv) {
-    //     this.selectedViewerImage = url;
-    //   } else {
-    //     this.selectedEditorImage = url;
-    //   }
-    // },
     dragImage(event, url) {
       event.dataTransfer.setData("text/plain", url);
     },
@@ -192,9 +183,9 @@ export default {
     updateImageList(updatedImageList) {
       this.images = updatedImageList;
     },
-    getDropdownImages(url) {
-      return this.images.filter((image) => image.url !== url).slice(0, 3);
-    },
+    // getDropdownImages(url) {
+    //   return this.images.filter((image) => image.url !== url).slice(0, 3);
+    // },
   },
 };
 </script>
