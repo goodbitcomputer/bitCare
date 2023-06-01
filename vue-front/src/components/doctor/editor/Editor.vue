@@ -33,7 +33,7 @@
           <div v-if="isSelected(image.url)" class="dropdown">
             <ul class="draggable-list">
               <li
-                  v-for="(image, index) in dropdownImages"
+                  v-for="(image, index) in index"
                   :key="index"
                   class="border-box img-select"
                   draggable="true"
@@ -70,6 +70,7 @@
             :selectedImage="selectedEditorImage"
             class="tui-editor"
             @ready="onEditorReady"
+            @save="handleSaveImage"
             @update:image-list="updateImageList"
         />
         <div v-if="showDiv" class="editor-cover" @click="removeCover">
@@ -84,6 +85,7 @@
 </template>
 
 <script>
+// import { fabric } from 'fabric';
 import ImageEditor from "@/components/doctor/editor/ImageEditor.vue";
 
 export default {
@@ -151,6 +153,13 @@ export default {
         this.toggleImage(url);
       }
     },
+    // handleImageClick(url) {
+    //   if (this.showDiv) {
+    //     this.selectedViewerImage = url;
+    //   } else {
+    //     this.selectedEditorImage = url;
+    //   }
+    // },
     dragImage(event, url) {
       event.dataTransfer.setData("text/plain", url);
     },
