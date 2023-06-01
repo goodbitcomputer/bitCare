@@ -1,9 +1,7 @@
 <template>
   <div>
     <div class="editor-container" @drop="dropImage" @dragover.prevent>
-      <div v-if="selectedImage && !isImageOnCanvas(selectedImage)" class="editor-cover">
-        <!-- <p class="editor-text">이미지 선택</p> -->
-      </div>
+      <div v-if="selectedImage && !isImageOnCanvas(selectedImage)" class="editor-cover"/>
       <tui-image-editor
           ref="tuiImageEditor"
           :options="editorOptions"
@@ -102,21 +100,35 @@ export default {
       canvasElement.height = canvasHeight * pixelRatio;
       this.loadImageFromURL(this.selectedImage);
     },
+    // saveImage() {
+    //   const canvas = this.editorInstance.toDataURL({ format: "jpeg", quality: 0.8 });
+    //   const url = URL.createObjectURL(this.dataURLtoBlob(canvas));
+    //   console.log("저장된 이미지 URL:", url);
+    //
+    //   this.$emit("update:image-list", [...this.imageList, { url: url }]);
+    // },
     saveImage() {
-      const canvas = this.editorInstance.toDataURL({format: "jpeg", quality: 0.8});
+      const canvas = this.editorInstance.toDataURL({format: "png", quality: 0.8});
       const url = URL.createObjectURL(this.dataURLtoBlob(canvas));
       this.$emit("save", url);
     },
     dataURLtoBlob(dataURL) {
-      const parts = dataURL.split(";base64,");
-      const contentType = parts[0].split(":")[1];
-      const raw = window.atob(parts[1]);
-      const rawLength = raw.length;
-      const uInt8Array = new Uint8Array(rawLength);
-      for (let i = 0; i < rawLength; ++i) {
-        uInt8Array[i] = raw.charCodeAt(i);
+      const base64Split = dataURL.split(",");
+      const contentType = base64Split[0].match(/:(.*?);/)[1];
+      const byteCharacters = atob(base64Split[1]);
+      const byteArrays = [];
+
+      for (let offset = 0; offset < byteCharacters.length; offset += 1024) {
+        const slice = byteCharacters.slice(offset, offset + 1024);
+        const byteNumbers = new Array(slice.length);
+        for (let i = 0; i < slice.length; i++) {
+          byteNumbers[i] = slice.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        byteArrays.push(byteArray);
       }
-      return new Blob([uInt8Array], {type: contentType});
+
+      return new Blob(byteArrays, { type: contentType });
     },
     isImageOnCanvas(url) {
       const objects = this.editorInstance._graphics._canvasImage.objects;
