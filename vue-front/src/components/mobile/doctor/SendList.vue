@@ -1,11 +1,11 @@
 <template>
   <div>
-    <div v-for="message in this.$store.state.alarm.messageList" :key="message.id">
-      <div @click="showDetails(message.id)">
+    <div v-for="message in this.$store.state.alarm.sendList" :key="message.id">
+      <div @click="showDetails(message)">
         <div class="patient-box border-box" data-aos="fade-up" data-aos-delay="200">
           <div class="title">
-            <span class="font-weight-bold">{{ message.sender }} </span>
-            <span v-if="message.receiveState === 'new'">new!</span>
+            <span class="font-weight-bold">{{ message.receiver }} </span>
+            <span>{{ formatState(message.receiveState) }}</span>
           </div>
           <div class="patient-info">
             <span>{{ formatDate(message.entryDate) }}</span>
@@ -13,32 +13,27 @@
         </div>
       </div>
     </div>
-    <div v-if="this.$store.state.alarm.messageList === null">
+    <div v-if="this.$store.state.alarm.sendList === null">
       <div class="patient-box border-box" data-aos="fade-up" data-aos-delay="200">
-        <span>받은 메시지가 없습니다.</span>
+        <span>보낸 메시지가 없습니다.</span>
       </div>
     </div>
     <div>
-      <b-modal v-model="this.$store.state.alarm.messageModal" size="sm" title="쪽지 내용" @hidden="closeModal">
-        <div>
-          <h2>
-            {{ this.$store.state.alarm.selectedMessage.sender }}
-            <button type="button" class="btn btn-primary btn-sm">
-              답장
-            </button>
-          </h2>
-        </div>
-        <div v-html="this.$store.state.alarm.selectedMessage.content"></div>
+      <b-modal v-model="showDetailsModal" size="lg" title="쪽지 내용">
+        <button v-if="selectedMessage.receiveState === 'new'" type="button" @click="sendCancel(selectedMessage)">
+          발송 취소
+        </button>
+        <div v-html="selectedMessage.content"></div>
       </b-modal>
     </div>
   </div>
 </template>
 
 <script>
-import {mapMutations, mapState} from "vuex";
 import Stomp from 'webstomp-client'
 import SockJS from 'sockjs-client'
 import axios from "axios";
+import {mapState, mapMutations} from "vuex";
 
 export default {
   data() {
@@ -53,32 +48,35 @@ export default {
       message_file: "",
       entryDate: "",
       type: "",
-      selectedMessage: "",
+      selectedMessage: {},
       showDetailsModal: false,
-      readMessage: "",
+      fields: [
+        {key: 'sender', label: '보낸 사람'},
+        {key: 'content', label: '내용'},
+        {key: 'entryDate', label: '수신 일자'},
+        {key: 'action', label: '작업'}
+      ]
     }
   },
-  name: "ReceiveMessage",
+  name: "SendList",
   created() {
-    this.recvList = this.messageList;
-    this.count = this.messageCount;
+    this.recvList = this.sendList;
+    this.count = this.sendCount;
     this.getSessionLogIn();
     // App.vue가 생성되면 소켓 연결을 시도합니다.
   },
   mounted() {
-    this.settingRecvList();
+    this.settingSendList();
   },
   computed: {
     ...mapState('alarm',
-        ['messageList', 'messageCount', 'messageModal', 'selectedMessage']
+        ['sendCount', 'sendList']
     ),
   },
   methods: {
     ...mapMutations('alarm', {
-      setMessage: 'setMessage',
-      setCount: 'setCount',
-      setMessageModal: 'setMessageModal',
-      setSelectedMessage: 'setSelectedMessage'
+      setSendList: 'setSendList',
+      setSendCount: 'setSendCount'
     }),
     formatDate(dateString) {
       const date = new Date(dateString);
@@ -90,6 +88,13 @@ export default {
       const seconds = String(date.getSeconds()).padStart(2, '0');
       return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     },
+    formatState(stateString) {
+      if (stateString === 'new') {
+        return '읽지 않음'
+      } else {
+        return '읽음'
+      }
+    },
     getSessionLogIn() {
       // Axios를 사용하여 RESTful API 호출
       axios.get('/api/login')
@@ -100,28 +105,6 @@ export default {
               let logIn = JSON.parse(JSON.stringify(response.data.logIn));
               console.log('현재 로그인된 사용자: ' + logIn.name);
               this.sender = logIn.name;
-              console.log(this.recvList)
-            } else {
-              console.log('로그인되어 있지 않습니다.');
-            }
-          })
-          .catch(error => {
-            console.error('세션 데이터를 가져오는 중 에러 발생: ', error);
-          });
-    },
-    settingRecvList() {
-      // Axios를 사용하여 RESTful API 호출
-      axios.get('/api/receiveMessageList')
-          .then(response => {
-            console.log(response.data);
-            // 세션 데이터 사용 예시
-            if (response.data && response.data.isLoggedIn) {
-              this.isLogin = true
-              let receiveList = JSON.parse(JSON.stringify(response.data.receiveList));
-              console.log(receiveList)
-              this.recvList = receiveList
-              this.setMessage(this.recvList)
-              this.alarmLength()
               console.log(this.recvList)
             } else {
               console.log('로그인되어 있지 않습니다.');
@@ -148,10 +131,9 @@ export default {
             this.stompClient.subscribe("/send/" + this.sender, res => {
               console.log('구독으로 받은 메시지 입니다.', res.body)
               // 받은 데이터를 json으로 파싱하고 리스트에 넣어줍니다.
-              this.recvList = this.messageList
-              this.recvList.push(JSON.parse(res.body))
-              this.setMessage(this.recvList)
-              this.setCount(this.count)
+              if (res.body === 'cancel') {
+                this.settingSendList()
+              }
             });
           },
           (error) => {
@@ -161,51 +143,57 @@ export default {
           }
       );
     },
-    alarmLength() {
+    /* DB 데이터 가져오기 */
+    settingSendList() {
+      // Axios를 사용하여 RESTful API 호출
+      axios.get('/api/sendMessageList')
+          .then(response => {
+            console.log(response.data);
+            // 세션 데이터 사용 예시
+            if (response.data && response.data.isLoggedIn) {
+              this.isLogin = true
+              let sendList = JSON.parse(JSON.stringify(response.data.sendList));
+              console.log(sendList)
+              this.recvList = sendList
+              this.setSendList(this.recvList)
+              this.sendLength()
+              console.log(this.recvList)
+            } else {
+              console.log('로그인되어 있지 않습니다.');
+            }
+          })
+          .catch(error => {
+            console.error('세션 데이터를 가져오는 중 에러 발생: ', error);
+          });
+    },
+    sendLength() {
       if (this.recvList != null) {
         this.count = this.recvList.filter(element => "new" === element.state).length
       }
-      this.setCount(this.count)
+      this.setSendCount(this.count)
     },
-    showDetails(messageId) {
+    showDetails(message) {
+      this.selectedMessage = message;
       this.showDetailsModal = true;
-      axios.get('/api/receiveMessage', {
-        params: {
-          id: messageId
-        }
-      }).then(response => {
-        if (response.status === 200) {
-          this.readMessage = response.data.receiveMessage
-          this.setSelectedMessage(this.readMessage)
-        } else {
-          console.log('메시지 불러오기 실패')
-        }
-      })
-      this.setMessageModal(this.showDetailsModal);
-      setTimeout(() => this.readOn(this.readMessage), 100)
-      this.readMessage = "";
     },
-    readOn(message) {
+    sendCancel(message) {
       this.connect()
-      setTimeout(() => this.read(message), 100)
+      setTimeout(() => this.cancel(message), 100)
     },
-    read(message) {
-      console.log("read message:" + message.id);
+    cancel(message) {
+      console.log("Cancel message:" + message.id);
       if (this.stompClient && this.stompClient.connected) {
         const msg = {
-          connectType: "read",
+          connectType: "cancel",
           id: message.id
         };
-        this.stompClient.send("/app/receive/" + message.sender, JSON.stringify(msg), {});
+        this.stompClient.send("/app/receive/" + message.receiver, JSON.stringify(msg), {});
       }
-      console.log("읽기 처리 요청 완료. 소켓 연결 해제")
+      console.log("전송 취소 요청 완료. 소켓 연결 해제")
       setTimeout(() => this.stompClient.disconnect(), 100)
       this.messageContent = ''
-      setTimeout(() => this.settingRecvList(), 100)
-    },
-    closeModal() {
-      this.showDetailsModal = false;
-      this.setMessageModal(this.showDetailsModal);
+      this.showDetailsModal = false
+      setTimeout(() => this.settingSendList(), 100)
     }
   }
 }

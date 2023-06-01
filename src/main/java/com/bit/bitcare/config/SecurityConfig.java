@@ -94,7 +94,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeRequests() //<security:intercept-url>
-                .antMatchers("/", "/api/**","/autoLogin","/login","/auth","/user/register", "/mobile/home", "/mobile/login").permitAll() //permitAll 권한부여
+                .antMatchers("/", "/api/**","/autoLogin","/login","/auth","/user/register", "/mobile/**").permitAll() //permitAll 권한부여
                 .anyRequest().authenticated() //나머지 url에 대해 authenticated 권한 부여
                 .and().formLogin() //<security:form-login>
                 .loginPage("/")

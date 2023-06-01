@@ -218,7 +218,7 @@ export default {
     deleteMessage(message) {
       // API를 호출해서 해당 메시지를 삭제합니다.
       // 성공적으로 삭제되면 this.settingRecvList()를 호출합니다.
-      axios.get('api/deleteReceiveMessage', {
+      axios.get('/api/deleteReceiveMessage', {
         params: {
           id: message.id
         }

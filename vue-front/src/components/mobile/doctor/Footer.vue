@@ -2,7 +2,7 @@
   <div>
     <!-- ======= Header ======= -->
     <header id="footer" class="fixed-bottom d-flex align-items-center">
-      <div id="main-box" class="container ">
+      <div id="main-box" class="container">
 
         <button class="col text-center" @click="NextBtn(1)"><b-img src="/assets/mobile/img/home_house_icon2.png"/></button>
         <button class="col text-center" @click="NextBtn(2)"><b-img src="/assets/mobile/img/persons_icon2.png"/></button>
@@ -19,7 +19,8 @@
       </div>
     </header>
     <!-- End Header -->
-
+    <span v-if="(state==='new') && (this.$store.state.alarm.messageCount > 0)" class="note-new">{{ this.$store.state.alarm.messageCount }}</span>
+    <span v-else-if="this.$store.state.alarm.messageCount > 0" class="note-num">{{ this.$store.state.alarm.messageCount }}</span>
   </div>
 </template>
 
@@ -76,7 +77,6 @@ export default {
       setMessageModal: 'setMessageModal',
       setMessage: 'setMessage',
       setCount: 'setCount',
-      divHeightFix: 'divHeightFix'
     }),
     getSessionLogIn() {
       // Axios를 사용하여 RESTful API 호출
@@ -96,7 +96,21 @@ export default {
           });
     },
     settingRecvList() {
-      // Axios를 사용하여 RESTful API 호출
+      axios.get('/api/receiveList')
+          .then(response => {
+            // 세션 데이터 사용 예시
+            if (response.data && response.data.isLoggedIn) {
+              this.isLogin = true
+              let receiveList = JSON.parse(JSON.stringify(response.data.receiveList))
+              this.recvList = receiveList
+              this.setAlarm(this.recvList)
+              this.alarmLength()
+            }
+          })
+          .catch(error => {
+            console.error('세션 데이터를 가져오는 중 에러 발생: ', error);
+          });
+
       axios.get('/api/receiveMessageList')
           .then(response => {
             console.log(response.data);
@@ -105,10 +119,48 @@ export default {
               this.isLogin = true
               let receiveList = JSON.parse(JSON.stringify(response.data.receiveList));
               console.log(receiveList)
-              this.recvList = receiveList
-              this.setMessage(this.recvList)
-              this.alarmLength()
-              console.log(this.recvList)
+              this.setMessage(receiveList)
+              if(receiveList != null) {
+                this.count = receiveList.filter(element => "new" === element.state).length
+              }
+              this.setCount(this.count)
+              console.log(receiveList)
+            } else {
+              console.log('로그인되어 있지 않습니다.');
+            }
+          })
+          .catch(error => {
+            console.error('세션 데이터를 가져오는 중 에러 발생: ', error);
+          });
+
+      axios.get('/api/sendMessageList')
+          .then(response => {
+            console.log(response.data);
+            // 세션 데이터 사용 예시
+            if (response.data && response.data.isLoggedIn) {
+              this.isLogin = true
+              let sendList = JSON.parse(JSON.stringify(response.data.sendList));
+              this.setSendList(sendList)
+              this.sendLength()
+              console.log(sendList)
+            } else {
+              console.log('로그인되어 있지 않습니다.');
+            }
+          })
+          .catch(error => {
+            console.error('세션 데이터를 가져오는 중 에러 발생: ', error);
+          });
+
+      axios.get('/api/sendMessageList')
+          .then(response => {
+            console.log(response.data);
+            // 세션 데이터 사용 예시
+            if (response.data && response.data.isLoggedIn) {
+              this.isLogin = true
+              let sendList = JSON.parse(JSON.stringify(response.data.sendList));
+              this.setSendList(sendList)
+              this.sendLength()
+              console.log(sendList)
             } else {
               console.log('로그인되어 있지 않습니다.');
             }
@@ -122,6 +174,12 @@ export default {
         this.count = this.recvList.filter(element => "new" === element.state).length
       }
       this.setCount(this.count)
+    },
+    sendLength() {
+      if(this.recvList != null) {
+        this.count = this.recvList.filter(element => "new" === element.state).length
+      }
+      this.setSendCount(this.count)
     },
     connect() {
       console.log("연결 시도")
@@ -146,11 +204,9 @@ export default {
                   this.recvList = []
                 }
                 this.settingRecvList()
-                setTimeout(() => {this.divHeightFix()},10)
                 setTimeout(() => this.state = "", 1501)
               }else{
                 this.settingRecvList()
-                setTimeout(() => {this.divHeightFix()},10)
               }
             });
           },
@@ -180,5 +236,80 @@ export default {
 #main-box {
   display: flex;
   justify-content: space-between;
+}
+
+
+.note-num {
+  position: relative;
+  top: -5px;
+  right: -25px;
+  z-index: 3;
+  height: 17px;
+  width: 17px;
+  line-height: 17px;
+  text-align: center;
+  font-weight: bold;
+  background-color: red;
+  border-radius: 15px;
+  display: inline-block;
+}
+
+.note-new {
+  position: relative;
+  top: -5px;
+  right: -25px;
+  z-index: 3;
+  height: 17px;
+  width: 17px;
+  line-height: 17px;
+  text-align: center;
+  background-color: red;
+  border-radius: 15px;
+  display: inline-block;
+  animation: pulse 1.5s 1;
+}
+
+.note-new:after {
+  position: relative;
+  top: -5px;
+  right: -25px;
+  z-index: 3;
+  height: 17px;
+  width: 17px;
+  line-height: 17px;
+  text-align: center;
+  background-color: red;
+  border-radius: 15px;
+  display: inline-block;
+  animation: sonar 1.5s 1;
+}
+
+@keyframes sonar {
+  0% {
+    transform: scale(.9);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  20% {
+    transform: scale(1.4);
+  }
+  50% {
+    transform: scale(.9);
+  }
+  80% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 </style>

@@ -10,10 +10,10 @@
         <ReceiveMessage/>
       </div>
       <div v-else-if="this.tab === 2">
-        보낸 메시지 목록
+        <SendList/>
       </div>
       <div v-else-if="this.tab === 3">
-        메시지 전송
+        <SendMessage/>
       </div>
     </div>
   </section>
@@ -21,6 +21,8 @@
 
 <script>
 import ReceiveMessage from "@/components/mobile/doctor/ReceiveMessage.vue"
+import SendList from "@/components/mobile/doctor/SendList.vue"
+import SendMessage from "@/components/mobile/doctor/SendMessage.vue"
 
 export default {
   name: "MobileMessage",
@@ -40,9 +42,9 @@ export default {
     }
   },
   components: {
-    ReceiveMessage
-    // MobileMessageList,
-    // MobileSendList
+    SendMessage,
+    ReceiveMessage,
+    SendList,
   },
   mounted() {
     this.divHeightFix();
