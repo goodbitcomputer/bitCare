@@ -51,7 +51,20 @@ export default {
         },
         setSelectedMessage : function (state, selectedMessage) {
             return state.selectedMessage = selectedMessage;
-        }
+        },
+        divHeightFix() {
+            let div = document.getElementById('mobile-doctor');
+            let divHeight = div.offsetHeight;
+            let windowHeight = window.innerHeight;
+
+            div.style.height = 'auto';
+
+            setTimeout(() => {
+                if (divHeight < windowHeight) {
+                    div.style.height = '100vh';
+                }
+            },10)
+        },
     },
     actions: {
 

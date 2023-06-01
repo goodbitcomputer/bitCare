@@ -54,9 +54,8 @@ export default {
       rememberMe: false
     }
   },
-  mounted() {
+  created() {
     this.autoLogin()
-    this.setRole('ROLE_ADMIN')
   },
   computed: {
     ...mapState('login',
