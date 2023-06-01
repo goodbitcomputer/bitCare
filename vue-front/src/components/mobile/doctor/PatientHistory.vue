@@ -50,9 +50,9 @@
           <span class="font-weight-bold">이미지</span>
           <div class="img-list-box">
             <swiper :options="swiperOptions" ref="swiper">
-              <swiper-slide v-for="(slide, index) in imgList" :key="index">
+              <swiper-slide v-for="(slide, index) in addImgListLogic" :key="index">
                 <!-- 슬라이드 내용 -->
-                <img :src="slide.imagePath" alt="Slide Image">
+                <img :src="imgUrl(slide)" alt="Slide Image">
               </swiper-slide>
 
               <!-- 네비게이션 버튼 -->
@@ -147,6 +147,7 @@
 
 import {mapMutations, mapState} from "vuex";
 import axios from "axios";
+
 const Swal = window.Swal;
 
 export default {
@@ -222,6 +223,18 @@ export default {
     imageCategoryMsg() {
       if (this.imageCategory === "") return "촬영 부위 선택";
       else return this.imageCategory;
+    },
+    // image swiper 데이터 리스트
+    addImgListLogic() {
+      let addImgList = [];
+      this.imgList.forEach((item)=>{
+        addImgList.push(item);
+      });
+      this.savePhotoList.forEach((item)=>{
+        addImgList.push(item);
+      });
+      console.log(addImgList);
+      return addImgList;
     }
   },
   methods: {
@@ -283,7 +296,7 @@ export default {
     // 저장 버튼
     saveBtn() {
       this.saveFileList = [];
-      this.savePhotoList.forEach((item)=>{
+      this.savePhotoList.forEach((item) => {
         this.saveFileList.push(item.file)
       })
 
@@ -313,7 +326,19 @@ export default {
       }).catch(function (error) {
         console.log(error);
       })
-    }
+    },
+
+    imgUrl(item) {
+      console.log("url");
+      console.log(item.url);
+      console.log("imagePath");
+      console.log(item.imagePath);
+      if(item.url === undefined){
+        return item.imagePath;
+      }else{
+        return item.url;
+      }
+    },
 
   },
 }

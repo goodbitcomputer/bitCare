@@ -62,6 +62,8 @@ export default {
       setCbList: 'setCbList',
       setImgList: 'setImgList',
       setPhysicalData: 'setPhysicalData',
+      initNewCameraList: 'initNewCameraList',
+      initSavePhotoList: 'initSavePhotoList',
 
     }),
     divHeightFix() {
@@ -141,6 +143,8 @@ export default {
         let diagnoseList = JSON.parse(response.data.diagnoseList);
         let imgList = JSON.parse(response.data.imgList);
         this.setHistoryLogic(item, diseaseList, diagnoseList, imgList);
+        this.initNewCameraList(); // 이전 진료내역에서 촬영했던 사진들 리셋
+        this.initSavePhotoList(); // 이전 진료내역에서 임시저장했던 사진들 리셋
         this.setNextStep(4);  // 환자기록 페이지로 넘어감
       }).catch(function (error) {
         console.log(error);

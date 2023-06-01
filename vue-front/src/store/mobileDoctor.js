@@ -105,7 +105,13 @@ export default {
                     state.savePhotoList.push(item);
                 }
             })
-        }
+        },
+        initNewCameraList: (state) => {
+            state.newCameraList = [];
+        },
+        initSavePhotoList: (state) => {
+            state.savePhotoList = [];
+        },
 
     }, actions: {
         // 히스토리 리스트 가져오기
