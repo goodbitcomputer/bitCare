@@ -82,9 +82,8 @@ public class DoctorServiceImpl implements DoctorService {
     // 처방(더미)테이블 search
     @Override
     public List<DiagnoseDTO> cbFilterSearch(String filterMessage) {
-        List<DiagnoseDTO> list = diagnoseDAO.search(filterMessage);
 
-        return list;
+        return diagnoseDAO.search(filterMessage);
     }
 
     @Override
@@ -92,9 +91,7 @@ public class DoctorServiceImpl implements DoctorService {
         HttpSession session = request.getSession();
         EmployeeDTO logIn = (EmployeeDTO) session.getAttribute("logIn");
 
-        List<WaitingDTO> list = waitingDAO.selectWaitByDept(logIn.getDeptId());
-
-        return list;
+        return waitingDAO.selectWaitByDept(logIn.getDeptId());
     }
 
     @Override
@@ -102,9 +99,7 @@ public class DoctorServiceImpl implements DoctorService {
         HttpSession session = request.getSession();
         EmployeeDTO logIn = (EmployeeDTO) session.getAttribute("logIn");
 
-        List<WaitingDTO> list = waitingDAO.selectCompletedByDept(logIn.getDeptId());
-
-        return list;
+        return waitingDAO.selectCompletedByDept(logIn.getDeptId());
     }
 
     @Transactional
