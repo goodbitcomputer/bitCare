@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="editor-container" @drop="dropImage" @dragover.prevent>
-      <div v-if="selectedImage" class="editor-cover">
+      <div v-if="selectedImage && !isImageOnCanvas(selectedImage)" class="editor-cover">
         <!-- <p class="editor-text">이미지 선택</p> -->
       </div>
       <tui-image-editor
@@ -118,9 +118,14 @@ export default {
       }
       return new Blob([uInt8Array], {type: contentType});
     },
+    isImageOnCanvas(url) {
+      const objects = this.editorInstance._graphics._canvasImage.objects;
+      return objects.some((obj) => obj._element.src === url);
+    },
   },
 };
 </script>
+
 
 <style scoped>
 .editor-container {
