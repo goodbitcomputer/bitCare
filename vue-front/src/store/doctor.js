@@ -38,10 +38,6 @@ export default {
     mutations: {
         // 환자기록에서 편집 누를시 환자기록쓰기에 데이터 넘기기
         historyDataToWrite: (state, {history, sbList, cbList, imgList}) => {
-            console.log(history);
-            console.log(sbList);
-            console.log(cbList);
-            console.log(imgList);
 
             state.memoEditor.setData(history.memo);
             state.symptomEditor.setData(history.symptomDetail);

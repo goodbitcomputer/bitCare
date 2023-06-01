@@ -337,7 +337,6 @@ export default {
     completedBtn() {
       let waitingData = this.waitingData;
       waitingData.state = '진료완료';
-      console.log(waitingData);
 
       axios.post('/doctor/completed_proc', waitingData).then(() => {
         // historyPage의 historyData 초기화

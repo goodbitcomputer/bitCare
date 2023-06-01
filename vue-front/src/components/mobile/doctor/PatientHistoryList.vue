@@ -126,12 +126,6 @@ export default {
       this.setCbList(cbItems);
       this.setImgList(imgItems);
       this.setPhysicalData(pyItems);
-
-      console.log(item);
-      console.log(sbItems);
-      console.log(cbItems);
-      console.log(imgItems);
-      console.log(pyItems);
     },
 
     // 진료기록리스트에서 특정 진료기록 선택

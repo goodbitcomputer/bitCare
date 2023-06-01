@@ -2,8 +2,10 @@ package com.bit.bitcare.controller;
 
 import com.bit.bitcare.awsS3.AwsS3;
 import com.bit.bitcare.awsS3.AwsS3Service;
+import com.bit.bitcare.model.BodyCategoryDTO;
 import com.bit.bitcare.model.DeptDTO;
 import com.bit.bitcare.model.PatientDTO;
+import com.bit.bitcare.service.MobileDoctorService;
 import com.bit.bitcare.service.MobileService;
 import com.bit.bitcare.serviceImpl.MobileServiceImpl;
 import lombok.AllArgsConstructor;
@@ -29,11 +31,13 @@ import java.util.UUID;
 @RequestMapping("/mobile/doctor")
 public class MobileDoctorController {
     private MobileService mobileService;
+    private MobileDoctorService mobileDoctorService;
     @Autowired
     private AwsS3Service awsS3Service;
 
-    public MobileDoctorController(MobileServiceImpl mobileService) {
+    public MobileDoctorController(MobileDoctorService mobileDoctorService, MobileServiceImpl mobileService) {
         this.mobileService = mobileService;
+        this.mobileDoctorService = mobileDoctorService;
     }
 
 
@@ -43,30 +47,32 @@ public class MobileDoctorController {
 
         return mobileService.insertPatient(requestData).toString();
     }
+    @ResponseBody
+    @GetMapping("/getBodyCategoryData")
+    public List<BodyCategoryDTO> getBodyCategoryData(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        return mobileDoctorService.getBodyCategoryAll();
+    }
 
     @ResponseBody
     @PostMapping("/photoSave_proc")
-    public String photoSave(@RequestPart(value="uploadFiles", required = true) MultipartFile[] files, HttpServletRequest request ) throws IOException {
-//        System.out.println("file: "+ file);
+    public Boolean photoSave(@RequestPart(value="uploadFiles", required = true) MultipartFile[] files, @RequestPart(value="bodyCategoryId", required = true) int bodyCategoryId, @RequestPart(value="historyId", required = true) int historyId , HttpServletRequest request ) throws IOException {
         for(MultipartFile multipartFile : files) {
 
+            AwsS3 awsS3 = awsS3Service.upload(multipartFile,"imgUpload/"+historyId);
 
-            AwsS3 awsS3 = awsS3Service.upload(multipartFile,"imgUpload");
+//            System.out.println("aws key: " +awsS3.getKey());      // aws 스토리지에 올라간 파일 key (삭제하려면 key가 필요함)
+//            System.out.println("aws path: " +awsS3.getPath());    // aws 스토리지에 올라간 파일 path (url)
 
-            System.out.println("aws key: " +awsS3.getKey());
-            System.out.println("aws path: " +awsS3.getPath());
+            mobileDoctorService.photoSave(awsS3, historyId, bodyCategoryId);
 
-            AwsS3 removeS3 = new AwsS3();
-
-            removeS3.setKey(awsS3.getKey());
-
-// 이미지 삭제
+            // 이미지 삭제
+//            AwsS3 removeS3 = new AwsS3();
+//            removeS3.setKey(awsS3.getKey());
 //            awsS3Service.remove(removeS3);
 
         }
 
-        return null;
+        return true;
     }
-
 
 }

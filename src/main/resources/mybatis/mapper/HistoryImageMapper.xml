@@ -13,8 +13,8 @@
 
     <!-- 진료 기록의 이미지부분(history_image) insert -->
     <insert id="insert" parameterType="historyImageDTO">
-        insert into `history_image`(history_id,path,entry_date,category_id)
-        values(#{historyId},#{imagePath},#{entryDate},#{categoryId})
+        insert into `history_image`(history_id, image_path, image_key, category_id)
+        values(#{historyId}, #{imagePath}, #{imageKey}, #{categoryId})
     </insert>
 
 </mapper>

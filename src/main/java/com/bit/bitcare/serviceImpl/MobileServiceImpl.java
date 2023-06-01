@@ -1,13 +1,7 @@
 package com.bit.bitcare.serviceImpl;
 
-import com.bit.bitcare.dao.AddressDAO;
-import com.bit.bitcare.dao.DeptDAO;
-import com.bit.bitcare.dao.PatientDAO;
-import com.bit.bitcare.dao.WaitingDAO;
-import com.bit.bitcare.model.AddressDTO;
-import com.bit.bitcare.model.DeptDTO;
-import com.bit.bitcare.model.PatientDTO;
-import com.bit.bitcare.model.WaitingDTO;
+import com.bit.bitcare.dao.*;
+import com.bit.bitcare.model.*;
 import com.bit.bitcare.service.MobileService;
 import com.google.gson.JsonObject;
 import org.springframework.stereotype.Service;
@@ -133,5 +127,6 @@ public class MobileServiceImpl implements MobileService {
 
         return true;
     }
+
 }
 

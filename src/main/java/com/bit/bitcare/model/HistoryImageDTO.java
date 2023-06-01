@@ -11,5 +11,5 @@ public class HistoryImageDTO {
     String imagePath;
     String imageKey;
     Date entryDate;
-    String categoryId;
+    int categoryId;
 }

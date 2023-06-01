@@ -1,5 +1,6 @@
 package com.bit.bitcare.service;
 
+import com.bit.bitcare.model.BodyCategoryDTO;
 import com.bit.bitcare.model.DeptDTO;
 import com.bit.bitcare.model.DiagnoseDTO;
 import com.bit.bitcare.model.PatientDTO;

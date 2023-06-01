@@ -69,7 +69,8 @@
                 class="btn-outline-dark mt-2 mb-2"
                 menu-class="w-100"
             >
-              <b-dropdown-item v-for="(item) in imageList" :key="item.id" @click="dropClick(item)">{{ item.dept }}
+              <b-dropdown-item v-for="(item) in bodyCategoryList" :key="item.id" @click="dropClick(item)">
+                {{ item.categoryName }}
               </b-dropdown-item>
             </b-dropdown>
           </div>
@@ -163,11 +164,8 @@ export default {
         {key: 'temperature', label: '체온'},
       ],
 
-
       // 이미지
       imageList: [],
-      imageCategory: "",
-
 
       // 상병 테이블 로직
       sbFields: [
@@ -204,11 +202,14 @@ export default {
       },
 
       saveFileList: [],
+      bodyCategoryList: [],
+      bodyCategoryId: "", // 저장할때 쓸꺼
+      bodyCategoryName: "", // 저장할때 쓸꺼
     }
   },
   mounted() {
     this.divHeightFix();
-
+    this.getBodyCategoryData()
   },
   computed: {
     ...mapState('mobileDoctor',
@@ -221,19 +222,18 @@ export default {
     * -----------------------------------------------------------------
     */
     imageCategoryMsg() {
-      if (this.imageCategory === "") return "촬영 부위 선택";
-      else return this.imageCategory;
+      if (this.bodyCategoryName === "") return "촬영 부위 선택";
+      else return this.bodyCategoryName;
     },
     // image swiper 데이터 리스트
     addImgListLogic() {
       let addImgList = [];
-      this.imgList.forEach((item)=>{
+      this.imgList.forEach((item) => {
         addImgList.push(item);
       });
-      this.savePhotoList.forEach((item)=>{
+      this.savePhotoList.forEach((item) => {
         addImgList.push(item);
       });
-      console.log(addImgList);
       return addImgList;
     }
   },
@@ -281,12 +281,6 @@ export default {
       }
     },
 
-    // imageCategory item 선택시 data 변경
-    dropClick(item) {
-      this.image = item.dept;
-      this.imageId = item.id;
-    },
-
     // 사진촬영버튼
     photography() {
       this.setPhotoListToNewCameraList(this.savePhotoList);
@@ -296,48 +290,75 @@ export default {
     // 저장 버튼
     saveBtn() {
       this.saveFileList = [];
-      this.savePhotoList.forEach((item) => {
-        this.saveFileList.push(item.file)
-      })
 
+      if (this.savePhotoList.length === 0) {
+        Swal.fire({
+          icon: 'error',
+          title: '실패 !!!',
+          text: '추가된 사진이 없습니다.',
+          showConfirmButton: false,
+          timer: 1000
+        })
+      } else if (this.bodyCategoryId === "") {
+        Swal.fire({
+          icon: 'error',
+          title: '실패 !!!',
+          text: '이미지 카테고리를 선택해주세요.',
+          showConfirmButton: false,
+          timer: 1000
+        })
+      } else {
+        this.savePhotoList.forEach((item) => {
+          this.saveFileList.push(item.file)
+        })
 
-      let formData = new FormData();
-      // formData.append("files", this.saveFileList);
-      for (let i = 0; i < this.saveFileList.length; i++) {
-        console.log(this.saveFileList[i]);
-        formData.append("uploadFiles", this.saveFileList[i]);//키,값으로 append
+        let formData = new FormData();
+        formData.append("bodyCategoryId", new Blob([JSON.stringify(this.bodyCategoryId)], {type: "application/json"}));
+        formData.append("historyId", new Blob([JSON.stringify(this.historyData.id)], {type: "application/json"}));
+        for (let i = 0; i < this.saveFileList.length; i++) {
+          formData.append("uploadFiles", this.saveFileList[i]);// 키,값으로 append
+        }
+        return axios.post('/mobile/doctor/photoSave_proc', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }).then((response) => {
+          if (response.data === true) {
+            Swal.fire({
+              icon: 'success',
+              title: '성공 !!!',
+              text: 'file save',
+              showConfirmButton: false,
+              timer: 1000
+            }).then(() => {
+              this.setNextStep(3);
+            })
+          }
+        }).catch(function (error) {
+          console.log(error);
+        })
       }
-      return axios.post('/mobile/doctor/photoSave_proc', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      }).then((response) => {
-        if (response.data === true) {
-          Swal.fire({
-            icon: 'success',
-            title: '성공 !!!',
-            text: 'file save',
-            showConfirmButton: false,
-            timer: 1000
-          }).then(() => {
-            // this.$router.push('m.home');
-          })
-        }
-      }).catch(function (error) {
-        console.log(error);
-      })
     },
 
     imgUrl(item) {
-      console.log("url");
-      console.log(item.url);
-      console.log("imagePath");
-      console.log(item.imagePath);
-      if(item.url === undefined){
+      if (item.url === undefined) {
         return item.imagePath;
-      }else{
+      } else {
         return item.url;
       }
+    },
+    getBodyCategoryData() {
+      return axios.get('/mobile/doctor/getBodyCategoryData', {}).then(response => {
+        let list = response.data;
+        this.bodyCategoryList = list;
+      }).catch(function (error) {
+        console.log(error);
+      });
+    },
+    // imageCategory item 선택시 data 변경
+    dropClick(item) {
+      this.bodyCategoryName = item.categoryName;
+      this.bodyCategoryId = item.id;
     },
 
 

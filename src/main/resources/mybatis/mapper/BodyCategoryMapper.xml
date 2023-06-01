@@ -5,6 +5,11 @@
 
 <mapper namespace="com.bit.bitcare.dao.BodyCategoryDAO">
 
+
+    <!-- 인체 카테고리 목록 -->
+    <select id="selectAll" resultType="bodyCategoryDTO">
+        select * from `body_category`
+    </select>
     <!-- 인체 카테고리 선택 -->
     <select id="selectOne" parameterType="int" resultType="bodyCategoryDTO">
         select * from `body_category`

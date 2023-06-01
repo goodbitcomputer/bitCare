@@ -406,8 +406,6 @@ export default {
       // newCameraList on vuex 저장
       this.setNewCameraList({blob: blob, url: url, file: file, storeSelect: false, photoSelect: false});
 
-      console.log(url);
-
       // document.getElementById('cameraImg').src = url;
 
 
