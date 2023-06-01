@@ -3,6 +3,7 @@
     <span>nurse</span>
     <button @click="click()">버튼</button>
     <div v-if="isClick">
+
       <textarea id="editor" name="memo"></textarea>
     </div>
   </div>
