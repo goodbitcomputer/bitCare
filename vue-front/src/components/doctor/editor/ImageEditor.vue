@@ -100,18 +100,18 @@ export default {
       canvasElement.height = canvasHeight * pixelRatio;
       this.loadImageFromURL(this.selectedImage);
     },
-    // saveImage() {
-    //   const canvas = this.editorInstance.toDataURL({ format: "jpeg", quality: 0.8 });
-    //   const url = URL.createObjectURL(this.dataURLtoBlob(canvas));
-    //   console.log("저장된 이미지 URL:", url);
-    //
-    //   this.$emit("update:image-list", [...this.imageList, { url: url }]);
-    // },
     saveImage() {
-      const canvas = this.editorInstance.toDataURL({format: "png", quality: 0.8});
+      const canvas = this.editorInstance.toDataURL({format: "jpeg", quality: 0.8});
       const url = URL.createObjectURL(this.dataURLtoBlob(canvas));
-      this.$emit("save", url);
+      console.log("저장된 이미지 URL:", url);
+
+      this.$emit("update:image-list", [...this.imageList, {url: url}]);
     },
+    // saveImage() {
+    //   const canvas = this.editorInstance.toDataURL({format: "png", quality: 0.8});
+    //   const url = URL.createObjectURL(this.dataURLtoBlob(canvas));
+    //   this.$emit("save", url);
+    // },
     dataURLtoBlob(dataURL) {
       const base64Split = dataURL.split(",");
       const contentType = base64Split[0].match(/:(.*?);/)[1];
@@ -128,7 +128,7 @@ export default {
         byteArrays.push(byteArray);
       }
 
-      return new Blob(byteArrays, { type: contentType });
+      return new Blob(byteArrays, {type: contentType});
     },
     isImageOnCanvas(url) {
       const objects = this.editorInstance._graphics._canvasImage.objects;
