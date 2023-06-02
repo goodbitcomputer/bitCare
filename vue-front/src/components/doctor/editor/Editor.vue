@@ -27,7 +27,7 @@
             @click="handleImageClick(image.url)"
             @dragstart="dragImage($event, image.url)"
         >
-          <img :src="image.url" class="image-list-box" />
+          <img :src="image.url" class="image-list-box"/>
           <div v-if="isSelected(image.url)" class="img-cover"></div>
           <p class="date">{{ getCurrentDate() }}</p>
           <div v-if="isSelected(image.url)" class="dropdown">
@@ -47,11 +47,11 @@
           </div>
         </div>
       </div>
-      <br />
+      <br/>
     </div>
     <div class="flex-grow-1 d-flex editor-container border-box">
       <div v-if="showDiv" class="viewer d-flex align-items-center">
-        <img class="BI" src="@/assets/BI/BIW2.png" />
+        <img class="BI" src="@/assets/BI/BIW2.png"/>
         <img
             v-if="selectedViewerImage"
             :src="selectedViewerImage"
@@ -74,7 +74,7 @@
         />
         <div v-if="showDiv" class="editor-cover" @click="removeCover">
           <p class="editor-text" style="margin-bottom: 0">
-            편집할 이미지를 드래그 해주세요! <br />
+            편집할 이미지를 드래그 해주세요! <br/>
             뷰어 해제 (Click or F2)
           </p>
         </div>
@@ -85,6 +85,7 @@
 
 <script>
 import ImageEditor from "@/components/doctor/editor/ImageEditor.vue";
+// import axios from "axios";
 
 export default {
   name: "DoctorEditor",
@@ -95,14 +96,21 @@ export default {
     return {
       showDiv: false,
       images: [
-        { url: "/assets/image/n0.jpg" },
-        { url: "/assets/image/n1.png" },
-        { url: "/assets/image/n2.png" },
-        { url: "/assets/image/n3.png" },
-        { url: "/assets/image/n4.png" },
-        { url: "/assets/image/n5.png" },
-        { url: "/assets/image/n6.png" },
-        { url: "/assets/image/n7.png" },
+        {url: "https://s3.ap-northeast-2.amazonaws.com/bitcare.image.bucket/imgUpload/a48cb9b5-bc7d-4b26-8c5c-882fd1e00dbaimage.png"},
+        // {url: "https://s3.ap-northeast-2.amazonaws.com/bitcare.image.bucket/imgUpload/a48cb9b5-bc7d-4b26-8c5c-882fd1e00dbaimage.png"},
+        // {url: "https://s3.ap-northeast-2.amazonaws.com/bitcare.image.bucket/imgUpload/a48cb9b5-bc7d-4b26-8c5c-882fd1e00dbaimage.png"},
+        // {url: "https://s3.ap-northeast-2.amazonaws.com/bitcare.image.bucket/imgUpload/a48cb9b5-bc7d-4b26-8c5c-882fd1e00dbaimage.png"},
+        // {url: "https://s3.ap-northeast-2.amazonaws.com/bitcare.image.bucket/imgUpload/a48cb9b5-bc7d-4b26-8c5c-882fd1e00dbaimage.png"},
+        // {url: "https://s3.ap-northeast-2.amazonaws.com/bitcare.image.bucket/imgUpload/a48cb9b5-bc7d-4b26-8c5c-882fd1e00dbaimage.png"},
+        // {url: "https://s3.ap-northeast-2.amazonaws.com/bitcare.image.bucket/imgUpload/a48cb9b5-bc7d-4b26-8c5c-882fd1e00dbaimage.png"},
+        {url: "/assets/image/n0.jpg"},
+        {url: "/assets/image/n1.png"},
+        {url: "/assets/image/n2.png"},
+        {url: "/assets/image/n3.png"},
+        {url: "/assets/image/n4.png"},
+        {url: "/assets/image/n5.png"},
+        {url: "/assets/image/n6.png"},
+        {url: "/assets/image/n7.png"},
       ],
       selectedEditorImage: null,
       selectedViewerImage: null,
@@ -119,7 +127,7 @@ export default {
   methods: {
     getCurrentDate() {
       const today = new Date();
-      const options = { year: "numeric", month: "long", day: "numeric" };
+      const options = {year: "numeric", month: "long", day: "numeric"};
       return today.toLocaleDateString("ko-KR", options);
     },
     toggleImage(url) {
