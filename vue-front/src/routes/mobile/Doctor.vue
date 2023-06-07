@@ -6,7 +6,7 @@
     <PatientHistoryList v-if="patientHistoryListByStep"/>
     <PatientHistory v-if="patientHistoryByStep"/>
     <MobileMessage v-if="messageByStep"/>
-    <Waiting v-if="settingByStep"/>
+    <PatientHistoryList v-if="settingByStep"/>
 
     <Camera v-if="cameraByStep"/>
     <Gallery v-if="galleryByStep"/>
@@ -23,7 +23,6 @@ import Home from "@/components/mobile/doctor/Home.vue";
 import PatientList from "@/components/mobile/doctor/PatientList.vue";
 import PatientHistoryList from "@/components/mobile/doctor/PatientHistoryList.vue";
 import PatientHistory from "@/components/mobile/doctor/PatientHistory.vue";
-import Waiting from "@/components/mobile/doctor/Wating.vue";
 import MobileMessage from "@/components/mobile/doctor/Message.vue";
 
 // 카메라
@@ -42,7 +41,6 @@ export default {
     PatientList,
     PatientHistoryList,
     PatientHistory,
-    Waiting,
 
     Camera,
     Gallery,

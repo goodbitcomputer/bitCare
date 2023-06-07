@@ -1,7 +1,7 @@
 <template>
   <!-- ======= Hero Section ======= -->
   <section id="mobile-doctor">
-    <div id="patientList-box" class="patientList-box container text-center text-lg-start" data-aos="fade-up">
+    <div id="patientList-box" class="patientList-box text-center text-lg-start" data-aos="fade-up">
       <div class="util d-flex" data-aos="fade-up">
         <button class="border-box col" @click="waitingBtn">진료대기</button>
         <button class="border-box col" @click="completedBtn">진료완료</button>
@@ -156,6 +156,7 @@ export default {
 
 .patientList-box {
   padding-top: 150px;
+  margin : 0 3px;
 }
 
 .patientList-box .util button {
@@ -213,7 +214,7 @@ export default {
 }
 
 
-@media (max-width: 992px) {
+@media (max-width: 1200px) {
   .patientList-box {
     padding-top: 110px;
   }

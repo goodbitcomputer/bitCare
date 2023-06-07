@@ -3,7 +3,7 @@
     <NavBar/>
     <!-- ======= Hero Section ======= -->
     <section id="hero" class="d-flex align-items-center">
-      <div class="container pt-0" data-aos="zoom-in" data-aos-delay="100">
+      <div class="pt-0" data-aos="zoom-in" data-aos-delay="100">
         <div class="page-box justify-content-center">
           <div class="logo-box d-flex align-items-center" data-aos="zoom-in"
                data-aos-delay="200">

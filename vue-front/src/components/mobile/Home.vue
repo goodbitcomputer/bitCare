@@ -11,6 +11,7 @@
           <div class="btns">
             <a @click="registerBtn" class="btn-menu animated fadeInUp scrollto">접수하기</a>
             <a @click="doctorBtn" class="btn-book animated fadeInUp scrollto">관 계 자</a>
+            <a @click="paymentBtn" class="btn-book animated fadeInUp scrollto">결제하기</a>
           </div>
         </div>
         <div class="col-lg-4 d-flex align-items-center justify-content-center position-relative" data-aos="zoom-in"
@@ -34,7 +35,10 @@ export default {
     },
     doctorBtn() {
       this.$router.push('/mobile/login')
-    }
+    },
+    paymentBtn() {
+      this.$router.push('/mobile/payment')
+    },
   },
 }
 </script>

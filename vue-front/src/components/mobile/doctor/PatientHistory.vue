@@ -1,7 +1,7 @@
 <template>
   <!-- ======= Hero Section ======= -->
   <section id="mobile-doctor">
-    <div id="mobileDoctor-box" class="container" data-aos="fade-up">
+    <div id="mobileDoctor-box" class="" data-aos="fade-up">
       <div class="util" data-aos="fade-up">
         <div class="title">
           <span class="font-weight-bold">{{ this.waitingData.name }}</span>
@@ -48,31 +48,33 @@
         <!--      이미지 list-->
         <div class="border-box">
           <span class="font-weight-bold">이미지</span>
-          <div class="img-list-box">
-            <swiper :options="swiperOptions" ref="swiper">
-              <swiper-slide v-for="(slide, index) in addImgListLogic" :key="index">
-                <!-- 슬라이드 내용 -->
-                <img :src="imgUrl(slide)" alt="Slide Image">
-              </swiper-slide>
+          <div class="img-list-box text-center">
+            <div class="swiper-box">
+              <swiper :options="swiperOptions" ref="swiper">
+                <swiper-slide v-for="(slide, index) in addImgListLogic" :key="index">
+                  <!-- 슬라이드 내용 -->
+                  <img :src="imgUrl(slide)" alt="Slide Image">
+                </swiper-slide>
 
-              <!-- 네비게이션 버튼 -->
-              <div class="swiper-button-prev" slot="button-prev"></div>
-              <div class="swiper-button-next" slot="button-next"></div>
-            </swiper>
-          </div>
-          <!--          <b-button class="btn col mt-1" variant="primary">촬영 부위 선택</b-button>-->
-          <div class="imageCategory-box">
-            <b-dropdown
-                :text="imageCategoryMsg"
-                block
-                variant="primary"
-                class="btn-outline-dark mt-2 mb-2"
-                menu-class="w-100"
-            >
-              <b-dropdown-item v-for="(item) in bodyCategoryList" :key="item.id" @click="dropClick(item)">
-                {{ item.categoryName }}
-              </b-dropdown-item>
-            </b-dropdown>
+                <!-- 네비게이션 버튼 -->
+                <div class="swiper-button-prev" slot="button-prev"></div>
+                <div class="swiper-button-next" slot="button-next"></div>
+              </swiper>
+              <!--          <b-button class="btn col mt-1" variant="primary">촬영 부위 선택</b-button>-->
+              <div class="imageCategory-box">
+                <b-dropdown
+                    :text="imageCategoryMsg"
+                    block
+                    variant="primary"
+                    class="btn-outline-dark mt-2 mb-2"
+                    menu-class="w-100"
+                >
+                  <b-dropdown-item v-for="(item) in bodyCategoryList" :key="item.id" @click="dropClick(item)">
+                    {{ item.categoryName }}
+                  </b-dropdown-item>
+                </b-dropdown>
+              </div>
+            </div>
           </div>
         </div>
         <!--      증상-->
@@ -399,6 +401,7 @@ section {
 #mobileDoctor-box {
   padding-top: 150px;
   padding-bottom: 65px;
+  margin: 0 3px;
 }
 
 #mobileDoctor-box * {
@@ -460,7 +463,12 @@ section {
   max-width: 600px; /* 요소의 최대 너비를 지정합니다. */
 }
 
-@media (min-width: 995px ) {
+.swiper-box {
+  display: inline-block;
+  padding: 0;
+}
+
+@media (min-width: 1200px ) {
   .img-list-box .swiper-container {
     /* calc- 계산해주는 함수 */
     width: calc(200px * 3 + 20px);
@@ -485,7 +493,7 @@ section {
   }
 }
 
-@media (max-width: 995px) {
+@media (max-width: 1200px) {
   #mobileDoctor-box {
     padding-top: 110px;
   }
@@ -541,6 +549,7 @@ section {
     height: 100px;
     object-fit: contain;
   }
+
 }
 
 @media (max-width: 540px) {
