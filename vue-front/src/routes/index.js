@@ -10,6 +10,7 @@ import MobileRegister from "@/routes/mobile/Register.vue";
 import MobileLogin from "@/routes/mobile/Login.vue";
 import MobileDoctor from "@/routes/mobile/Doctor.vue";
 import MobileCamera from "@/routes/mobile/Camera.vue";
+import MobilePayment from "@/routes/mobile/Payment.vue";
 import ImageEditor from "@/routes/doctor/ImageEditor.vue";
 import Alarm from './alarm/Alarm.vue'
 import store from "@/store";
@@ -115,7 +116,7 @@ export default new VueRouter({
       path: '/nurse',
       component: Nurse,
       meta: {
-        roles: ['ROLE_NURSE', 'ROLE_MASTER']
+        roles: ['ROLE_NURSE', 'ROLE_MASTER', 'ROLE_ADMIN']
       },
       beforeEnter: function(to, from, next) {
         let roleStatus = store.state.login.role // 권한 상태
@@ -181,7 +182,14 @@ export default new VueRouter({
       meta: {
         roles: ['ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_NURSE', 'ROLE_MASTER']
       }
-    }
+    },
+    {
+      path: '/mobile/payment/',
+      component: MobilePayment,
+      meta: {
+        roles: ['ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_NURSE', 'ROLE_MASTER']
+      }
+    },
     // {
     //   path: '/:notFound(.*)',
     //   component: NotFound

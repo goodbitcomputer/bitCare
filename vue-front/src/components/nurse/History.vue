@@ -1,17 +1,30 @@
 <template>
-  <div class="history-box border-box">
-    <div class="border-box d-flex">
-      <span style="font-size: 1.2em; font-weight: 700; flex-grow: 1">진료 기록</span>
-      <span style="cursor:pointer" @click="refreshBtn">새로고침</span>
-    </div>
+  <div class="history-box border-box"><div class="border-box d-flex">
+    <span style="font-size: 1.2em; font-weight: 700; flex-grow: 1">진료 기록</span>
+    <span style="cursor:pointer" @click="refreshBtn">새로고침</span>
+  </div>
+
     <!--      history 리스트-->
-    <div class="empty-list-box border-box" v-if="isListEmpty">
+    <div class="empty-list-box border-box" v-if="false">
       <div class="empty-img-box">
         <img src="@/assets/img/empty-box.png">
       </div>
     </div>
-    <div class="d-flex" v-if="!isListEmpty">
+    <div class="d-flex" v-if="true">
       <div class="waiting-list-box">
+        <div class="border-box">
+          <div>
+            <div>
+              <span>2023.09.02</span>
+            </div>
+            <div>
+              <span>내분비내과</span>
+            </div>
+            <div>
+              <span>초진</span>
+            </div>
+          </div>
+        </div>
         <div class="border-box" v-for="(item) in historyList" :key="item.id">
           <div @click="selectHistoryBtn(item)">
             <div>
@@ -26,17 +39,16 @@
           </div>
         </div>
       </div>
-      <div class="empty-box border-box flex-grow-1" v-if="isSelectEmpty">
+      <div class="empty-box border-box flex-grow-1" v-if="false">
         <div class="empty-img-box">
           <img src="@/assets/img/empty-box.png">
         </div>
       </div>
-      <div class="history-detail-box border-box" v-if="!isSelectEmpty">
+      <div class="history-detail-box border-box" v-if="true">
         <!--      진료기록title-->
         <div class="d-flex">
           <span>진료기록</span>
           <span class="flex-grow-1">[{{ dateMsg(selectHistoryData.entryDate) }}]</span>
-          <span style="cursor:pointer" @click="updateBtn" v-if="isCheckUpdate">편집</span>
         </div>
         <!--      신체계측/바이탈-->
         <div>
@@ -140,6 +152,15 @@
             </div>
           </div>
         </div>
+        <!--      총진료비-->
+        <div class="d-flex">
+          <span class="font-weight-bold flex-grow-1">총진료비</span>
+          <span>16,970원</span>
+        </div>
+        <div class="d-flex">
+          <span class="font-weight-bold flex-grow-1">수납금</span>
+          <span>5,000원</span>
+        </div>
       </div>
     </div>
   </div>
@@ -150,7 +171,7 @@ import {mapActions, mapMutations, mapState} from "vuex";
 import axios from "axios";
 
 export default {
-  name: "DoctorHistory",
+  name: "NurseHistory",
 
   // Note `isActive` is left out and will not appear in the rendered table
   data() {

@@ -1,7 +1,7 @@
 <template>
   <!-- ======= Hero Section ======= -->
   <section id="mobile-doctor">
-    <div id="mobileDoctor-box" class="container text-center text-lg-start" data-aos="fade-up">
+    <div id="mobileDoctor-box" class="text-center text-lg-start" data-aos="fade-up">
       <div class="util" data-aos="fade-up">
         <div class="title">
           <span class="font-weight-bold">{{ this.waitingData.name }}</span>
@@ -178,6 +178,7 @@ export default {
 #mobileDoctor-box {
   padding-top: 150px;
   padding-bottom: 65px;
+  margin : 0 3px;
 }
 
 #mobileDoctor-box .util {
@@ -230,7 +231,7 @@ export default {
 }
 
 
-@media (max-width: 992px) {
+@media (max-width: 1200px) {
   #mobileDoctor-box {
     padding-top: 110px;
   }
