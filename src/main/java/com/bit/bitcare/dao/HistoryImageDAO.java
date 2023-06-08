@@ -8,5 +8,10 @@ import java.util.List;
 @Component
 public interface HistoryImageDAO {
     public List<HistoryImageDTO> selectByHistoryId(int historyId);
+
     public void insert(HistoryImageDTO historyImageDTO);
+
+    public List<HistoryImageDTO> selectByPatientIdAndHistoryId(int patientId, int historyId);
+
+    public void insertEditedPhoto(HistoryImageDTO historyImageDTO);
 }
