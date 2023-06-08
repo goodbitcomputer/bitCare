@@ -20,17 +20,17 @@
         <div
             v-for="(image, index) in images"
             :key="index"
-            :class="{ active: isSelected(image.url) }"
+            :class="{ active: isSelected(image.imagePath) }"
             class="border-box img-select"
             draggable="true"
             style="margin-bottom: 15px;"
-            @click="handleImageClick(image.url)"
-            @dragstart="dragImage($event, image.url)"
+            @click="handleImageClick(image.imagePath)"
+            @dragstart="dragImage($event, image)"
         >
-          <img :src="image.url" class="image-list-box"/>
-          <div v-if="isSelected(image.url)" class="img-cover"></div>
+          <img :src="image.imagePath" class="image-list-box" draggable="false"/>
+          <div v-if="isSelected(image.imagePath)" class="img-cover"></div>
           <p class="date">{{ getCurrentDate() }}</p>
-          <div v-if="isSelected(image.url)" class="dropdown">
+          <div v-if="isSelected(image.imagePath)" class="dropdown">
             <ul class="draggable-list">
               <li
                   v-for="(image, index) in dropdownImages"
@@ -38,9 +38,9 @@
                   class="border-box img-select"
                   draggable="true"
                   style="margin-bottom: 15px;"
-                  @dragstart="dragImage($event, image.url)"
+                  @dragstart="dragImage($event, image.imagePath)"
               >
-                <img :src="image.url" class="image-list-box"/>
+                <img :src="image.imagePath" class="image-list-box"/>
                 <p class="date">{{ getCurrentDate() }}</p>
               </li>
             </ul>
@@ -71,6 +71,7 @@
             class="tui-editor"
             @ready="onEditorReady"
             @update:image-list="updateImageList"
+            @edit-complete="handleEditComplete"
         />
         <div v-if="showDiv" class="editor-cover" @click="removeCover">
           <p class="editor-text" style="margin-bottom: 0">
@@ -85,46 +86,67 @@
 
 <script>
 import ImageEditor from "@/components/doctor/editor/ImageEditor.vue";
+import axios from "axios";
+import {mapMutations} from "vuex";
 // import axios from "axios";
 
 export default {
+
   name: "DoctorEditor",
   components: {
     ImageEditor,
   },
+
+  // props: {
+  //   patientId: {
+  //     type: Number,
+  //     default: 0,
+  //   },
+  // },
+
   data() {
     return {
       showDiv: false,
-      images: [
-        {url: "https://s3.ap-northeast-2.amazonaws.com/bitcare.image.bucket/imgUpload/a48cb9b5-bc7d-4b26-8c5c-882fd1e00dbaimage.png"},
-        // {url: "https://s3.ap-northeast-2.amazonaws.com/bitcare.image.bucket/imgUpload/a48cb9b5-bc7d-4b26-8c5c-882fd1e00dbaimage.png"},
-        // {url: "https://s3.ap-northeast-2.amazonaws.com/bitcare.image.bucket/imgUpload/a48cb9b5-bc7d-4b26-8c5c-882fd1e00dbaimage.png"},
-        // {url: "https://s3.ap-northeast-2.amazonaws.com/bitcare.image.bucket/imgUpload/a48cb9b5-bc7d-4b26-8c5c-882fd1e00dbaimage.png"},
-        // {url: "https://s3.ap-northeast-2.amazonaws.com/bitcare.image.bucket/imgUpload/a48cb9b5-bc7d-4b26-8c5c-882fd1e00dbaimage.png"},
-        // {url: "https://s3.ap-northeast-2.amazonaws.com/bitcare.image.bucket/imgUpload/a48cb9b5-bc7d-4b26-8c5c-882fd1e00dbaimage.png"},
-        // {url: "https://s3.ap-northeast-2.amazonaws.com/bitcare.image.bucket/imgUpload/a48cb9b5-bc7d-4b26-8c5c-882fd1e00dbaimage.png"},
-        {url: "/assets/image/n0.jpg"},
-        {url: "/assets/image/n1.png"},
-        {url: "/assets/image/n2.png"},
-        {url: "/assets/image/n3.png"},
-        {url: "/assets/image/n4.png"},
-        {url: "/assets/image/n5.png"},
-        {url: "/assets/image/n6.png"},
-        {url: "/assets/image/n7.png"},
-      ],
+      images: [],
       selectedEditorImage: null,
       selectedViewerImage: null,
       showViewerButton: false,
       isDeletingImage: false,
     };
   },
+
   mounted() {
-    document.addEventListener("keydown", this.handleKeyDown);
+    document.addEventListener('keydown', this.handleKeyDown);
+    const patientId = this.$route.query.patientId;
+    const historyId = this.$route.query.historyId;
+    axios
+        .post('/doctor/editor/selectByPatientIdAndHistoryId', null, {
+          params: {
+            patientId: patientId,
+            historyId: historyId
+          }
+        })
+        .then(response => {
+          console.log(response.data);
+          this.images = response.data;
+        })
+        .catch(error => {
+          console.error(error);
+        });
   },
+
   beforeUnmount() {
     document.removeEventListener("keydown", this.handleKeyDown);
   },
+
   methods: {
+    ...mapMutations('editor', {
+      setHistoryImageId: 'setHistoryImageId',
+      setBodyCategoryId: 'setBodyCategoryId',
+    }),
+    handleEditComplete(image) {
+      this.images.push({imagePath: image});
+    },
     getCurrentDate() {
       const today = new Date();
       const options = {year: "numeric", month: "long", day: "numeric"};
@@ -150,23 +172,36 @@ export default {
     },
     handleImageClick(url) {
       if (this.isDeletingImage) {
-        const index = this.images.findIndex((image) => image.url === url);
+        const index = this.images.findIndex((image) => image.imagePath === url);
         if (index !== -1) {
           this.images.splice(index, 1);
         }
         this.isDeletingImage = false;
       } else {
-        this.toggleImage(url);
+        if (this.showDiv) {
+          if (this.selectedViewerImage === url) {
+            this.selectedViewerImage = null;
+          } else {
+            this.selectedViewerImage = url;
+          }
+        } else {
+          this.selectedEditorImage = url;
+          this.$refs.tuiImageEditor.loadImageFromURL(url, "Sample Image");
+          this.$refs.tuiImageEditor.editorInstance.ui.activeMenuEvent();
+        }
       }
     },
-    dragImage(event, url) {
-      event.dataTransfer.setData("text/plain", url);
+    dragImage(event, image) {
+      event.dataTransfer.setData("text/plain", image.imagePath);
+      this.setHistoryImageId(image.id);
+      this.setBodyCategoryId(image.categoryId);
     },
     isSelected(url) {
-      return (
-          (this.showDiv && this.selectedViewerImage === url) ||
-          (!this.showDiv && this.selectedEditorImage === url)
-      );
+      if (this.showDiv) {
+        return this.selectedViewerImage === url;
+      } else {
+        return this.selectedEditorImage === url && this.selectedViewerImage !== url;
+      }
     },
     onEditorReady() {
       if (this.selectedEditorImage) {
@@ -189,10 +224,10 @@ export default {
       }
     },
     updateImageList(updatedImageList) {
-      this.images = updatedImageList;
+      this.images = updatedImageList.map((image) => ({imagePath: image.imagePath}));
     },
     // getDropdownImages(url) {
-    //   return this.images.filter((image) => image.url !== url).slice(0, 3);
+    //   return this.images.filter((image) => image.imagePath !== url).slice(0, 3);
     // },
   },
 };

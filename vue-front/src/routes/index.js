@@ -19,172 +19,175 @@ import Admin from "@/routes/Admin.vue";
 Vue.use(VueRouter)
 
 export default new VueRouter({
-  scrollBehavior() {
-    return { x: 0, y: 0 }
-  },
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes: [
-    {
-      path: '/',
-      component: Root,
-      meta: {
-        roles: ['ROLE_DOCTOR', 'ROLE_NURSE', "ROLE_ADMIN"]
-      }
+    scrollBehavior() {
+        return {x: 0, y: 0}
     },
-    {
-      path: '/alarm',
-      component: Alarm,
-      meta: {
-        roles: ['ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_NURSE', 'ROLE_MASTER']
-      }
-    },
-    {
-      path: '/login',
-      component: LogIn,
-      meta: {
-        roles: ['ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_NURSE', 'ROLE_MASTER']
-      }
-    },
-    {
-      path: '/Home',
-      component: Home,
-      meta: {
-        roles: ['ROLE_DOCTOR', 'ROLE_NURSE', 'ROLE_MASTER']
-      }
-    },
-    {
-      path: '/admin',
-      component: Admin,
-      meta: {
-        roles: ['ROLE_MASTER']
-      },
-      beforeEnter: function(to, from, next) {
-        let roleStatus = store.state.login.role // 권한 상태
-        let roleName
-        if (!to.meta.roles.includes(roleStatus)) {
-          if(roleStatus === 'ROLE_DOCTOR'){
-            roleName = '의사'
-          } else if(roleStatus === 'ROLE_NURSE'){
-            roleName = '간호사'
-          }
+    mode: 'history',
+    base: process.env.BASE_URL,
+    routes: [
+        {
+            path: '/',
+            component: Root,
+            meta: {
+                roles: ['ROLE_DOCTOR', 'ROLE_NURSE', "ROLE_ADMIN"]
+            }
+        },
+        {
+            path: '/alarm',
+            component: Alarm,
+            meta: {
+                roles: ['ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_NURSE', 'ROLE_MASTER']
+            }
+        },
+        {
+            path: '/login',
+            component: LogIn,
+            meta: {
+                roles: ['ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_NURSE', 'ROLE_MASTER']
+            }
+        },
+        {
+            path: '/Home',
+            component: Home,
+            meta: {
+                roles: ['ROLE_DOCTOR', 'ROLE_NURSE', 'ROLE_MASTER']
+            }
+        },
+        {
+            path: '/admin',
+            component: Admin,
+            meta: {
+                roles: ['ROLE_MASTER']
+            },
+            beforeEnter: function (to, from, next) {
+                let roleStatus = store.state.login.role // 권한 상태
+                let roleName
+                if (!to.meta.roles.includes(roleStatus)) {
+                    if (roleStatus === 'ROLE_DOCTOR') {
+                        roleName = '의사'
+                    } else if (roleStatus === 'ROLE_NURSE') {
+                        roleName = '간호사'
+                    }
 
-          window.Swal.fire({
-            icon: 'error',
-            title: 'error',
-            html: '해당 페이지에 접근 권한이 없습니다.<br>접근권한을 가진 계정으로 로그인 하십시오.<br>현재 로그인한 계정의 권한 : '+roleName,
-            timer: 3000
-          })
+                    window.Swal.fire({
+                        icon: 'error',
+                        title: 'error',
+                        html: '해당 페이지에 접근 권한이 없습니다.<br>접근권한을 가진 계정으로 로그인 하십시오.<br>현재 로그인한 계정의 권한 : ' + roleName,
+                        timer: 3000
+                    })
 
-          next(from)
-        } else {
-          next()
+                    next(from)
+                } else {
+                    next()
+                }
+            }
+        },
+        {
+            path: '/doctor',
+            component: Doctor,
+            meta: {
+                roles: ['ROLE_DOCTOR', 'ROLE_MASTER']
+            },
+            beforeEnter: function (to, from, next) {
+                let roleStatus = store.state.login.role // 권한 상태
+                let roleName;
+                if (!to.meta.roles.includes(roleStatus)) {
+                    if (roleStatus === 'ROLE_DOCTOR') {
+                        roleName = '의사'
+                    } else if (roleStatus === 'ROLE_NURSE') {
+                        roleName = '간호사'
+                    }
+
+                    window.Swal.fire({
+                        icon: 'error',
+                        title: 'error',
+                        html: '해당 페이지에 접근 권한이 없습니다.<br>접근권한을 가진 계정으로 로그인 하십시오.<br>현재 로그인한 계정의 권한 : ' + roleName,
+                        timer: 3000
+                    })
+
+                    next(from)
+                } else {
+                    next()
+                }
+            }
+        },
+        {
+            path: '/nurse',
+            component: Nurse,
+            meta: {
+                roles: ['ROLE_NURSE', 'ROLE_MASTER']
+            },
+            beforeEnter: function (to, from, next) {
+                let roleStatus = store.state.login.role // 권한 상태
+                let roleName;
+                if (!to.meta.roles.includes(roleStatus)) {
+                    if (roleStatus === 'ROLE_DOCTOR') {
+                        roleName = '의사'
+                    } else if (roleStatus === 'ROLE_NURSE') {
+                        roleName = '간호사'
+                    }
+
+                    window.Swal.fire({
+                        icon: 'error',
+                        title: 'error',
+                        html: '해당 페이지에 접근 권한이 없습니다.<br>접근권한을 가진 계정으로 로그인 하십시오.<br>현재 로그인한 계정의 권한 : ' + roleName,
+                        timer: 3000
+                    })
+
+                    next(from)
+                } else {
+                    next()
+                }
+            }
+        },
+        {
+            path: '/doctor/editor/:patientId',
+            component: ImageEditor,
+            //23.06.05 유동준 수정
+            // name: 'Params',
+            // props: true,
+            meta: {
+                roles: ['ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_NURSE', 'ROLE_MASTER']
+            }
+        },
+        {
+            path: '/mobile/home/',
+            component: Mobile,
+            meta: {
+                roles: ['ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_NURSE', 'ROLE_MASTER']
+            }
+        },
+        {
+            path: '/mobile/login/',
+            component: MobileLogin,
+            meta: {
+                roles: ['ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_NURSE', 'ROLE_MASTER']
+            }
+        },
+        {
+            path: '/mobile/register/',
+            component: MobileRegister,
+            meta: {
+                roles: ['ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_NURSE', 'ROLE_MASTER']
+            }
+        },
+        {
+            path: '/mobile/doctor/',
+            component: MobileDoctor,
+            meta: {
+                roles: ['ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_NURSE', 'ROLE_MASTER']
+            }
+        },
+        {
+            path: '/mobile/camera/',
+            component: MobileCamera,
+            meta: {
+                roles: ['ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_NURSE', 'ROLE_MASTER']
+            }
         }
-      }
-    },
-    {
-      path: '/doctor',
-      component: Doctor,
-      meta: {
-        roles: ['ROLE_DOCTOR', 'ROLE_MASTER']
-      },
-      beforeEnter: function(to, from, next) {
-        let roleStatus = store.state.login.role // 권한 상태
-        let roleName;
-        if (!to.meta.roles.includes(roleStatus)) {
-          if(roleStatus === 'ROLE_DOCTOR'){
-            roleName = '의사'
-          } else if(roleStatus === 'ROLE_NURSE'){
-            roleName = '간호사'
-          }
-
-          window.Swal.fire({
-            icon: 'error',
-            title: 'error',
-            html: '해당 페이지에 접근 권한이 없습니다.<br>접근권한을 가진 계정으로 로그인 하십시오.<br>현재 로그인한 계정의 권한 : '+roleName,
-            timer: 3000
-          })
-
-          next(from)
-        } else {
-          next()
-        }
-      }
-    },
-    {
-      path: '/nurse',
-      component: Nurse,
-      meta: {
-        roles: ['ROLE_NURSE', 'ROLE_MASTER']
-      },
-      beforeEnter: function(to, from, next) {
-        let roleStatus = store.state.login.role // 권한 상태
-        let roleName;
-        if (!to.meta.roles.includes(roleStatus)) {
-          if(roleStatus === 'ROLE_DOCTOR'){
-            roleName = '의사'
-          } else if(roleStatus === 'ROLE_NURSE'){
-            roleName = '간호사'
-          }
-
-          window.Swal.fire({
-            icon: 'error',
-            title: 'error',
-            html: '해당 페이지에 접근 권한이 없습니다.<br>접근권한을 가진 계정으로 로그인 하십시오.<br>현재 로그인한 계정의 권한 : '+roleName,
-            timer: 3000
-          })
-
-          next(from)
-        } else {
-          next()
-        }
-      }
-    },
-    {
-      path: '/doctor/editor',
-      component: ImageEditor,
-      meta: {
-        roles: ['ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_NURSE', 'ROLE_MASTER']
-      }
-    },
-    {
-      path: '/mobile/home/',
-      component: Mobile,
-      meta: {
-        roles: ['ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_NURSE', 'ROLE_MASTER']
-      }
-    },
-    {
-      path: '/mobile/login/',
-      component: MobileLogin,
-      meta: {
-        roles: ['ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_NURSE', 'ROLE_MASTER']
-      }
-    },
-    {
-      path: '/mobile/register/',
-      component: MobileRegister,
-      meta: {
-        roles: ['ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_NURSE', 'ROLE_MASTER']
-      }
-    },
-    {
-      path: '/mobile/doctor/',
-      component: MobileDoctor,
-      meta: {
-        roles: ['ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_NURSE', 'ROLE_MASTER']
-      }
-    },
-    {
-      path: '/mobile/camera/',
-      component: MobileCamera,
-      meta: {
-        roles: ['ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_NURSE', 'ROLE_MASTER']
-      }
-    }
-    // {
-    //   path: '/:notFound(.*)',
-    //   component: NotFound
-    // }
-  ],
+        // {
+        //   path: '/:notFound(.*)',
+        //   component: NotFound
+        // }
+    ],
 })

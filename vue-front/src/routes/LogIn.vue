@@ -52,7 +52,7 @@ export default {
   },
   computed: {
     ...mapState('login',
-        ['role','name']
+        ['role', 'name']
     )
   },
   methods: {
@@ -60,7 +60,7 @@ export default {
       setRole: 'setRole',
       setName: 'setName'
     }),
-    autoLogin(){
+    autoLogin() {
       axios.get('/api/login')
           .then(response => {
             // 세션 데이터 사용 예시
@@ -69,7 +69,7 @@ export default {
               this.setName(logIn.name)
               this.setRole(logIn.role)
               this.$router.push('/home')
-            } else{
+            } else {
               this.setName('admin')
               this.setRole('ROLE_ADMIN')
             }
