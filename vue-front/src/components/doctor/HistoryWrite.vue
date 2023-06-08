@@ -3,14 +3,14 @@
     <div class="border-box">
       <span style="font-size: 1.2em; font-weight: 700">진료 기록 작성</span>
     </div>
-    <div class="empty-list-box border-box" v-if="isSelectEmpty">
+    <div v-if="isSelectEmpty" class="empty-list-box border-box">
       <div class="empty-img-box">
         <img src="@/assets/img/empty-box.png">
       </div>
     </div>
     <div v-if="!isSelectEmpty">
       <div class="border-box">
-        <b-dropdown size="sm" :text="visitMsg" class="m-0">
+        <b-dropdown :text="visitMsg" class="m-0" size="sm">
           <b-dropdown-item-button @click="visitBtn('초진')">초진</b-dropdown-item-button>
           <b-dropdown-item-button @click="visitBtn('재진')">재진</b-dropdown-item-button>
         </b-dropdown>
@@ -23,19 +23,19 @@
         </div>
         <div class="symptom-box">
           <div class="symptomInfo-box">
-            <textarea ref="symptomEditor" id="symptomEditor" name="symptom"></textarea>
+            <textarea id="symptomEditor" ref="symptomEditor" name="symptom"></textarea>
           </div>
           <div class="writeImg-box">
             <div class="img-list-box">
-              <swiper :options="swiperOptions" ref="swiper">
+              <swiper ref="swiper" :options="swiperOptions">
                 <swiper-slide v-for="(slide, index) in writeImgList" :key="index">
                   <!-- 슬라이드 내용 -->
                   <img :src="slide.imagePath" alt="Slide Image">
                 </swiper-slide>
 
                 <!-- 네비게이션 버튼 -->
-                <div class="swiper-button-prev" slot="button-prev"></div>
-                <div class="swiper-button-next" slot="button-next"></div>
+                <div slot="button-prev" class="swiper-button-prev"></div>
+                <div slot="button-next" class="swiper-button-next"></div>
               </swiper>
             </div>
           </div>
@@ -46,24 +46,24 @@
       <div class="border-box">
         <span class="font-weight-bold">상병</span>
         <div>
-          <b-table class="text-nowrap" :items="writeSbList" :fields="sbFields" small>
+          <b-table :fields="sbFields" :items="writeSbList" class="text-nowrap" small>
             <template #cell(main)="data">
               <div class="text-center">
                 <input
-                    class="radio-btn"
-                    type="radio"
                     v-model="data.item.main"
                     :value="true"
+                    class="radio-btn"
+                    type="radio"
                 >
               </div>
             </template>
             <template #cell(sub)="data">
               <div class="text-center">
                 <input
-                    class="radio-btn"
-                    type="radio"
                     v-model="data.item.main"
                     :value="false"
+                    class="radio-btn"
+                    type="radio"
                 >
               </div>
             </template>
@@ -89,15 +89,15 @@
       <div class="border-box">
         <span class="font-weight-bold">처방</span>
         <div>
-          <b-table :items="writeCbList" :fields="cbFields" small>
+          <b-table :fields="cbFields" :items="writeCbList" small>
             <template #cell(dose)="data">
-              <input class="cb-input" type="number" v-model="data.item.dose">
+              <input v-model="data.item.dose" class="cb-input" type="number">
             </template>
             <template #cell(time)="data">
-              <input class="cb-input" type="number" v-model="data.item.time">
+              <input v-model="data.item.time" class="cb-input" type="number">
             </template>
             <template #cell(days)="data">
-              <input class="cb-input" type="number" v-model="data.item.days">
+              <input v-model="data.item.days" class="cb-input" type="number">
             </template>
 
             <template #cell(icon)="data">
@@ -131,7 +131,7 @@
 
 import WriteSbModel from "@/components/doctor/WriteSbModal.vue";
 import WriteCbModel from "@/components/doctor/WriteCbModal.vue";
-import {mapState, mapMutations, mapActions} from 'vuex';
+import {mapActions, mapMutations, mapState} from 'vuex';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import axios from "axios";
 
@@ -280,9 +280,20 @@ export default {
     },
 
     // editorBtn
+    // 2023.06.08 유동준
+    // patientId, historyId값 같이 넘겨주기
     editorBtn() {
-      this.$router.push('/doctor/editor');
+      console.log("선택한 환자 번호: " + this.waitingData.patientId);
+      console.log("선택한 진료 기록 번호: " + this.historyId);
+      this.$router.push({
+        path: '/doctor/editor/selectByPatientIdAndHistoryId',
+        query: {
+          patientId: this.waitingData.patientId,
+          historyId: this.historyId
+        }
+      });
     },
+
     upsertBtn() {
       this.historyUpsertSend();
     },

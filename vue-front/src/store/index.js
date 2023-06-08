@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import doctor from './doctor'
 import nurse from './nurse'
+import editor from './editor'
 import alarm from './alarm'
 import mobile from './mobile'
 import mobileDoctor from './mobileDoctor'
@@ -15,6 +16,7 @@ export default new Vuex.Store({
         // doctor: doctor
         doctor,
         nurse,
+        editor,
         alarm,
         mobile,
         login,

@@ -8,8 +8,8 @@
           class="editor"
           @ready="onEditorReady"
       ></tui-image-editor>
-      <button class="btn btn-primary save-button" @click="saveImage">이미지 저장</button>
-      <img ref="img">
+      <button class="btn btn-primary save-button" @click="saveEditedPhoto"> 편집 완료</button>
+      <img v-if="selectedImage" ref="img" :src="selectedImage"/>
     </div>
   </div>
 </template>
@@ -18,6 +18,8 @@
 import "tui-image-editor/dist/tui-image-editor.css";
 import "tui-color-picker/dist/tui-color-picker.css";
 import ImageEditor from "tui-image-editor";
+import axios from "axios";
+import {mapState} from "vuex";
 
 export default {
   name: "ImageEditor",
@@ -40,17 +42,22 @@ export default {
             path: "",
             name: "",
           },
+          // initMenu : 시작할 때 켜질 기능
+          // menu : 사용할 기능
           initMenu: "filter",
-          menu: ["crop", "flip", "rotate", "draw", "text"],
+          menu: ["draw"],
+          // menu: ["crop", "flip", "rotate", "draw", "text"],
           uiSize: {
             width: "100%",
             height: "100%",
           },
           menuBarPosition: "bottom",
         },
+        // canvas 최대 사이즈 지정
         cssMaxWidth: 600,
         cssMaxHeight: 400,
         usageStatistics: false,
+        crossOrigin: 'Anonymous',
       },
     };
   },
@@ -68,21 +75,73 @@ export default {
       }
     },
   },
+  computed: {
+    ...mapState('editor', [
+      'historyImageId', 'bodyCategoryId',
+    ])
+  },
   methods: {
+    // 2023.06.08 유동준
+    // 편집한 이미지 저장하기 기능
+    saveEditedPhoto() {
+      const canvas = this.editorInstance.toDataURL();
+      const blob = this.dataURLtoBlob(canvas);
+      const file = new File([blob], "edited.png", {type: "image/png"});
+
+
+      console.log(this.$route.query.historyId);
+      console.log(this.bodyCategoryId);
+      console.log(this.historyImageId);
+
+      const formData = new FormData();
+
+      formData.append("uploadFile", file);
+      formData.append("historyId", new Blob([JSON.stringify(this.$route.query.historyId)], {type: "application/json"}));
+      formData.append("bodyCategoryId", new Blob([JSON.stringify(this.bodyCategoryId)], {type: "application/json"}));
+      formData.append("edited", new Blob([JSON.stringify(this.historyImageId)], {type: "application/json"}));
+
+      // 편집된 사진을 서버에 전송
+      axios
+          .post("/doctor/editor/saveEditedPhoto", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          })
+          .then(() => {
+            // 성공적으로 저장되었을 때의 처리
+            console.log("편집된 사진이 성공적으로 저장되었습니다.");
+          })
+          .catch((error) => {
+            // 저장 중 오류가 발생했을 때의 처리
+            console.error("편집된 사진 저장 중 오류가 발생했습니다.", error);
+          });
+    },
     onEditorReady() {
       if (this.selectedImage) {
         this.loadImageFromURL(this.selectedImage);
       }
     },
+
     loadImageFromURL(url) {
       this.editorInstance.loadImageFromURL(url, "Sample Image");
       this.editorInstance.ui.activeMenuEvent();
     },
+
+    // image-list에서 사진 드래그앤드랍했을 때
     dropImage(event) {
       event.preventDefault();
       const url = event.dataTransfer.getData("text/plain");
-      this.loadImageFromURL(url);
+
+      // S3 서버 CORS 관리
+      const tempImage = new Image()
+      tempImage.crossOrigin = "Anonymous"
+      tempImage.src = url;
+
+
+      this.loadImageFromURL(tempImage.src + '?t=' + new Date().getTime());
     },
+
+    // canvas 사이즈 조절
     adjustCanvasSize() {
       if (!this.editorInstance) {
         return;
@@ -100,18 +159,9 @@ export default {
       canvasElement.height = canvasHeight * pixelRatio;
       this.loadImageFromURL(this.selectedImage);
     },
-    saveImage() {
-      const canvas = this.editorInstance.toDataURL({format: "jpeg", quality: 0.8});
-      const url = URL.createObjectURL(this.dataURLtoBlob(canvas));
-      console.log("저장된 이미지 URL:", url);
 
-      this.$emit("update:image-list", [...this.imageList, {url: url}]);
-    },
-    // saveImage() {
-    //   const canvas = this.editorInstance.toDataURL({format: "png", quality: 0.8});
-    //   const url = URL.createObjectURL(this.dataURLtoBlob(canvas));
-    //   this.$emit("save", url);
-    // },
+
+    // data 타입 변환
     dataURLtoBlob(dataURL) {
       const base64Split = dataURL.split(",");
       const contentType = base64Split[0].match(/:(.*?);/)[1];
@@ -143,7 +193,6 @@ export default {
 .editor-container {
   width: 100%;
   height: 100%;
-  /* border: 1px solid #ebebeb; */
 }
 
 @media screen and (max-width: 600px) {
@@ -172,7 +221,8 @@ export default {
 
 .save-button {
   position: absolute;
-  top: 10px;
+  top: 20px; /* 수정: 조정된 버튼 간격 */
   right: 10px;
 }
+
 </style>
