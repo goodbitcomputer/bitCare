@@ -8,7 +8,7 @@
           class="editor"
           @ready="onEditorReady"
       ></tui-image-editor>
-      <button class="btn btn-primary save-button" @click="saveEditedPhoto"> 편집 완료</button>
+      <button class="btn btn-primary save-button" @click="saveEditedImage"> 편집 완료</button>
       <img v-if="selectedImage" ref="img" :src="selectedImage"/>
     </div>
   </div>
@@ -83,15 +83,10 @@ export default {
   methods: {
     // 2023.06.08 유동준
     // 편집한 이미지 저장하기 기능
-    saveEditedPhoto() {
+    saveEditedImage() {
       const canvas = this.editorInstance.toDataURL();
       const blob = this.dataURLtoBlob(canvas);
       const file = new File([blob], "edited.png", {type: "image/png"});
-
-
-      console.log(this.$route.query.historyId);
-      console.log(this.bodyCategoryId);
-      console.log(this.historyImageId);
 
       const formData = new FormData();
 
@@ -102,7 +97,7 @@ export default {
 
       // 편집된 사진을 서버에 전송
       axios
-          .post("/doctor/editor/saveEditedPhoto", formData, {
+          .post("/doctor/editor/saveEditedImage", formData, {
             headers: {
               "Content-Type": "multipart/form-data",
             },
@@ -123,6 +118,7 @@ export default {
     },
 
     loadImageFromURL(url) {
+      console.log("asdfasdfasdfasdfdasf")
       this.editorInstance.loadImageFromURL(url, "Sample Image");
       this.editorInstance.ui.activeMenuEvent();
     },

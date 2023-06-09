@@ -32,15 +32,15 @@ public class EditorController {
     @ResponseBody
     @PostMapping("/selectByPatientIdAndHistoryId")
     public List<HistoryImageDTO> selectByPatientIdAndHistoryId(@RequestParam int patientId, @RequestParam int historyId) {
-        System.out.println(patientId);
-        System.out.println(historyId);
+//        System.out.println(patientId);
+//        System.out.println(historyId);
         List<HistoryImageDTO> imagePaths = editorService.getImagesByPatientIdAndHistoryId(patientId, historyId);
         return imagePaths;
     }
 
     @ResponseBody
-    @PostMapping("/saveEditedPhoto")
-    public Boolean saveEditedPhoto(@RequestPart(value = "uploadFile", required = true) MultipartFile file,
+    @PostMapping("/saveEditedImage")
+    public Boolean saveEditedImage(@RequestPart(value = "uploadFile", required = true) MultipartFile file,
                                    @RequestPart(value = "historyId", required = true) int historyId,
                                    @RequestPart(value = "bodyCategoryId", required = true) int bodyCategoryId,
                                    @RequestPart(value = "edited", required = true) int edited,
@@ -51,10 +51,18 @@ public class EditorController {
         AwsS3 awsS3 = awsS3Service.upload(file, "imgUpload/" + historyDTO.getPatientId());
 
         // 이미지 경로를 DB에 저장
-        editorService.saveEditedPhoto(awsS3, historyId, bodyCategoryId, edited);
+        editorService.saveEditedImage(awsS3, historyId, bodyCategoryId, edited);
 
 
         return true;
+    }
+
+    @ResponseBody
+    @PostMapping("/deleteImage")
+    public void deleteImage(String imagePath) {
+        System.out.println("imagePath = " + imagePath);
+        System.out.println("EditorController.deleteImage");
+        editorService.deleteImage(imagePath);
     }
 
 

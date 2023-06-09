@@ -10,6 +10,7 @@ import java.util.List;
 public interface EditorService {
     List<HistoryImageDTO> getImagesByPatientIdAndHistoryId(int patientId, int historyId);
 
-    void saveEditedPhoto(AwsS3 awsS3, int historyId, int bodyCategoryId, int edited);
+    void saveEditedImage(AwsS3 awsS3, int historyId, int bodyCategoryId, int edited);
 
+    void deleteImage(String imagePath);
 }

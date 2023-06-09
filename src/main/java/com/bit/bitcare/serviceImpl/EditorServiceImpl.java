@@ -25,15 +25,15 @@ public class EditorServiceImpl implements EditorService {
 
     @Override
     public List<HistoryImageDTO> getImagesByPatientIdAndHistoryId(int patientId, int historyId) {
-        System.out.println(patientId);
-        System.out.println(historyId);
-        System.out.println(historyImageDAO.selectByPatientIdAndHistoryId(patientId, historyId));
+//        System.out.println(patientId);
+//        System.out.println(historyId);
+//        System.out.println(historyImageDAO.selectByPatientIdAndHistoryId(patientId, historyId));
         return historyImageDAO.selectByPatientIdAndHistoryId(patientId, historyId);
     }
 
 
     @Override
-    public void saveEditedPhoto(AwsS3 awsS3, int historyId, int bodyCategoryId, int edited) {
+    public void saveEditedImage(AwsS3 awsS3, int historyId, int bodyCategoryId, int edited) {
 
         HistoryImageDTO imageDTO = new HistoryImageDTO();
         imageDTO.setHistoryId(historyId);
@@ -42,7 +42,15 @@ public class EditorServiceImpl implements EditorService {
         imageDTO.setCategoryId(bodyCategoryId);
         imageDTO.setEdited(edited);
 
-        historyImageDAO.insertEditedPhoto(imageDTO);
+        historyImageDAO.insertEditedImage(imageDTO);
     }
+
+    @Override
+    public void deleteImage(String imagePath) {
+        System.out.println("EditorServiceImpl.deleteImage");
+
+        historyImageDAO.deleteImage(imagePath);
+    }
+
 
 }

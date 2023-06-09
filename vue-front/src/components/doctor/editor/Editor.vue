@@ -29,7 +29,7 @@
         >
           <img :src="image.imagePath" class="image-list-box" draggable="false"/>
           <div v-if="isSelected(image.imagePath)" class="img-cover"></div>
-          <p class="date">{{ getCurrentDate() }}</p>
+          <p class="image-date">{{ formatDate(image.entryDate) }}</p>
           <div v-if="isSelected(image.imagePath)" class="dropdown">
             <ul class="draggable-list">
               <li
@@ -41,7 +41,7 @@
                   @dragstart="dragImage($event, image.imagePath)"
               >
                 <img :src="image.imagePath" class="image-list-box"/>
-                <p class="date">{{ getCurrentDate() }}</p>
+                <p class="image-date">{{ image.entryDate() }}</p>
               </li>
             </ul>
           </div>
@@ -88,7 +88,6 @@
 import ImageEditor from "@/components/doctor/editor/ImageEditor.vue";
 import axios from "axios";
 import {mapMutations} from "vuex";
-// import axios from "axios";
 
 export default {
 
@@ -96,14 +95,6 @@ export default {
   components: {
     ImageEditor,
   },
-
-  // props: {
-  //   patientId: {
-  //     type: Number,
-  //     default: 0,
-  //   },
-  // },
-
   data() {
     return {
       showDiv: false,
@@ -144,14 +135,24 @@ export default {
       setHistoryImageId: 'setHistoryImageId',
       setBodyCategoryId: 'setBodyCategoryId',
     }),
+    formatDate(date) {
+      const formattedDate = new Date(date);
+      const year = formattedDate.getFullYear();
+      const month = String(formattedDate.getMonth() + 1).padStart(2, '0');
+      const day = String(formattedDate.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    },
     handleEditComplete(image) {
       this.images.push({imagePath: image});
     },
     getCurrentDate() {
       const today = new Date();
-      const options = {year: "numeric", month: "long", day: "numeric"};
-      return today.toLocaleDateString("ko-KR", options);
+      const year = today.getFullYear();
+      const month = String(today.getMonth() + 1).padStart(2, '0');
+      const day = String(today.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
     },
+
     toggleImage(url) {
       if (this.showDiv) {
         if (this.selectedViewerImage === url) {
@@ -167,16 +168,83 @@ export default {
       this.showDiv = !this.showDiv;
       this.showViewerButton = this.showDiv;
     },
+    // 2023.06.08 유동준
+    // 삭제 버튼 클릭 후 사진 클릭하면 db에서 삭제
     toggleDeleteMode() {
-      this.isDeletingImage = !this.isDeletingImage;
+      console.log("asdfasdf");
+      console.log(this.$children)
+      if (this.isDeletingImage) {
+        const url = this.selectedEditorImage || this.selectedViewerImage;
+        if (url) {
+          if (confirm("정말로 이미지를 삭제하시겠습니까?")) {
+            axios
+                .post('/doctor/editor/deleteImage', null, {
+                  params: {
+                    imagePath: url
+                  }
+                })
+                .then(() => {
+                  const index = this.images.findIndex((image) => image.imagePath === url);
+                  if (index !== -1) {
+                    this.images.splice(index, 1);
+                  }
+                  this.isDeletingImage = false;
+                  // alert("이미지가 삭제되었습니다.");
+                  window.Swal.fire({
+                    icon: 'error',
+                    title: 'error',
+                    html: '이미지가 삭제되었습니다.1234 1234123412341234',
+                    timer: 3000
+                  })
+                })
+                .catch((error) => {
+                  console.error(error);
+                  alert("이미지 삭제 중 오류가 발생했습니다.");
+                });
+          }
+        }
+      } else {
+        this.isDeletingImage = true;
+      }
     },
+
+    // 2023. 06. 09 유동준
+    // 삭제 버튼 클릭 후 이미지 클릭하면 알람창 뜨고 이미지 삭제, db에서도 삭제 완료
     handleImageClick(url) {
       if (this.isDeletingImage) {
-        const index = this.images.findIndex((image) => image.imagePath === url);
-        if (index !== -1) {
-          this.images.splice(index, 1);
+        if (confirm("정말로 이미지를 삭제하시겠습니까?")) {
+
+          axios
+              .post('/doctor/editor/deleteImage', null, {
+                params: {
+                  imagePath: url
+                }
+              })
+              .then(() => {
+                const index = this.images.findIndex((image) => image.imagePath === url);
+                if (index !== -1) {
+                  this.images.splice(index, 1);
+                }
+                this.isDeletingImage = false;
+                // alert("이미지가 삭제되었습니다.");
+                window.Swal.fire({
+                  icon: 'success',
+                  title: '삭제 성공',
+                  html: '이미지가 삭제되었습니다.',
+                  timer: 3000
+                })
+              })
+              .catch((error) => {
+                console.error(error);
+                // alert("이미지 삭제 중 오류가 발생했습니다.");
+                window.Swal.fire({
+                  icon: 'error',
+                  title: '삭제 실패',
+                  html: '이미지 삭제 중 오류가 발생했습니다.',
+                  timer: 3000
+                })
+              });
         }
-        this.isDeletingImage = false;
       } else {
         if (this.showDiv) {
           if (this.selectedViewerImage === url) {
@@ -187,7 +255,7 @@ export default {
         } else {
           this.selectedEditorImage = url;
           this.$refs.tuiImageEditor.loadImageFromURL(url, "Sample Image");
-          this.$refs.tuiImageEditor.editorInstance.ui.activeMenuEvent();
+          this.$refs.tuiImageEditor.adjustCanvasSize();
         }
       }
     },
@@ -326,7 +394,7 @@ export default {
   text-align: center;
 }
 
-.date {
+.image-date {
   font-size: 15px;
   font-weight: bold;
   text-align: center;
