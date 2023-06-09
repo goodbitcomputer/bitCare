@@ -160,12 +160,15 @@
     </select>
 
     <!-- 편집된 이미지 저장 -->
-    <insert id="insertEditedPhoto" parameterType="historyImageDTO">
+    <insert id="insertEditedImage" parameterType="historyImageDTO">
         insert into `history_image` (history_id, image_path, image_key, category_id, edited)
         values (#{historyId}, #{imagePath}, #{imageKey}, #{categoryId}, #{edited} + 0.1)
     </insert>
 
-
-
+    <!-- 이미지 삭제 -->
+    <delete id="deleteImage" parameterType="string">
+        DELETE FROM `history_image`
+        WHERE image_path = #{imagePath}
+    </delete>
 
 </mapper>
