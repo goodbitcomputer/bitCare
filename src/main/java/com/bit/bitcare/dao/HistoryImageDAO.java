@@ -13,5 +13,8 @@ public interface HistoryImageDAO {
 
     public List<HistoryImageDTO> selectByPatientIdAndHistoryId(int patientId, int historyId);
 
-    public void insertEditedPhoto(HistoryImageDTO historyImageDTO);
+    public void insertEditedImage(HistoryImageDTO historyImageDTO);
+
+    void deleteImage(String imagePath);
+
 }
