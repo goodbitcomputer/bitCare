@@ -17,4 +17,6 @@ public interface HistoryImageDAO {
 
     void deleteImage(String imagePath);
 
+    void updateEditedImage(HistoryImageDTO historyImageDTO);
+
 }
