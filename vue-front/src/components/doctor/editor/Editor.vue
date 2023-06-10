@@ -25,7 +25,7 @@
             draggable="true"
             style="margin-bottom: 15px;"
             @click="handleImageClick(image.imagePath)"
-            @dragstart="dragImage($event, image)"
+            @dragstart="[Number.isInteger(image.edited) ? dragImage($event, image) : dragFail()]"
         >
           <img :src="image.imagePath" class="image-list-box" draggable="false"/>
           <div v-if="isSelected(image.imagePath)" class="img-cover"></div>
@@ -33,12 +33,12 @@
           <div v-if="isSelected(image.imagePath)" class="dropdown">
             <ul class="draggable-list">
               <li
-                  v-for="(image, index) in dropdownImages"
-                  :key="index"
+                  v-for="(dropdownImage, dropdownIndex) in getDropdownImages(image.imagePath)"
+                  :key="dropdownIndex"
                   class="border-box img-select"
                   draggable="true"
                   style="margin-bottom: 15px;"
-                  @dragstart="dragImage($event, image.imagePath)"
+                  @dragstart="dragImage($event, dropdownImage.imagePath)"
               >
                 <img :src="image.imagePath" class="image-list-box"/>
                 <p class="image-date">{{ image.entryDate() }}</p>
@@ -140,7 +140,7 @@ export default {
       const year = formattedDate.getFullYear();
       const month = String(formattedDate.getMonth() + 1).padStart(2, '0');
       const day = String(formattedDate.getDate()).padStart(2, '0');
-      return `${year}-${month}-${day}`;
+      return `${year}년 ${month}월 ${day}일`;
     },
     handleEditComplete(image) {
       this.images.push({imagePath: image});
@@ -168,11 +168,7 @@ export default {
       this.showDiv = !this.showDiv;
       this.showViewerButton = this.showDiv;
     },
-    // 2023.06.08 유동준
-    // 삭제 버튼 클릭 후 사진 클릭하면 db에서 삭제
     toggleDeleteMode() {
-      console.log("asdfasdf");
-      console.log(this.$children)
       if (this.isDeletingImage) {
         const url = this.selectedEditorImage || this.selectedViewerImage;
         if (url) {
@@ -193,7 +189,7 @@ export default {
                   window.Swal.fire({
                     icon: 'error',
                     title: 'error',
-                    html: '이미지가 삭제되었습니다.1234 1234123412341234',
+                    html: '이미지가 삭제되었습니다.',
                     timer: 3000
                   })
                 })
@@ -212,39 +208,45 @@ export default {
     // 삭제 버튼 클릭 후 이미지 클릭하면 알람창 뜨고 이미지 삭제, db에서도 삭제 완료
     handleImageClick(url) {
       if (this.isDeletingImage) {
-        if (confirm("정말로 이미지를 삭제하시겠습니까?")) {
-
-          axios
-              .post('/doctor/editor/deleteImage', null, {
-                params: {
-                  imagePath: url
-                }
-              })
-              .then(() => {
-                const index = this.images.findIndex((image) => image.imagePath === url);
-                if (index !== -1) {
-                  this.images.splice(index, 1);
-                }
-                this.isDeletingImage = false;
-                // alert("이미지가 삭제되었습니다.");
-                window.Swal.fire({
-                  icon: 'success',
-                  title: '삭제 성공',
-                  html: '이미지가 삭제되었습니다.',
-                  timer: 3000
+        window.Swal.fire({
+          icon: 'question',
+          title: '이미지 삭제',
+          text: '정말로 이미지를 삭제하시겠습니까?',
+          showCancelButton: true,
+          confirmButtonText: '삭제',
+          cancelButtonText: '취소',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            axios
+                .post('/doctor/editor/deleteImage', null, {
+                  params: {
+                    imagePath: url,
+                  },
                 })
-              })
-              .catch((error) => {
-                console.error(error);
-                // alert("이미지 삭제 중 오류가 발생했습니다.");
-                window.Swal.fire({
-                  icon: 'error',
-                  title: '삭제 실패',
-                  html: '이미지 삭제 중 오류가 발생했습니다.',
-                  timer: 3000
+                .then(() => {
+                  const index = this.images.findIndex((image) => image.imagePath === url);
+                  if (index !== -1) {
+                    this.images.splice(index, 1);
+                  }
+                  this.isDeletingImage = false;
+                  window.Swal.fire({
+                    icon: 'success',
+                    title: '삭제 성공',
+                    html: '이미지가 삭제되었습니다.',
+                    timer: 3000,
+                  });
                 })
-              });
-        }
+                .catch((error) => {
+                  console.error(error);
+                  window.Swal.fire({
+                    icon: 'error',
+                    title: '삭제 실패',
+                    html: '이미지 삭제 중 오류가 발생했습니다.',
+                    timer: 3000,
+                  });
+                });
+          }
+        });
       } else {
         if (this.showDiv) {
           if (this.selectedViewerImage === url) {
@@ -254,7 +256,7 @@ export default {
           }
         } else {
           this.selectedEditorImage = url;
-          this.$refs.tuiImageEditor.loadImageFromURL(url, "Sample Image");
+          this.$refs.tuiImageEditor.loadImageFromURL(url, 'Sample Image');
           this.$refs.tuiImageEditor.adjustCanvasSize();
         }
       }
@@ -263,6 +265,14 @@ export default {
       event.dataTransfer.setData("text/plain", image.imagePath);
       this.setHistoryImageId(image.id);
       this.setBodyCategoryId(image.categoryId);
+    },
+    dragFail(){
+      window.Swal.fire({
+        icon: 'error',
+        title: '사진 편집 불가',
+        html: '편집본은 수정이 불가합니다.',
+        timer: 3000,
+      });
     },
     isSelected(url) {
       if (this.showDiv) {
@@ -294,9 +304,12 @@ export default {
     updateImageList(updatedImageList) {
       this.images = updatedImageList.map((image) => ({imagePath: image.imagePath}));
     },
-    // getDropdownImages(url) {
-    //   return this.images.filter((image) => image.imagePath !== url).slice(0, 3);
-    // },
+    getDropdownImages(url) {
+      const integerPart = Math.floor(url); // 이미지의 정수 부분 추출
+      return this.images.filter(
+          (image) => Math.floor(image.imagePath) === integerPart && image.imagePath !== url
+      );
+    },
   },
 };
 </script>
