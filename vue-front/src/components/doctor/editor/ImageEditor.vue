@@ -8,8 +8,7 @@
           class="editor"
           @ready="onEditorReady"
       ></tui-image-editor>
-      <button class="btn btn-primary save-button" @click="saveEditedImage"> 편집 완료</button>
-      <img v-if="selectedImage" ref="img" :src="selectedImage"/>
+      <button class="btn btn-primary save-button" @click="saveEditedImage">편집 완료</button>
     </div>
   </div>
 </template>
@@ -35,6 +34,7 @@ export default {
   },
   data() {
     return {
+      imageData: null,
       editorInstance: null,
       editorOptions: {
         includeUI: {
@@ -104,11 +104,25 @@ export default {
           })
           .then(() => {
             // 성공적으로 저장되었을 때의 처리
-            console.log("편집된 사진이 성공적으로 저장되었습니다.");
+            // console.log("편집된 사진이 성공적으로 저장되었습니다.");
+            window.Swal.fire({
+              icon: 'success',
+              title: '편집 완료',
+              html: '이미지가 저장되었습니다.',
+              timer: 3000
+            }).then(() => {
+              window.location.reload(); // 실시간으로 image_list에 안올라감 페이지 새로고침
+            });
           })
-          .catch((error) => {
+          .catch(() => {
             // 저장 중 오류가 발생했을 때의 처리
-            console.error("편집된 사진 저장 중 오류가 발생했습니다.", error);
+            // console.error("편집된 사진 저장 중 오류가 발생했습니다.", error);
+            window.Swal.fire({
+              icon: 'error',
+              title: '저장 실패',
+              html: '이미지 저장을 실패했습니다.',
+              timer: 3000
+            })
           });
     },
     onEditorReady() {
@@ -117,10 +131,14 @@ export default {
       }
     },
 
+    // handleImageClick() {
+    //   this.loadImageFromURL(this.selectedImage);
+    // },
+
     loadImageFromURL(url) {
-      console.log("asdfasdfasdfasdfdasf")
       this.editorInstance.loadImageFromURL(url, "Sample Image");
       this.editorInstance.ui.activeMenuEvent();
+      this.imageData = url; // 이미지가 선택되도록 데이터를 업데이트합니다.
     },
 
     // image-list에서 사진 드래그앤드랍했을 때
@@ -132,8 +150,6 @@ export default {
       const tempImage = new Image()
       tempImage.crossOrigin = "Anonymous"
       tempImage.src = url;
-
-
       this.loadImageFromURL(tempImage.src + '?t=' + new Date().getTime());
     },
 
