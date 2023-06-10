@@ -25,9 +25,6 @@ public class EditorServiceImpl implements EditorService {
 
     @Override
     public List<HistoryImageDTO> getImagesByPatientIdAndHistoryId(int patientId, int historyId) {
-//        System.out.println(patientId);
-//        System.out.println(historyId);
-//        System.out.println(historyImageDAO.selectByPatientIdAndHistoryId(patientId, historyId));
         return historyImageDAO.selectByPatientIdAndHistoryId(patientId, historyId);
     }
 
@@ -47,8 +44,6 @@ public class EditorServiceImpl implements EditorService {
 
     @Override
     public void deleteImage(String imagePath) {
-        System.out.println("EditorServiceImpl.deleteImage");
-
         historyImageDAO.deleteImage(imagePath);
     }
 

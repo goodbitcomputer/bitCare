@@ -60,8 +60,6 @@ public class EditorController {
     @ResponseBody
     @PostMapping("/deleteImage")
     public void deleteImage(String imagePath) {
-        System.out.println("imagePath = " + imagePath);
-        System.out.println("EditorController.deleteImage");
         editorService.deleteImage(imagePath);
     }
 
