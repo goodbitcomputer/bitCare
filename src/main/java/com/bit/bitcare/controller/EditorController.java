@@ -60,7 +60,20 @@ public class EditorController {
     @ResponseBody
     @PostMapping("/deleteImage")
     public void deleteImage(String imagePath) {
+
+//        AwsS3 awsS3 = awsS3Service.remove(File file);
+
         editorService.deleteImage(imagePath);
+    }
+
+    @ResponseBody
+    @PostMapping("/updateEditedImage")
+    public void updateEditedImage(@RequestPart(value = "uploadFile", required = true) MultipartFile file, HistoryImageDTO historyImageDTO) throws IOException {
+        HistoryDTO historyDTO = historyDAO.selectOne(historyImageDTO.getHistoryId());
+
+        AwsS3 awsS3 = awsS3Service.upload(file, "imgUpload/" + historyDTO.getPatientId());
+
+        editorService.updateEditedImage(awsS3, historyImageDTO);
     }
 
 

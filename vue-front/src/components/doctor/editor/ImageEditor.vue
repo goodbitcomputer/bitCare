@@ -8,7 +8,7 @@
           class="editor"
           @ready="onEditorReady"
       ></tui-image-editor>
-      <button class="btn btn-primary save-button" @click="saveEditedImage">편집 완료</button>
+      <button class="btn btn-primary save-button" @click="saveEditedImage(imageList)">편집 완료</button>
     </div>
   </div>
 </template>
@@ -83,7 +83,7 @@ export default {
   methods: {
     // 2023.06.08 유동준
     // 편집한 이미지 저장하기 기능
-    saveEditedImage() {
+    saveEditedImage(imageList) {
       const canvas = this.editorInstance.toDataURL();
       const blob = this.dataURLtoBlob(canvas);
       const file = new File([blob], "edited.png", {type: "image/png"});
@@ -95,35 +95,86 @@ export default {
       formData.append("bodyCategoryId", new Blob([JSON.stringify(this.bodyCategoryId)], {type: "application/json"}));
       formData.append("edited", new Blob([JSON.stringify(this.historyImageId)], {type: "application/json"}));
 
-      // 편집된 사진을 서버에 전송
-      axios
-          .post("/doctor/editor/saveEditedImage", formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          })
-          .then(() => {
-            // 성공적으로 저장되었을 때의 처리
-            // console.log("편집된 사진이 성공적으로 저장되었습니다.");
-            window.Swal.fire({
-              icon: 'success',
-              title: '편집 완료',
-              html: '이미지가 저장되었습니다.',
-              timer: 3000
-            }).then(() => {
-              window.location.reload(); // 실시간으로 image_list에 안올라감 페이지 새로고침
-            });
-          })
-          .catch(() => {
-            // 저장 중 오류가 발생했을 때의 처리
-            // console.error("편집된 사진 저장 중 오류가 발생했습니다.", error);
-            window.Swal.fire({
-              icon: 'error',
-              title: '저장 실패',
-              html: '이미지 저장을 실패했습니다.',
-              timer: 3000
+      let image = []
+      let editedId = []
+      for (let i = 0; i < imageList.length; i++) {
+        image.push(imageList[i].edited)
+        editedId.push(imageList[i].id)
+      }
+
+      let setId = editedId[image.indexOf(this.historyImageId + 0.1)]
+      if (image.includes(this.historyImageId + 0.1)) {
+        const canvas = this.editorInstance.toDataURL();
+        const blob = this.dataURLtoBlob(canvas);
+        const file = new File([blob], "editedUpdate.png", {type: "image/png"});
+
+        const editedData = new FormData();
+
+        editedData.append("id", setId);
+        editedData.append("uploadFile", file);
+        editedData.append("historyId", this.$route.query.historyId);
+        editedData.append("bodyCategoryId", this.bodyCategoryId);
+        editedData.append("edited", (this.historyImageId + 0.1).toString());
+
+        axios
+            .post("/doctor/editor/updateEditedImage", editedData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
             })
-          });
+            .then(() => {
+              // 성공적으로 저장되었을 때의 처리
+              // console.log("편집된 사진이 성공적으로 저장되었습니다.");
+              window.Swal.fire({
+                icon: 'success',
+                title: '편집본 업데이트 완료',
+                html: '새로운 편집본이 저장되었습니다.',
+                timer: 3000
+              }).then(() => {
+                window.location.reload(); // 실시간으로 image_list에 안올라감 페이지 새로고침
+              });
+            })
+            .catch(() => {
+              // 저장 중 오류가 발생했을 때의 처리
+              // console.error("편집된 사진 저장 중 오류가 발생했습니다.", error);
+              window.Swal.fire({
+                icon: 'error',
+                title: '업데이트 실패',
+                html: '이미지 저장을 실패했습니다.',
+                timer: 3000
+              })
+            });
+      } else {
+        // 편집된 사진을 서버에 전송
+        axios
+            .post("/doctor/editor/saveEditedImage", formData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            })
+            .then(() => {
+              // 성공적으로 저장되었을 때의 처리
+              // console.log("편집된 사진이 성공적으로 저장되었습니다.");
+              window.Swal.fire({
+                icon: 'success',
+                title: '편집 완료',
+                html: '이미지가 저장되었습니다.',
+                timer: 3000
+              }).then(() => {
+                window.location.reload(); // 실시간으로 image_list에 안올라감 페이지 새로고침
+              });
+            })
+            .catch(() => {
+              // 저장 중 오류가 발생했을 때의 처리
+              // console.error("편집된 사진 저장 중 오류가 발생했습니다.", error);
+              window.Swal.fire({
+                icon: 'error',
+                title: '저장 실패',
+                html: '이미지 저장을 실패했습니다.',
+                timer: 3000
+              })
+            });
+      }
     },
     onEditorReady() {
       if (this.selectedImage) {
