@@ -13,4 +13,6 @@ public interface EditorService {
     void saveEditedImage(AwsS3 awsS3, int historyId, int bodyCategoryId, int edited);
 
     void deleteImage(String imagePath);
+    void updateEditedImage(AwsS3 awsS3, HistoryImageDTO historyImageDTO);
+
 }
