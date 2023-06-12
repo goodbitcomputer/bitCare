@@ -41,7 +41,7 @@
                   @dragstart="dragImage($event, dropdownImage.imagePath)"
               >
                 <img :src="image.imagePath" class="image-list-box"/>
-                <p class="image-date">{{ image.entryDate() }}</p>
+                <p class="image-date">{{ formatDate(image.entryDate) }}</p>
               </li>
             </ul>
           </div>
@@ -72,11 +72,13 @@
             @ready="onEditorReady"
             @update:image-list="updateImageList"
             @edit-complete="handleEditComplete"
+            :disabled="showDiv"
         />
+
         <div v-if="showDiv" class="editor-cover" @click="removeCover">
           <p class="editor-text" style="margin-bottom: 0">
             편집할 이미지를 드래그 해주세요! <br/>
-            뷰어 해제 (Click or F2)
+            비교할 이미지 선택을 눌러 다른 이미지로 교체할 수 있습니다.
           </p>
         </div>
       </div>
@@ -437,5 +439,11 @@ export default {
   font-size: 13px;
   letter-spacing: 1px;
   margin-bottom: 5px;
+}
+
+.info-container {
+  color: red;
+//position: absolute; //top: 20px; right: 50%;
+//transform: translateX(50%);
 }
 </style>

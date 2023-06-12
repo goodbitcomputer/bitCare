@@ -76,17 +76,20 @@ public class EditorController {
 
     @ResponseBody
     @PostMapping("/updateEditedImage")
-    public void updateEditedImage(@RequestPart(value = "uploadFile", required = true) MultipartFile file, HistoryImageDTO historyImageDTO) throws IOException {
+    public void updateEditedImage(@RequestPart (value = "uploadFile", required = true) MultipartFile file, HistoryImageDTO historyImageDTO) throws IOException {
         HistoryDTO historyDTO = historyDAO.selectOne(historyImageDTO.getHistoryId());
+        HistoryImageDTO historyImageTemp = historyImageDAO.selectById(historyImageDTO.getId());
+        // s3 이미지 삭제
+//        AwsS3 awsS3 = awsS3Service.remove(File file);
 
         AwsS3 awsS3 = awsS3Service.upload(file, "imgUpload/" + historyDTO.getPatientId());
 
-        // s3 이미지 삭제
         AwsS3 removeS3 = new AwsS3();
-        removeS3.setKey(historyImageDTO.getImageKey());
+        removeS3.setKey(historyImageTemp.getImageKey());
         awsS3Service.remove(removeS3);
 
-        editorService.updateEditedImage(awsS3, historyImageDTO);
+        editorService.updateEditedImage(awsS3, historyImageTemp);
+
     }
 
 

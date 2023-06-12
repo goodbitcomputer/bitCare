@@ -8,6 +8,10 @@
           class="editor"
           @ready="onEditorReady"
       ></tui-image-editor>
+      <div class="info-container">
+        차트 넘버 : CN.{{ this.waitingData.patientId }}, 환자 이름 : {{ this.waitingData.name }}<br/>
+        성별 : {{ this.waitingData.gender }}, 연령 : {{ ageMsg }}세, 주민번호 : {{ identityNumberMsg }}
+      </div>
       <button class="btn btn-primary save-button" @click="saveEditedImage(imageList)">편집 완료</button>
     </div>
   </div>
@@ -18,7 +22,7 @@ import "tui-image-editor/dist/tui-image-editor.css";
 import "tui-color-picker/dist/tui-color-picker.css";
 import ImageEditor from "tui-image-editor";
 import axios from "axios";
-import {mapState} from "vuex";
+import {mapMutations, mapState} from "vuex";
 
 export default {
   name: "ImageEditor",
@@ -45,7 +49,7 @@ export default {
           // initMenu : 시작할 때 켜질 기능
           // menu : 사용할 기능
           initMenu: "filter",
-          menu: ["draw"],
+          menu: ["draw", "text"],
           // menu: ["crop", "flip", "rotate", "draw", "text"],
           uiSize: {
             width: "100%",
@@ -78,9 +82,47 @@ export default {
   computed: {
     ...mapState('editor', [
       'historyImageId', 'bodyCategoryId',
-    ])
+    ]),
+    ...mapState('doctor',
+        ['waitingData']),
+    identityNumberMsg() {
+      if (this.waitingData === "") {
+        return ""
+      } else {
+        let str1 = this.waitingData.identityNumber.slice(0, 6);
+        let str2 = this.waitingData.identityNumber.slice(6, 7);
+        str1 = str1 + "-" + str2 + "******";
+        return str1;
+      }
+    },
+    // 휴대폰번호
+    phonePadMsg() {
+      if (this.waitingData === "") {
+        return ""
+      } else {
+        let newStr = this.waitingData.phoneNumber.replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3").replace(/(-{1,2})$/g, "");
+        return newStr;
+      }
+    },
+    // 나이
+    ageMsg() {
+      if (this.waitingData === "") {
+        return ""
+      } else {
+        let dateTemp = new Date(this.waitingData.birth)
+        let dateNow = new Date();
+
+        let tempYear = dateTemp.getFullYear();
+        let nowYear = dateNow.getFullYear();
+        let age = parseInt(nowYear) - parseInt(tempYear) + 1;
+        return age;
+      }
+    },
   },
   methods: {
+    ...mapMutations('doctor', {
+      setMemoEditor: 'setMemoEditor',
+    }),
     // 2023.06.08 유동준
     // 편집한 이미지 저장하기 기능
     saveEditedImage(imageList) {
@@ -288,4 +330,12 @@ export default {
   right: 10px;
 }
 
+.info-container {
+  color: white;
+  position: absolute;
+  top: 18px;
+  right: 50%;
+  transform: translateX(50%);
+
+}
 </style>

@@ -1,5 +1,6 @@
 package com.bit.bitcare.dao;
 
+import com.bit.bitcare.awsS3.AwsS3;
 import com.bit.bitcare.model.HistoryImageDTO;
 import org.springframework.stereotype.Component;
 
@@ -7,6 +8,7 @@ import java.util.List;
 
 @Component
 public interface HistoryImageDAO {
+    public HistoryImageDTO selectById(int id);
     public List<HistoryImageDTO> selectByHistoryId(int historyId);
     public HistoryImageDTO selectByImagePath(String imagePath);
 
