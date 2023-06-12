@@ -23,6 +23,7 @@
     <update id="update" parameterType="employeeDTO">
         UPDATE `employee` SET
         password = #{password},
+        name = #{name},
         phone_number = #{phoneNumber},
         dept_id = #{deptId},
         profile_image = #{profileImage},

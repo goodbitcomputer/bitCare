@@ -24,21 +24,9 @@
         </div>
       </div>
 
-      <b-button class="logout btn-outline-primary col text-center" @click="logOut">로그아웃</b-button>
       <b-button pills card vertical class="admin col text-center" data-aos="fade-up" @click="showDetails">
         <span>내정보 수정</span>
       </b-button>
-      <b-button pills card vertical class="admin col text-center" data-aos="fade-up" @click="NextBtn(7)">
-        <span>관리자 페이지</span>
-      </b-button>
-    </div>
-
-    <div>
-      <b-modal v-model="this.$store.state.login.registerModal" id="modal" size="lg" title="내정보 수정" @hidden="closeModal">
-        <div id="register">
-          <EmployeeUpdate/>
-        </div>
-      </b-modal>
     </div>
   </section>
 </template>
@@ -46,7 +34,6 @@
 <script>
 import axios from "axios";
 import {mapMutations, mapState} from "vuex";
-import EmployeeUpdate from "@/components/mobile/doctor/EmployeeUpdate.vue";
 
 export default {
   data() {
@@ -58,12 +45,9 @@ export default {
     }
   },
   name: "MobileSetting",
-  components: {EmployeeUpdate},
+  components: {},
   created() {
     this.getSessionLogIn();
-  },
-  mounted() {
-    this.divHeightFix();
   },
   computed: {
     ...mapState('login',
@@ -82,15 +66,6 @@ export default {
     }),
     NextBtn(item) {
       this.setNextStep(item);
-    },
-    divHeightFix() {
-      let div = document.getElementById('patientList-box');
-      let divHeight = div.offsetHeight;
-      let windowHeight = window.innerHeight;
-
-      if (divHeight < windowHeight) {
-        div.style.height = '100vh';
-      }
     },
     getSessionLogIn() {
       // Axios를 사용하여 RESTful API 호출
@@ -163,37 +138,6 @@ export default {
 </script>
 
 <style scoped>
-
-#mobile-doctor {
-  width: 100%;
-  /*height: 100vh;*/
-  background: url("/public/assets/img/main/hero-bg.jpg");
-  background-size: cover;
-  /* 배경이미지 반복여부 */
-  background-repeat: no-repeat;
-  /* 배경의 위치는 그 세션의 정가운데에 위치 */
-  background-position: center;
-  /* 더이상 요소가 스크롤될때 같이 스크롤되지않고 이미지가 뷰포트부분에 고정, 화면이 스크롤 되더라도 같이 움직이지않는구조로 만듬 */
-  background-attachment: fixed;
-  position: relative;
-  padding: 0;
-}
-
-#mobile-doctor:before {
-  content: "";
-  background: rgba(0, 0, 0, 0.2);
-  position: absolute;
-  bottom: 0;
-  top: 0;
-  left: 0;
-  right: 0;
-}
-
-.patientList-box {
-  padding-top: 150px;
-  padding-bottom: 60px;
-}
-
 .patientList-box .util {
   background: rgba(12, 11, 9, 0.7);
   color: white;
@@ -219,19 +163,6 @@ export default {
 /*  color: #999999;*/
 /*  white-space: nowrap;*/
 /*}*/
-
-
-@media (max-width: 992px) {
-  #patientList-box {
-    padding-top: 110px;
-  }
-}
-
-@media (max-width: 335px) {
-  #patientList-box {
-    padding-top: 140px;
-  }
-}
 
 .patient-box {
   text-align: left;

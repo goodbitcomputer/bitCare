@@ -16,7 +16,7 @@
         <tr v-for="(employee,index) in this.$store.state.login.list" :key="employee.id">
           <td>{{employee.name}}</td>
           <td>{{employee.username}}</td>
-          <td>{{employee.role}}</td>
+          <td>{{ formatRole(employee.role) }}</td>
           <td>
             <b-select v-model="role[index]">
               <option v-for="role in roles" :key="role">{{role}}</option>
@@ -60,7 +60,8 @@ export default {
     return {
       showDetailsModal: false,
       role: [],
-      roles: ['ROLE_DOCTOR', 'ROLE_NURSE']
+      roles: ['의사', '간호사'],
+      selectRole: '',
     }
   },
   created(){
@@ -83,7 +84,7 @@ export default {
     saveRole(employee, index) {
       // API를 호출해서 해당 메시지를 삭제합니다.
       // 성공적으로 삭제되면 this.settingRecvList()를 호출합니다.
-      if(this.role[index]!=='ROLE_DOCTOR' && this.role[index]!=='ROLE_NURSE'){
+      if(this.role[index]!=='의사' && this.role[index]!=='간호사'){
         window.Swal.fire({
           icon: 'error',
           title: 'error',
@@ -91,10 +92,15 @@ export default {
           timer: 3000
         })
       }else {
+        if(this.role[index]==='의사'){
+          this.selectRole = 'ROLE_DOCTOR'
+        } else if(this.role[index]==='간호사'){
+          this.selectRole = 'ROLE_NURSE'
+        }
         axios.get('api/updateEmployee', {
           params: {
             id: employee.id,
-            role: this.role[index]
+            role: this.selectRole
           }
         }).then(response => {
           if (response.status === 200) {
@@ -106,6 +112,13 @@ export default {
 
         this.role[index] = ''
         setTimeout(() => this.getEmployeeList(), 100)
+      }
+    },
+    formatRole(role){
+      if(role==='ROLE_DOCTOR'){
+        return '의사'
+      }else if(role==='ROLE_NURSE'){
+        return '간호사'
       }
     },
     getEmployeeList(){

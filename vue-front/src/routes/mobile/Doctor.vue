@@ -6,7 +6,8 @@
     <PatientHistoryList v-if="patientHistoryListByStep"/>
     <PatientHistory v-if="patientHistoryByStep"/>
     <MobileMessage v-if="messageByStep"/>
-    <PatientHistoryList v-if="settingByStep"/>
+    <Waiting v-if="settingByStep"/>
+<!--    <Admin v-if="adminByStep"/>-->
 
     <Camera v-if="cameraByStep"/>
     <Gallery v-if="galleryByStep"/>
@@ -23,6 +24,7 @@ import Home from "@/components/mobile/doctor/Home.vue";
 import PatientList from "@/components/mobile/doctor/PatientList.vue";
 import PatientHistoryList from "@/components/mobile/doctor/PatientHistoryList.vue";
 import PatientHistory from "@/components/mobile/doctor/PatientHistory.vue";
+import Waiting from "@/components/mobile/doctor/Wating.vue";
 import MobileMessage from "@/components/mobile/doctor/Message.vue";
 
 // 카메라
@@ -41,6 +43,7 @@ export default {
     PatientList,
     PatientHistoryList,
     PatientHistory,
+    Waiting,
 
     Camera,
     Gallery,
@@ -68,18 +71,21 @@ export default {
     settingByStep() {
       return this.nextStep===6 ? true : false;
     },
-    cameraByStep() {
+    adminByStep() {
       return this.nextStep===7 ? true : false;
     },
-    galleryByStep() {
+    cameraByStep() {
       return this.nextStep===8 ? true : false;
     },
-    photoDetailByStep() {
+    galleryByStep() {
       return this.nextStep===9 ? true : false;
+    },
+    photoDetailByStep() {
+      return this.nextStep===10 ? true : false;
     },
 
     isNavFooter(){
-      return this.nextStep<7 ? true : false;
+      return this.nextStep<8 ? true : false;
     },
   }
 }

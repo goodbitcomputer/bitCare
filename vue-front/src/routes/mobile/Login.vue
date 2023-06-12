@@ -84,7 +84,7 @@ export default {
     // },
     ...mapMutations('login', {
       setRole: 'setRole',
-      setName: 'setName'
+      setName: 'setName',
     }),
     autoLogin(){
       axios.get('/api/login')
@@ -97,7 +97,6 @@ export default {
               console.log(logIn.role)
               this.setName(logIn.name)
               this.setRole(logIn.role)
-              console.log(this.recvList)
               this.$router.push('/mobile/doctor')
             } else{
               this.setName('admin')
@@ -139,7 +138,12 @@ export default {
             this.setName(response.data.name)
             this.$router.push('/mobile/doctor')
           } else {
-            console.log(response.data)
+            window.Swal.fire({
+              icon: 'error',
+              title: 'error',
+              html: '로그인 실패<br>로그인 정보를 정확하게 입력해주세요.',
+              timer: 3000
+            })
           }
         }
       }).catch((err) => {

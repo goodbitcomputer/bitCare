@@ -7,11 +7,13 @@ import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Date;
 
 public interface AlarmService {
     public void SocketHandler(String send, MessageDTO messageDTO, AlarmDTO alarmDTO,String connectType) throws JsonProcessingException;
     public ResponseEntity<String> getReceiveList(HttpServletRequest request) throws IOException;
     public ResponseEntity<String> getReceiveMessageList(HttpServletRequest request) throws IOException;
+    public ResponseEntity<String> getAnnouncementList() throws IOException;
     public ResponseEntity<String> getReceiveMessage(int messageId) throws IOException;
     public ResponseEntity<String> getSendMessageList(HttpServletRequest request) throws IOException;
     public void deleteAlarm(int messageId);
