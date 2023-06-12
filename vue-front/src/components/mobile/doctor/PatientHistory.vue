@@ -335,6 +335,16 @@ export default {
             }).then(() => {
               this.setNextStep(3);
             })
+          }else {
+            Swal.fire({
+              icon: 'error',
+              title: '실패 !!!',
+              text: 'fail',
+              showConfirmButton: false,
+              timer: 1000
+            }).then(() => {
+              this.setNextStep(3);
+            })
           }
         }).catch(function (error) {
           console.log(error);
