@@ -266,7 +266,7 @@ export default {
       this.setHistoryImageId(image.id);
       this.setBodyCategoryId(image.categoryId);
     },
-    dragFail(){
+    dragFail() {
       window.Swal.fire({
         icon: 'error',
         title: '사진 편집 불가',
