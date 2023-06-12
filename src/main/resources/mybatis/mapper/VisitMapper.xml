@@ -16,5 +16,9 @@
         SELECT * FROM `visit`
         WHERE id=#{id}
     </select>
+    <!-- 수납(visit) 전부 가져오기 -->
+    <select id="selectAll" resultType="visitDTO">
+        SELECT * FROM `visit`
+    </select>
 
 </mapper>

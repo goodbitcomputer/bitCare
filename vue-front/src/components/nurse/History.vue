@@ -1,31 +1,46 @@
 <template>
-  <div class="history-box border-box"><div class="border-box d-flex">
-    <span style="font-size: 1.2em; font-weight: 700; flex-grow: 1">진료 기록</span>
-    <span style="cursor:pointer" @click="refreshBtn">새로고침</span>
-  </div>
+  <div class="history-box">
+    <div class="title-border-box d-flex">
+      <span style="font-size: 1.2em; font-weight: 700; flex-grow: 1">진료 기록</span>
+      <span style="cursor:pointer" @click="refreshBtn">새로고침</span>
+    </div>
 
-    <!--      history 리스트-->
-    <div class="empty-list-box border-box" v-if="false">
+    <!--    patient 리스트-->
+    <div class="empty-box border-box" v-if="isEmpty">
       <div class="empty-img-box">
         <img src="@/assets/img/empty-box.png">
       </div>
     </div>
-    <div class="d-flex" v-if="true">
-      <div class="waiting-list-box">
-        <div class="border-box">
-          <div>
-            <div>
-              <span>2023.09.02</span>
-            </div>
-            <div>
-              <span>내분비내과</span>
-            </div>
-            <div>
-              <span>초진</span>
-            </div>
-          </div>
+    <div class="border-box" v-if="!isEmpty">
+      <div style="display: flex;align-items: center;">
+        <span class="font-weight-bold">{{ this.waitingData.name }}</span>
+        <span style="flex-grow: 1">cn.{{ this.waitingData.patientId }}</span>
+        <button>...</button>
+      </div>
+      <div class="patient-info">
+        <span>{{ identityNumberMsg }}</span>
+        <span>{{ ageMsg }}세</span>
+        <span>{{ this.waitingData.gender }}</span>
+        <span>{{ phonePadMsg }}</span>
+      </div>
+      <div style="border-top: 1px solid #DBDFE5;">
+        <p class="font-weight-bold">진료메모</p>
+        <div
+            v-html="selectHistoryData.memo">
+          >
         </div>
-        <div class="border-box" v-for="(item) in historyList" :key="item.id">
+      </div>
+    </div>
+
+    <!--      history 리스트-->
+    <div class="empty-list-box border-box" v-if="isListEmpty">
+      <div class="empty-img-box">
+        <img src="@/assets/img/empty-box.png">
+      </div>
+    </div>
+    <div class="d-flex" v-if="!isListEmpty">
+      <div class="waiting-list-box">
+        <div class="main-border-box" v-for="(item) in historyList" :key="item.id">
           <div @click="selectHistoryBtn(item)">
             <div>
               <span>{{ dateMsg(item.entryDate) }}</span>
@@ -39,12 +54,12 @@
           </div>
         </div>
       </div>
-      <div class="empty-box border-box flex-grow-1" v-if="false">
+      <div class="empty-box border-box flex-grow-1" v-if="isSelectEmpty">
         <div class="empty-img-box">
           <img src="@/assets/img/empty-box.png">
         </div>
       </div>
-      <div class="history-detail-box border-box" v-if="true">
+      <div class="history-detail-box border-box" v-if="!isSelectEmpty">
         <!--      진료기록title-->
         <div class="d-flex">
           <span>진료기록</span>
@@ -152,15 +167,15 @@
             </div>
           </div>
         </div>
-        <!--      총진료비-->
-        <div class="d-flex">
-          <span class="font-weight-bold flex-grow-1">총진료비</span>
-          <span>16,970원</span>
-        </div>
-        <div class="d-flex">
-          <span class="font-weight-bold flex-grow-1">수납금</span>
-          <span>5,000원</span>
-        </div>
+        <!--        &lt;!&ndash;      총진료비&ndash;&gt;-->
+        <!--        <div class="d-flex">-->
+        <!--          <span class="font-weight-bold flex-grow-1">총진료비</span>-->
+        <!--          <span>16,970원</span>-->
+        <!--        </div>-->
+        <!--        <div class="d-flex">-->
+        <!--          <span class="font-weight-bold flex-grow-1">수납금</span>-->
+        <!--          <span>5,000원</span>-->
+        <!--        </div>-->
       </div>
     </div>
   </div>
@@ -225,16 +240,12 @@ export default {
   },
   mounted() {
     // historyPage의 historyData 초기화
-    this.$EventBus.$on('initHistory', () => {
+    this.$EventBus.$on('initNurseHistory', () => {
       this.selectHistoryData = "";
-    });
-    // historyPage 새로고침
-    this.$EventBus.$on('refresh', () => {
-      this.refreshBtn();
     });
   },
   computed: {
-    ...mapState('doctor',
+    ...mapState('nurse',
         ['historyList', 'waitingData']
     ),
     // 진료기록 리스트가 있는지 확인
@@ -248,14 +259,58 @@ export default {
     // 대기환자 진료부서id와 진료기록 진료부서id가 같은지 비교
     isCheckUpdate() {
       return this.selectHistoryData.deptId === this.waitingData.deptId ? true : false;
-    }
+    },
+
+
+    // 환자 정보
+    // 주민번호
+    identityNumberMsg() {
+      if (this.waitingData === "") {
+        return ""
+      } else {
+        let str1 = this.waitingData.identityNumber.slice(0, 6);
+        let str2 = this.waitingData.identityNumber.slice(6, 7);
+        str1 = str1 + "-" + str2 + "******";
+        return str1;
+      }
+    },
+    // 휴대폰번호
+    phonePadMsg() {
+      if (this.waitingData === "") {
+        return ""
+      } else {
+        let newStr = this.waitingData.phoneNumber.replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, "$1-$2-$3").replace(/(-{1,2})$/g, "");
+        return newStr;
+      }
+    },
+    // 나이
+    ageMsg() {
+      if (this.waitingData === "") {
+        return ""
+      } else {
+        let dateTemp = new Date(this.waitingData.birth)
+        let dateNow = new Date();
+
+        let tempYear = dateTemp.getFullYear();
+        let nowYear = dateNow.getFullYear();
+        let age = parseInt(nowYear) - parseInt(tempYear) + 1;
+        return age;
+      }
+    },
+    // 환자 데이터가 있는지 확인
+    isEmpty() {
+      return this.waitingData === "" ? true : false;
+    },
   },
   methods: {
-    ...mapMutations('doctor', {
-      historyDataToWrite: 'historyDataToWrite',
+    ...mapMutations('nurse', {
+      setVuexHistoryData: 'setHistoryData',
+      setVisitList: 'setVisitList',
+      setReceiptData: 'setReceiptData',
+      initHistoryData: 'initHistoryData',
     }),
-    ...mapActions('doctor', {
-      getHistoryList: 'getHistoryList'
+    ...mapActions('nurse', {
+      getHistoryList: 'getHistoryList',
     }),
     // 상병 테이블 로직
     rowClass(item) {
@@ -290,6 +345,9 @@ export default {
       });
 
       this.setHistoryData(item);
+      this.setVuexHistoryData(item);  // vuex에 저장 (수납내역에 사용하기위해)
+      this.getVisitData(item.visit);
+      this.getReceiptData(item);
       this.pyItems = [];
       this.pyItems.push({
         height: item.height,
@@ -352,13 +410,53 @@ export default {
       this.sbItems = [];
       this.cbItems = [];
       this.slides = [];
-    }
+      this.initHistoryData();
+    },
+    getVisitData(item) {
+      return axios.post('/nurse/getVisitData', {
+        visitType: item,
+      }).then(response => {
+        let list = response.data;
+        this.setVisitList(list);
+      }).catch(function (error) {
+        console.log(error);
+      });
+    },
+    getReceiptData(item) {
+      return axios.post('/nurse/getReceiptData', {
+        historyId: item.id,
+      }).then(response => {
+        let data = response.data;
+        this.setReceiptData(data);
+      }).catch(function (error) {
+        console.log(error);
+      });
+    },
+
   },
 
 }
 </script>
 
 <style lang="scss" scoped>
+.title-border-box {
+  margin: 5px;
+  padding: 0 5px;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #003A63;
+  border-image: initial;
+  border-radius: 10px;
+}
+.main-border-box {
+  margin: 5px;
+  padding: 0 5px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #ccc;
+  border-image: initial;
+  border-radius: 10px;
+}
 .empty-list-box {
   height: 140px;
   display: flex;
@@ -388,6 +486,7 @@ export default {
   overflow-y: scroll;
   max-height: 600px;
 }
+
 /* 스크롤바 숨기기 */
 .waiting-list-box::-webkit-scrollbar {
   width: 0;
@@ -488,6 +587,30 @@ b-table * * {
   width: 100px;
   height: 100px;
   object-fit: contain;
+}
+
+
+// 환자 정보
+.Patient-box {
+}
+
+.patient-info {
+  flex-wrap: nowrap;
+}
+
+.patient-info span {
+  font-size: 10px;
+  // 글자 줄바꿈 안되게 함.
+  white-space: nowrap;
+}
+
+.patient-info span:after {
+  display: inline-block;
+  content: '';
+  width: 1px;
+  height: 12px;
+  background: #b9b9b9;
+  margin: 0 3px 0px 3px;
 }
 
 

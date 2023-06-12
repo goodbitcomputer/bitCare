@@ -5,7 +5,7 @@
 <!--        <b-icon icon="plus-circle" variant=""></b-icon>-->
 <!--      </div>-->
       <div class="main">
-        <div class="main-left border-box">
+        <div class="main-left title-border-box">
           <div class="d-flex">
             <span class="flex-grow-1" style="font-size: 1.2em; font-weight: 700">대기 환자</span>
             <span style="cursor:pointer" @click="waitingRefresh">새로고침</span>
@@ -16,7 +16,7 @@
           </div>
         </div>
         <div class="waiting-info-box">
-          <div class="border-box" v-for="(item) in waitingList" :key="item.id">
+          <div class="main-border-box" v-for="(item) in waitingList" :key="item.id">
             <div @click="selectPatientBtn(item)">
               <div>
                 <span class="font-weight-bold">{{ item.name }} </span>
@@ -60,19 +60,21 @@ export default {
   },
   computed: {},
   methods: {
-    ...mapMutations('doctor', {
+    ...mapMutations('nurse', {
       setWaitingData: 'setWaitingData',
-      initHistoryList: 'initHistoryList'
+      initHistoryList: 'initHistoryList',
+      initHistoryData: 'initHistoryData'
     }),
-    ...mapActions('doctor', {
+    ...mapActions('nurse', {
       getHistoryList: 'getHistoryList'
     }),
     selectPatientBtn(item) {
+      this.initHistoryData();
       this.setWaitingData(item);
       this.getHistoryList(item.patientId);
 
       // historyPage의 historyData 초기화
-      this.$EventBus.$emit('initHistory')
+      this.$EventBus.$emit('initNurseHistory')
     },
 
     dateMsg(item) {
@@ -103,7 +105,7 @@ export default {
     },
     // waiting data reset_logic
     getWaitingData() {
-      return axios.get('/doctor/getWaitingData', {}).then(response => {
+      return axios.get('/nurse/getWaitingData', {}).then(response => {
         let list = response.data;
         this.setWaitingList(list);
       }).catch(function (error) {
@@ -112,7 +114,8 @@ export default {
     },
     // 진료대기 버튼 로직
     waitingBtn() {
-      return axios.get('/doctor/getWaitingData', {}).then(response => {
+      this.waitingRefresh();
+      return axios.get('/nurse/getWaitingData', {}).then(response => {
         let list = response.data;
         this.setWaitingList(list);
       }).catch(function (error) {
@@ -121,7 +124,8 @@ export default {
     },
     // 진료완료 버튼 로직
     completedBtn() {
-      return axios.get('/doctor/getWaitingCmopletedData', {}).then(response => {
+      this.waitingRefresh();
+      return axios.get('/nurse/getWaitingCmopletedData', {}).then(response => {
         let list = response.data;
         this.setWaitingList(list);
       }).catch(function (error) {
@@ -133,6 +137,7 @@ export default {
       this.getWaitingData();
       this.setWaitingData("");
       this.initHistoryList();
+      this.initHistoryData();
     }
   }
 }
@@ -172,7 +177,24 @@ export default {
 //  display: block;
 //  width: auto;
 //}
-
+.title-border-box {
+  margin: 5px;
+  padding: 0 5px;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #003A63;
+  border-image: initial;
+  border-radius: 10px;
+}
+.main-border-box {
+  margin: 5px;
+  padding: 0 5px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #ccc;
+  border-image: initial;
+  border-radius: 10px;
+}
 .util button {
   background: rgba(12, 11, 9, 0.7);
   color: white;

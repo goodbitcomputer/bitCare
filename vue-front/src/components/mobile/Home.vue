@@ -44,5 +44,13 @@ export default {
 </script>
 
 <style scoped>
-
+#hero .play-btn {
+  width: 94px;
+  height: 94px;
+  background: none;
+  border-radius: 50%;
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
 </style>

@@ -95,6 +95,7 @@
 <script>
 import {mapMutations,} from 'vuex';
 import axios from "axios";
+
 const Swal = window.Swal;
 export default {
   name: "mobileAuth",
@@ -128,12 +129,9 @@ export default {
   },
   methods: {
     // vuex에 휴대폰번호 또는 주민등록번호 저장
-    ...mapMutations('mobile', {
-      setPhoneNumber : 'setPhoneNumber',
-      setIdentityNumber : 'setIdentityNumber',
-      setNextStep : 'setNextStep',
-      setPatientId : 'setPatientId',
-      setName : 'setName',
+    ...mapMutations('mobilePayment', {
+      setPatientData: 'setPatientData',
+      setNextStep: 'setNextStep',
     }),
     divHeightFix() {
       let div = document.getElementById('payment-auth');
@@ -146,17 +144,15 @@ export default {
         div.style.height = 'auto';
       }
     },
-    prevBtn() {``
+    prevBtn() {
       this.$router.back();
     },
     nextBtn() {
-      if (this.isPhoneCheck && this.phoneNumber.length===11) {
-        this.setPhoneNumber(this.phoneNumber);
+      if (this.isPhoneCheck && this.phoneNumber.length === 11) {
         this.auth();
-      }else if(!this.isPhoneCheck && this.identityNumber.length===13){
-        this.setIdentityNumber(this.identityNumber);
+      } else if (!this.isPhoneCheck && this.identityNumber.length === 13) {
         this.auth();
-      }else if(this.isPhoneCheck){
+      } else if (this.isPhoneCheck) {
         Swal.fire({
           icon: 'error',
           title: 'error',
@@ -164,7 +160,7 @@ export default {
           showConfirmButton: false,
           timer: 1000
         })
-      }else if(!this.isPhoneCheck){
+      } else if (!this.isPhoneCheck) {
         Swal.fire({
           icon: 'error',
           title: 'error',
@@ -214,12 +210,17 @@ export default {
         phoneNumber: this.phoneNumber,
         identityNumber: this.identityNumber,
       }).then((response) => {
-        if(response.data !== ""){
-          this.setPatientId(response.data.id);
-          this.setName(response.data.name);
-          this.setNextStep(5);
-        }else{
+        if(response.data !== "") {
+          this.setPatientData(response.data);
           this.setNextStep(2);
+        }else{
+          Swal.fire({
+            icon: 'error',
+            title: 'error',
+            text: '등록된 환자정보가 없습니다.',
+            showConfirmButton: false,
+            timer: 1000
+          })
         }
       }).catch(function (error) {
         console.log(error);
@@ -256,10 +257,6 @@ export default {
   left: 0;
   right: 0;
 }
-.info-box {
-  margin-top: 30px;
-}
-
 
 h1 {
   font-size: 27px !important;
@@ -304,6 +301,7 @@ common style
   vertical-align: middle;
   justify-content: center;
 }
+
 .menu button {
   color: rgba(255, 255, 255, 0.8);
   font-family: Lato;
@@ -353,14 +351,14 @@ hover effect 21
 /* 넘버패드 css ------------ */
 /* Common button styles */
 @media (min-width: 992px) {
-  .input-text-box{
+  .input-text-box {
     width: 300px;
   }
-  .input-box{
+  .input-box {
     //margin-right: 95px;
     //margin:0 auto;
   }
-  .phone-input{
+  .phone-input {
     width: 300px;
     font-size: 20px;
   }
@@ -403,10 +401,10 @@ hover effect 21
 }
 
 @media (max-width: 992px) {
-  .input-text-box{
+  .input-text-box {
     width: 458px;
   }
-  .phone-input{
+  .phone-input {
     width: 458px;
     font-size: 40px;
   }
@@ -447,11 +445,12 @@ hover effect 21
     font-size: 35px;
   }
 }
+
 @media (max-width: 576px) {
-  .input-text-box{
+  .input-text-box {
     width: 370px;
   }
-  .phone-input{
+  .phone-input {
     width: 370px;
     font-size: 25px;
   }
@@ -492,11 +491,12 @@ hover effect 21
     font-size: 22px;
   }
 }
+
 @media (max-width: 400px) {
-  .input-text-box{
+  .input-text-box {
     width: 310px;
   }
-  .phone-input{
+  .phone-input {
     width: 310px;
     font-size: 20px;
   }
@@ -537,11 +537,12 @@ hover effect 21
     font-size: 20px;
   }
 }
+
 @media (max-width: 300px) {
-  .input-text-box{
+  .input-text-box {
     width: 200px;
   }
-  .phone-input{
+  .phone-input {
     width: 200px;
     font-size: 18px;
   }

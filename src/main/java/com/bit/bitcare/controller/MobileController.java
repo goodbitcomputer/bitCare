@@ -26,12 +26,9 @@ import java.util.Map;
 @RequestMapping("/mobile")
 public class MobileController {
     private MobileService mobileService;
-    private IamportClient api;
 
     public MobileController(MobileServiceImpl mobileService) {
         this.mobileService = mobileService;
-        // REST API 키와 REST API secret 를 아래처럼 순서대로 입력한다.
-        this.api = new IamportClient("6133142457574138","u39hsQc6oAvLnCWrgpTmWHsotpFlcrvr7gVQemdynSWSXAM797D9HLDW4IknsXRDakIRg6bujule91E8");
     }
 
     @ResponseBody
@@ -61,21 +58,6 @@ public class MobileController {
         return mobileService.register(requestData);
     }
 
-    @ResponseBody
-    @PostMapping("/payment_proc")
-    public IamportResponse<Payment> payment(@RequestBody Map<String, Object> requestData, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, IamportResponseException {
-        String impUid = (String)requestData.get("impUid");
-        int patientId = (int) requestData.get("patientId");
-
-        System.out.println("impUid: "+ impUid);
-        System.out.println("patientId: "+ patientId);
-        IamportResponse<Payment> payment = api.paymentByImpUid(impUid);
-
-        System.out.println(payment.getResponse());
-        System.out.println(payment.getResponse().getAmount());
-
-        return api.paymentByImpUid(impUid);
-    }
 
 
 }

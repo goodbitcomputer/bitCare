@@ -1,35 +1,35 @@
 <template>
-  <section id="hero" class="d-flex align-items-center" style="background: none">
+  <section id="hero" class="d-flex align-items-center">
     <div class="info-box container position-relative text-center text-lg-start" data-aos="zoom-in"
          data-aos-delay="100">
       <div class="row justify-content-center">
-        <div v-show="!isPhoneIdentityCheck" class="col-lg-5">
-          <div class="container text-left">
+        <div v-show="!isPhoneIdentityCheck" class="input-box col">
+          <div class="input-text-box text-left" style="margin: 0 auto">
             <h1 style="font-weight: 500;">처음이신가요?</h1>
             <h1 style="font-weight: 500;">휴대폰번호<span>를 입력해주세요.</span></h1>
           </div>
           <!--            휴대폰, 주민번호등록 div-->
           <div>
-            <div class="m-3">
+            <div class="input-box d-flex justify-content-center">
               <b-input readonly class="phone-input" :value="phonePadMsg"></b-input>
             </div>
           </div>
         </div>
-        <div v-show="isPhoneIdentityCheck" class="col-lg-5">
-          <div class="container text-left">
+        <div v-show="isPhoneIdentityCheck" class="input-box col">
+          <div class="input-text-box text-left" style="margin: 0 auto">
             <h1 style="font-weight: 500;">처음이신가요?</h1>
             <h1 style="font-weight: 500;">주민등록번호<span>를 입력해주세요.</span></h1>
           </div>
           <!--            휴대폰, 주민번호등록 div-->
           <div>
-            <div class="d-flex m-3">
+            <div class="input-box d-flex justify-content-center">
               <b-input readonly class="identity1-input" :value="identityPadMsg1"></b-input>
-              <span class="" style="margin: 0 10px; font-size: 20px; color:white">-</span>
+              <span class="tot m-1" style="color:white">-</span>
               <b-input readonly class="identity2-input" :value="identityPadMsg2"></b-input>
             </div>
           </div>
         </div>
-        <div class="col-lg-4 justify-content-center position-relative">
+        <div class="col justify-content-center position-relative">
           <div>
             <div class="num-pad-box container">
               <div class="number-pad justify-content-center">
@@ -85,12 +85,8 @@
       </div>
       <!--      start 버튼 박스-->
       <div class="btn-util-box d-flex justify-content-center">
-        <div class="mr-5 mt-2">
-          <button class="btn btn-dark" @click="prevBtn" style="width: 120px">이전</button>
-        </div>
-        <div class="ml-5 mt-2">
-          <button class="btn btn-primary" @click="nextBtn" style="width: 120px">다음</button>
-        </div>
+        <button class="util-btn left-util-btn btn bg-warning" @click="prevBtn" style="width: 120px; ">이전</button>
+        <button class="util-btn btn bg-warning" @click="nextBtn" style="width: 120px;">다음</button>
       </div>
       <!--      end 버튼 박스-->
     </div>
@@ -214,6 +210,31 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+#hero {
+  width: 100%;
+  /*height: 100vh;*/
+  background: none;
+  background-color: #A1C7E0;
+  background-size: cover;
+  /* 배경이미지 반복여부 */
+  background-repeat: no-repeat;
+  /* 배경의 위치는 그 세션의 정가운데에 위치 */
+  background-position: center;
+  /* 더이상 요소가 스크롤될때 같이 스크롤되지않고 이미지가 뷰포트부분에 고정, 화면이 스크롤 되더라도 같이 움직이지않는구조로 만듬 */
+  background-attachment: fixed;
+  position: relative;
+  padding: 0;
+}
+
+#hero:before {
+  content: "";
+  background: rgba(0, 0, 0, 0.6);
+  position: absolute;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+}
 h1 {
   font-size: 27px !important;
   // 글자 줄바꿈 안되게 함.
@@ -301,21 +322,235 @@ hover effect 21
 
 /* 넘버패드 css ------------ */
 /* Common button styles */
-.button {
-  float: left;
-  min-width: 70px;
-  max-width: 100px;
-  display: block;
-  margin: 0.1em;
-  padding: 1em 1em;
-  border: none;
-  background: none;
-  color: inherit;
-  vertical-align: middle;
-  position: relative;
-  z-index: 1;
-  -webkit-backface-visibility: hidden;
-  -moz-osx-font-smoothing: grayscale;
+@media (min-width: 992px) {
+  .input-text-box{
+    width: 300px;
+  }
+  .input-box{
+    //margin-right: 95px;
+    //margin:0 auto;
+  }
+  .phone-input{
+    width: 300px;
+    font-size: 20px;
+  }
+  .identity1-input {
+    width: 140px;
+    font-size: 20px;
+  }
+  .identity2-input {
+    width: 140px;
+    font-size: 20px;
+  }
+  .util-btn {
+    width: 250px !important;
+    margin: 30px 0 0 0;
+  }
+  .left-util-btn {
+    margin: 30px 265px 0 0;
+  }
+  .tot {
+    font-size: 20px;
+  }
+  .button {
+    float: left;
+    min-width: 100px;
+    height: 70px;
+    display: block;
+    margin: 0.1em;
+    padding: 1em 1em;
+    border: none;
+    background: none;
+    color: inherit;
+    vertical-align: middle;
+    position: relative;
+    z-index: 1;
+    -webkit-backface-visibility: hidden;
+    -moz-osx-font-smoothing: grayscale;
+
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 992px) {
+  .input-text-box{
+    width: 458px;
+  }
+  .phone-input{
+    width: 458px;
+    font-size: 40px;
+  }
+  .identity1-input {
+    width: 215px;
+    font-size: 40px;
+  }
+  .identity2-input {
+    width: 215px;
+    font-size: 40px;
+  }
+  .tot {
+    font-size: 40px;
+  }
+  .util-btn {
+    width: 180px !important;
+    margin: 20px 0 0 0;
+  }
+  .left-util-btn {
+    margin: 20px 95px 0 0;
+  }
+  .button {
+    float: left;
+    width: 150px;
+    height: 120px;
+    display: block;
+    margin: 0.1em;
+    padding: 1em 1em;
+    border: none;
+    background: none;
+    color: inherit;
+    vertical-align: middle;
+    position: relative;
+    z-index: 1;
+    -webkit-backface-visibility: hidden;
+    -moz-osx-font-smoothing: grayscale;
+
+    font-size: 35px;
+  }
+}
+@media (max-width: 576px) {
+  .input-text-box{
+    width: 370px;
+  }
+  .phone-input{
+    width: 370px;
+    font-size: 25px;
+  }
+  .identity1-input {
+    width: 170px;
+    font-size: 25px;
+  }
+  .identity2-input {
+    width: 170px;
+    font-size: 25px;
+  }
+  .tot {
+    font-size: 25px;
+  }
+  .util-btn {
+    width: 135px !important;
+    margin: 20px 0 0 0;
+  }
+  .left-util-btn {
+    margin: 20px 95px 0 0;
+  }
+  .button {
+    float: left;
+    width: 120px;
+    height: 90px;
+    display: block;
+    margin: 0.1em;
+    padding: 1em 1em;
+    border: none;
+    background: none;
+    color: inherit;
+    vertical-align: middle;
+    position: relative;
+    z-index: 1;
+    -webkit-backface-visibility: hidden;
+    -moz-osx-font-smoothing: grayscale;
+
+    font-size: 22px;
+  }
+}
+@media (max-width: 400px) {
+  .input-text-box{
+    width: 310px;
+  }
+  .phone-input{
+    width: 310px;
+    font-size: 20px;
+  }
+  .identity1-input {
+    width: 140px;
+    font-size: 20px;
+  }
+  .identity2-input {
+    width: 140px;
+    font-size: 20px;
+  }
+  .tot {
+    font-size: 20px;
+  }
+  .util-btn {
+    width: 100px !important;
+    margin: 20px 0 0 0;
+  }
+  .left-util-btn {
+    margin: 20px 40px 0 0;
+  }
+  .button {
+    float: left;
+    width: 100px;
+    height: 70px;
+    display: block;
+    margin: 0.1em;
+    padding: 1em 1em;
+    border: none;
+    background: none;
+    color: inherit;
+    vertical-align: middle;
+    position: relative;
+    z-index: 1;
+    -webkit-backface-visibility: hidden;
+    -moz-osx-font-smoothing: grayscale;
+
+    font-size: 20px;
+  }
+}
+@media (max-width: 300px) {
+  .input-text-box{
+    width: 200px;
+  }
+  .phone-input{
+    width: 200px;
+    font-size: 18px;
+  }
+  .identity1-input {
+    width: 88px;
+    font-size: 20px;
+  }
+  .identity2-input {
+    width: 88px;
+    font-size: 20px;
+  }
+  .tot {
+    font-size: 20px;
+  }
+  .util-btn {
+    width: 100px !important;
+    margin: 20px 0 0 0;
+  }
+  .left-util-btn {
+    margin: 20px 20px 0 0;
+  }
+  .button {
+    float: left;
+    width: 80px;
+    height: 50px;
+    display: block;
+    margin: 0.1em;
+    padding: 1em 1em;
+    border: none;
+    background: none;
+    color: inherit;
+    vertical-align: middle;
+    position: relative;
+    z-index: 1;
+    -webkit-backface-visibility: hidden;
+    -moz-osx-font-smoothing: grayscale;
+
+    font-size: 18px;
+  }
 }
 
 .button:focus {
