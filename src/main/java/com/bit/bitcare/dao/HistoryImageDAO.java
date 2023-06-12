@@ -8,6 +8,7 @@ import java.util.List;
 @Component
 public interface HistoryImageDAO {
     public List<HistoryImageDTO> selectByHistoryId(int historyId);
+    public HistoryImageDTO selectByImagePath(String imagePath);
 
     public void insert(HistoryImageDTO historyImageDTO);
 

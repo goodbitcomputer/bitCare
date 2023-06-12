@@ -3,6 +3,7 @@ package com.bit.bitcare.controller;
 import com.bit.bitcare.awsS3.AwsS3;
 import com.bit.bitcare.awsS3.AwsS3Service;
 import com.bit.bitcare.dao.HistoryDAO;
+import com.bit.bitcare.dao.HistoryImageDAO;
 import com.bit.bitcare.model.HistoryDTO;
 import com.bit.bitcare.model.HistoryImageDTO;
 import com.bit.bitcare.service.EditorService;
@@ -21,12 +22,14 @@ public class EditorController {
     private final EditorService editorService;
     private final AwsS3Service awsS3Service;
     private final HistoryDAO historyDAO;
+    private final HistoryImageDAO historyImageDAO;
 
     @Autowired
-    public EditorController(HistoryDAO historyDAO, EditorService editorService, AwsS3Service awsS3Service) {
+    public EditorController(HistoryImageDAO historyImageDAO, HistoryDAO historyDAO, EditorService editorService, AwsS3Service awsS3Service) {
         this.editorService = editorService;
         this.awsS3Service = awsS3Service;
         this.historyDAO = historyDAO;
+        this.historyImageDAO = historyImageDAO;
     }
 
     @ResponseBody
@@ -63,7 +66,12 @@ public class EditorController {
 
 //        AwsS3 awsS3 = awsS3Service.remove(File file);
 
+        HistoryImageDTO historyImageDTO = historyImageDAO.selectByImagePath(imagePath);
+        AwsS3 removeS3 = new AwsS3();
+        removeS3.setKey(historyImageDTO.getImageKey());
+
         editorService.deleteImage(imagePath);
+        awsS3Service.remove(removeS3);
     }
 
     @ResponseBody
@@ -72,6 +80,11 @@ public class EditorController {
         HistoryDTO historyDTO = historyDAO.selectOne(historyImageDTO.getHistoryId());
 
         AwsS3 awsS3 = awsS3Service.upload(file, "imgUpload/" + historyDTO.getPatientId());
+
+        // s3 이미지 삭제
+        AwsS3 removeS3 = new AwsS3();
+        removeS3.setKey(historyImageDTO.getImageKey());
+        awsS3Service.remove(removeS3);
 
         editorService.updateEditedImage(awsS3, historyImageDTO);
     }

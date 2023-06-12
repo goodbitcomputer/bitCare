@@ -105,7 +105,6 @@ export default {
       isDeletingImage: false,
     };
   },
-
   mounted() {
     document.addEventListener('keydown', this.handleKeyDown);
     const patientId = this.$route.query.patientId;
@@ -125,11 +124,9 @@ export default {
           console.error(error);
         });
   },
-
   beforeUnmount() {
     document.removeEventListener("keydown", this.handleKeyDown);
   },
-
   methods: {
     ...mapMutations('editor', {
       setHistoryImageId: 'setHistoryImageId',
@@ -145,14 +142,6 @@ export default {
     handleEditComplete(image) {
       this.images.push({imagePath: image});
     },
-    getCurrentDate() {
-      const today = new Date();
-      const year = today.getFullYear();
-      const month = String(today.getMonth() + 1).padStart(2, '0');
-      const day = String(today.getDate()).padStart(2, '0');
-      return `${year}-${month}-${day}`;
-    },
-
     toggleImage(url) {
       if (this.showDiv) {
         if (this.selectedViewerImage === url) {
@@ -166,7 +155,7 @@ export default {
     },
     toggleNewDiv() {
       this.showDiv = !this.showDiv;
-      this.showViewerButton = this.showDiv;
+      // this.showViewerButton = this.showDiv;
     },
     toggleDeleteMode() {
       if (this.isDeletingImage) {
@@ -179,31 +168,12 @@ export default {
                     imagePath: url
                   }
                 })
-                .then(() => {
-                  const index = this.images.findIndex((image) => image.imagePath === url);
-                  if (index !== -1) {
-                    this.images.splice(index, 1);
-                  }
-                  this.isDeletingImage = false;
-                  // alert("이미지가 삭제되었습니다.");
-                  window.Swal.fire({
-                    icon: 'error',
-                    title: 'error',
-                    html: '이미지가 삭제되었습니다.',
-                    timer: 3000
-                  })
-                })
-                .catch((error) => {
-                  console.error(error);
-                  alert("이미지 삭제 중 오류가 발생했습니다.");
-                });
           }
         }
       } else {
         this.isDeletingImage = true;
       }
     },
-
     // 2023. 06. 09 유동준
     // 삭제 버튼 클릭 후 이미지 클릭하면 알람창 뜨고 이미지 삭제, db에서도 삭제 완료
     handleImageClick(url) {
