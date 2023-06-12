@@ -9,6 +9,7 @@ import java.util.List;
 public interface HistoryImageDAO {
     public HistoryImageDTO selectById(int id);
     public List<HistoryImageDTO> selectByHistoryId(int historyId);
+    public HistoryImageDTO selectByImagePath(String imagePath);
 
     public void insert(HistoryImageDTO historyImageDTO);
 

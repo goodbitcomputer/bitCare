@@ -15,6 +15,11 @@
         select * from `history_image`
         where history_id = #{historyId}
     </select>
+    <!-- 진료 기록의 이미지부분(image_path) select -->
+    <select id="selectByImagePath" parameterType="string" resultType="historyImageDTO">
+        select * from `history_image`
+        where image_path = #{imagePath}
+    </select>
 
     <!-- 진료 기록의 이미지부분(history_image) insert -->
     <insert id="insert" parameterType="historyImageDTO" useGeneratedKeys="true" keyProperty="id">
