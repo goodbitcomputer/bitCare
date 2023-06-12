@@ -50,8 +50,10 @@ public class EditorServiceImpl implements EditorService {
     @Override
     public void updateEditedImage(AwsS3 awsS3, HistoryImageDTO historyImageDTO) {
 
+
         historyImageDTO.setImagePath(awsS3.getPath());
         historyImageDTO.setImageKey(awsS3.getKey());
+
         historyImageDAO.updateEditedImage(historyImageDTO);
     }
 

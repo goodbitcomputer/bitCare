@@ -1,5 +1,6 @@
 package com.bit.bitcare.dao;
 
+import com.bit.bitcare.awsS3.AwsS3;
 import com.bit.bitcare.model.HistoryImageDTO;
 import org.springframework.stereotype.Component;
 

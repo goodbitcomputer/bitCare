@@ -11,6 +11,11 @@
         where id = #{id}
     </select>
     <!-- 진료 기록의 이미지부분(history_image) select -->
+    <select id="selectById" parameterType="int" resultType="historyImageDTO">
+        select * from `history_image`
+        where id = #{id}
+    </select>
+    <!-- 진료 기록의 이미지부분(history_image) select -->
     <select id="selectByHistoryId" parameterType="int" resultType="historyImageDTO">
         select * from `history_image`
         where history_id = #{historyId}
@@ -66,7 +71,8 @@
     <!--    편집본 수정 시 최종본을 저장-->
     <update id="updateEditedImage" parameterType="historyImageDTO">
         UPDATE `history_image`
-        SET image_path=#{imagePath}
+        SET image_path=#{imagePath},
+        image_key = #{imageKey}
         WHERE id = #{id}
     </update>
 

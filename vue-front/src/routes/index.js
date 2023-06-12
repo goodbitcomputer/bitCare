@@ -142,7 +142,7 @@ export default new VueRouter({
       }
     },
     {
-      path: '/doctor/editor',
+      path: '/doctor/editor/selectByPatientIdAndHistoryId',
       component: ImageEditor,
       meta: {
         roles: ['ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_NURSE', 'ROLE_MASTER']
