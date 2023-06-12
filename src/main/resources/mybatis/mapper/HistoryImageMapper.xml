@@ -16,6 +16,11 @@
         where id = #{id}
     </select>
     <!-- 진료 기록의 이미지부분(history_image) select -->
+    <select id="selectById" parameterType="int" resultType="historyImageDTO">
+        select * from `history_image`
+        where id = #{id}
+    </select>
+    <!-- 진료 기록의 이미지부분(history_image) select -->
     <select id="selectByHistoryId" parameterType="int" resultType="historyImageDTO">
         select * from `history_image`
         where history_id = #{historyId}
@@ -105,6 +110,39 @@
     <update id="updateEditedImage" parameterType="historyImageDTO">
         UPDATE `history_image`
         SET image_path=#{imagePath}
+        WHERE id = #{id}
+    </update>
+
+
+    <!-- 2023.06.02 유동준-->
+    <!-- 환자와 진료 기록에 맞는 이미지 불러오기 -->
+    <select id="selectByPatientIdAndHistoryId" parameterType="map" resultType="historyImageDTO">
+        select *
+        from `history_image` as i
+        inner join `history` as h on i.`history_id` = h.`id`
+        inner join `patient` as p on h.`patient_id` = p.`id`
+        where p.`id` = #{patientId}
+        and h.`id` = #{historyId}
+        order by i.`edited` asc
+    </select>
+
+    <!-- 편집된 이미지 저장 -->
+    <insert id="insertEditedImage" parameterType="historyImageDTO">
+        insert into `history_image` (history_id, image_path, image_key, category_id, edited)
+        values (#{historyId}, #{imagePath}, #{imageKey}, #{categoryId}, #{edited} + 0.1)
+    </insert>
+
+    <!-- 이미지 삭제 -->
+    <delete id="deleteImage" parameterType="string">
+        DELETE FROM `history_image`
+        WHERE image_path = #{imagePath}
+    </delete>
+
+    <!--    편집본 수정 시 최종본을 저장-->
+    <update id="updateEditedImage" parameterType="historyImageDTO">
+        UPDATE `history_image`
+        SET image_path=#{imagePath},
+        image_key = #{imageKey}
         WHERE id = #{id}
     </update>
 
