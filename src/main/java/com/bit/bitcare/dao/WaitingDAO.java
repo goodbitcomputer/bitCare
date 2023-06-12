@@ -11,6 +11,8 @@ public interface WaitingDAO {
     public List<WaitingDTO> selectAll();
     public List<WaitingDTO> selectWaitByDept(int deptId);
     public List<WaitingDTO> selectCompletedByDept(int deptId);
+    public List<WaitingDTO> selectWaitAll();
+    public List<WaitingDTO> selectCompletedAll();
     public void delete(int id);
     public void insert(WaitingDTO waitingDTO);
     public void update(WaitingDTO waitingDTO);

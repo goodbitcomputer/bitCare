@@ -39,13 +39,29 @@
         ON waiting.patient_id = patient.id
         WHERE waiting.dept_id = #{deptId} AND waiting.state = '대기중';
     </select>
-    <!-- 접수대기환자 by진료과목  -->
+    <!-- 접수완료환자 by진료과목  -->
     <select id="selectCompletedByDept" resultType="waitingDTO">
         SELECT waiting.*, patient.name, patient.identity_number, patient.phone_number, patient.gender, patient.birth,
         patient.address_id FROM waiting
         LEFT JOIN patient
         ON waiting.patient_id = patient.id
         WHERE waiting.dept_id = #{deptId} AND waiting.state = '진료완료';
+    </select>
+    <!-- 접수대기환자 All -->
+    <select id="selectWaitAll" resultType="waitingDTO">
+        SELECT waiting.*, patient.name, patient.identity_number, patient.phone_number, patient.gender, patient.birth,
+        patient.address_id FROM waiting
+        LEFT JOIN patient
+        ON waiting.patient_id = patient.id
+        WHERE waiting.state = '대기중';
+    </select>
+    <!-- 접수완료환자 All  -->
+    <select id="selectCompletedAll" resultType="waitingDTO">
+        SELECT waiting.*, patient.name, patient.identity_number, patient.phone_number, patient.gender, patient.birth,
+        patient.address_id FROM waiting
+        LEFT JOIN patient
+        ON waiting.patient_id = patient.id
+        WHERE waiting.state = '진료완료';
     </select>
 
     <!-- 접수 처리(대기 목록 삭제) -->

@@ -33,14 +33,12 @@
 
 
 <script>
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import {mapMutations, mapState} from "vuex";
+import {mapState} from "vuex";
 
 export default {
   name: "NursePatient",
 
   mounted() {
-    this.ckeditorSetting();
 
   },
 
@@ -50,36 +48,8 @@ export default {
       ckeditor: 0,
     };
   },
-  created() {
-    this.contentCss = `
-        :root {
-          --ck-toolbar-height: 60px;
-          --ck-content-height: 300px;
-        }
-        .ck-editor__editable {
-          height: calc(var(--ck-content-height) - var(--ck-toolbar-height) - 2px) !important;
-          line-height: 0.3em;
-        }
-        .ck-toolbar {
-          height: var(--ck-toolbar-height) !important;
-        }
-      `;
-  },
-  // 환자데이터가 활성화되면 ckeditor 세팅하기
-  updated() {
-    this.$nextTick(()=>{
-      if(!this.isEmpty) {
-        if(this.ckeditor==0) {
-          this.ckeditorSetting();
-          this.ckeditor= this.ckeditor+1;
-        }
-      } else{
-        this.ckeditor= 0;
-      }
-    })
-  },
   computed: {
-    ...mapState('doctor',
+    ...mapState('nurse',
         ['waitingData']
     ),
     // 주민번호
@@ -123,37 +93,6 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('doctor', {
-      setMemoEditor:'setMemoEditor',
-    }),
-    ckeditorSetting() {
-      ClassicEditor.create(document.querySelector('#memoEditor'), {
-        contentCss: this.contentCss,
-        toolbar: [
-          // 'heading',
-          // '|',
-          'bold',
-          'italic',
-          'link',
-          'bulletedList',
-          '|',
-          'undo',
-          'redo',
-          // '|',
-          // 'imageUpload',
-          // 'alignment',
-          // 'numberedList',
-          // 'imageInsert',
-          // 'blockQuote',
-          // '|',
-          // 'ckfinder',
-        ],
-      }).then( newEditor => {
-        this.setMemoEditor(newEditor);
-      }).catch((error) => {
-        console.error(error);
-      });
-    }
   }
 
 }

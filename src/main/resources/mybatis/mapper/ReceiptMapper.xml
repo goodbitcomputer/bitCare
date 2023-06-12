@@ -6,15 +6,51 @@
 <mapper namespace="com.bit.bitcare.dao.ReceiptDAO">
 
     <!-- 해당 진료 기록(historyId)의 수납내역 -->
+    <select id="selectOne" parameterType="int" resultType="receiptDTO">
+        SELECT * FROM `receipt`
+        where id = #{id}
+    </select>
+    <!-- 해당 진료 기록(historyId)의 수납내역 -->
     <select id="selectByHistoryId" parameterType="int" resultType="receiptDTO">
         SELECT * FROM `receipt`
         where history_id = #{historyId}
     </select>
+    <!-- 해당 진료 기록(patientId)의 미납내역 -->
+    <select id="selectByPatientId" parameterType="int" resultType="receiptDTO">
+        SELECT receipt.*, history.memo, history.symptom_detail, history.entry_date, history.visit, employee.name, dept.dept FROM bit_care.receipt
+        LEFT JOIN history
+        ON receipt.history_id = history.id
+        LEFT JOIN employee
+        ON history.employee_id = employee.id
+        LEFT JOIN dept
+        ON history.dept_id = dept.id
+        where receipt.patient_id = #{patientId} and receipt.imp_uid is null
+        ORDER BY history.entry_date DESC;
+    </select>
+
 
     <!-- 진료 기록(historyId)의 수납내역 insert -->
     <insert id="insert" parameterType="receiptDTO">
-        insert into `receipt`(history_id,name,payment,visit_id)
-        values(#{historyId}, #{name}, #{payment}, #{visit_id})
+        insert into `receipt`(history_id, patient_id, content, payment, imp_uid, paid_at, card_name, card_number, apply_num)
+        values(#{historyId}, #{patientId}, #{content}, #{payment}, #{impUid}, #{paidAt}, #{cardName},#{cardNumber},#{applyNum})
     </insert>
+    <update id="update" parameterType="receiptDTO">
+        UPDATE `receipt` SET
+        history_id = #{historyId},
+        patient_id = #{patientId},
+        content = #{content},
+        payment = #{payment},
+        imp_uid = #{impUid},
+        paid_at = #{paidAt},
+        card_name = #{cardName},
+        card_number = #{cardNumber},
+        apply_num = #{applyNum}
+        WHERE
+        id = #{id};
+    </update>
+    <delete id="delete" parameterType="int">
+        DELETE FROM receipt
+        WHERE id= #{id}
+    </delete>
 
 </mapper>

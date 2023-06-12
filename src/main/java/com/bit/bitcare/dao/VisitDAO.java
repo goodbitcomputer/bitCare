@@ -9,4 +9,5 @@ import java.util.List;
 public interface VisitDAO {
     public List<VisitDTO> selectByType(String type);
     public VisitDTO selectOne(int id);
+    public List<VisitDTO> selectAll();
 }

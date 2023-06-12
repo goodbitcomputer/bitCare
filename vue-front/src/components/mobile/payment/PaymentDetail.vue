@@ -19,7 +19,7 @@ export default {
         pg : 'kakaopay',
         pay_method : 'kakaopay',
         merchant_uid : 'merchant_' + new Date().getTime(),
-        name : '상품1' , //결제창에서 보여질 이름
+        name : '비트케어' , //결제창에서 보여질 이름
         amount : 100, //실제 결제되는 가격
         buyer_name : '구매자이름',
         buyer_tel : '010-7399-2128',
@@ -53,9 +53,6 @@ export default {
         }).catch(function (error) {
           console.log(error);
         })
-
-
-
 
 
 
