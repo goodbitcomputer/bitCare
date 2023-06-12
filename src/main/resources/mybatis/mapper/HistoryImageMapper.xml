@@ -133,7 +133,7 @@
         WHERE image_path = #{imagePath}
     </delete>
 
-<!--    편집본 수정 시 최종본을 저장-->
+    <!--    편집본 수정 시 최종본을 저장-->
     <update id="updateEditedImage" parameterType="historyImageDTO">
         UPDATE `history_image`
         SET image_path=#{imagePath}
