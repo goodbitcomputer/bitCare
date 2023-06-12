@@ -163,7 +163,7 @@ export default {
     },
     alarmLength() {
       if (this.recvList != null) {
-        this.count = this.recvList.filter(element => "new" === element.state).length
+        this.count = this.recvList.filter(element => "new" === element.receiveState).length
       }
       this.setCount(this.count)
     },

@@ -16,7 +16,7 @@
           <div class="login-info-box align-items-center d-flex justify-content-center">
             <div class="text-center">
               <div class="d-flex text-nowrap">
-                <h1>백지영님 <span>환영합니다.</span></h1>
+                <h1>{{ this.name }}님 <span>환영합니다.</span></h1>
               </div>
               <div class="btns">
                 <a class="btn-menu animated fadeInUp scrollto" @click="NextBtn(2)">대기환자</a>
@@ -33,14 +33,24 @@
 </template>
 
 <script>
-import {mapMutations} from "vuex";
+import {mapMutations, mapState} from "vuex";
+import axios from "axios";
 
 export default {
   name: "MobileHome",
-
+  computed: {
+    ...mapState('login',
+        ['role','name','dept']
+    )
+  },
   methods: {
     ...mapMutations('mobileDoctor', {
       setNextStep: 'setNextStep',
+    }),
+    ...mapMutations('login', {
+      setRole: 'setRole',
+      setName: 'setName',
+      setDept: 'setDept',
     }),
     NextBtn(item) {
       this.setNextStep(item);
@@ -51,6 +61,25 @@ export default {
     },
     doctorBtn() {
       this.$router.push('/mobile/doctor')
+    },
+    loginSession(){
+      axios.get('/api/login')
+          .then(response => {
+            // 세션 데이터 사용 예시
+            if (response.data && response.data.isLoggedIn) {
+              let logIn = JSON.parse(JSON.stringify(response.data.logIn))
+              this.setName(logIn.name)
+              this.setRole(logIn.role)
+              this.setDept(logIn.deptId)
+            } else{
+              this.setName('admin')
+              this.setRole('ROLE_ADMIN')
+              this.setDept(0)
+            }
+          })
+          .catch(error => {
+            console.error('세션 데이터를 가져오는 중 에러 발생: ', error)
+          })
     }
   },
 }

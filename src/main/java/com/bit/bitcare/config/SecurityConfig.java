@@ -94,16 +94,12 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeRequests() //<security:intercept-url>
-                .antMatchers("/", "/api/**","/autoLogin","/login","/auth","/user/register", "/mobile/**").permitAll() //permitAll 권한부여
+                .antMatchers("/", "/api/**","/autoLogin","/logOut","/login","/auth","/user/register", "/mobile/**").permitAll() //permitAll 권한부여
                 .anyRequest().authenticated() //나머지 url에 대해 authenticated 권한 부여
                 .and().formLogin() //<security:form-login>
                 .loginPage("/")
                 .and().csrf().disable()
-                .logout()
-                .logoutUrl("/logOut")
-                .logoutSuccessUrl("/")
-                .invalidateHttpSession(true)
-                .and().rememberMe()
+                .rememberMe()
                 .alwaysRemember(true)
                 .tokenValiditySeconds(60 * 60 * 24) // Remember Me 쿠키의 유효시간을 1일로 지정
                 .key("uniqueAndSecret") // Remember Me 쿠키의 key 값

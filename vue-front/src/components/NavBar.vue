@@ -32,11 +32,24 @@
             </div>
           </b-button>
 
-          <router-link to="/admin" class="nav-item nav-link">
+          <router-link v-if="this.$store.state.login.role === 'ROLE_MASTER'" to="/admin" class="nav-item nav-link">
             <div>
-              <b-icon-person-fill style="width: 24px; height: 24px;" title="계정"></b-icon-person-fill>
+              <b-icon-three-dots title="관리자 페이지"></b-icon-three-dots>
             </div>
           </router-link>
+
+          <b-button type="button" class="nav-item nav-link" id="info">
+            <div>
+              <b-icon-person-fill style="width: 24px; height: 24px;" title="내 정보"></b-icon-person-fill>
+              {{ this.$store.state.login.name }}님
+            </div>
+          </b-button>
+
+          <b-button type="button" class="nav-item nav-link" id="logOut" @click="logOut()">
+            <div>
+              LogOut
+            </div>
+          </b-button>
         </b-navbar-nav>
       </b-collapse>
 
@@ -89,6 +102,20 @@
         <Alarm/>
       </div>
     </b-popover>
+
+    <b-popover
+        custom-class="wide-popover"
+        fallback-placement="clockwise"
+        target="info"
+        placement="bottomleft"
+        width="320"
+        height="500"
+        triggers="hover focus blur">
+      <div id="infoList">
+        <Waiting/>
+      </div>
+    </b-popover>
+
     <div>
       <b-modal v-model="this.$store.state.alarm.showModal" id="modal" size="lg" title="쪽지" @hidden="closeModal">
         <div id="messageList">
@@ -96,6 +123,15 @@
         </div>
       </b-modal>
     </div>
+
+    <div>
+      <b-modal v-model="this.$store.state.login.registerModal" id="modal" size="lg" title="내정보 수정" @hidden="closeRegisterModal">
+        <div id="register">
+          <EmployeeUpdate/>
+        </div>
+      </b-modal>
+    </div>
+
   </b-navbar>
 </template>
 
@@ -112,10 +148,12 @@ import axios from "axios";
 import SockJS from "sockjs-client";
 import Stomp from "webstomp-client";
 import Message from "@/routes/message/Message.vue";
-import Alarm from "@/routes/alarm/Alarm.vue"
+import Alarm from "@/routes/alarm/Alarm.vue";
+import Waiting from "@/components/home/Wating.vue";
+import EmployeeUpdate from "@/components/mobile/doctor/EmployeeUpdate.vue";
 
 export default {
-  components: {Message,Alarm},
+  components: {Message, Alarm, Waiting, EmployeeUpdate},
   data() {
     return {
       count: this.messageCount,
@@ -141,7 +179,10 @@ export default {
   },
   computed: {
     ...mapState('alarm',
-        ['alarmList','messageList', 'messageCount', 'alarmCount', 'sendList', 'sendCount', 'showModal','messageModal']
+        ['alarmList', 'messageList', 'messageCount', 'alarmCount', 'sendList', 'sendCount', 'showModal', 'messageModal','announcementList']
+    ),
+    ...mapState('login',
+        ['role', 'name', 'registerModal']
     )
   },
   methods: {
@@ -154,6 +195,12 @@ export default {
       setMessageModal: 'setMessageModal',
       setMessage: 'setMessage',
       setCount: 'setCount',
+      setAnnouncementList: 'setAnnouncementList',
+    }),
+    ...mapMutations('login', {
+      setRole: 'setRole',
+      setName: 'setName',
+      setRegisterModal: 'setRegisterModal',
     }),
     getSessionLogIn() {
       // Axios를 사용하여 RESTful API 호출
@@ -164,7 +211,7 @@ export default {
             if (response.data && response.data.isLoggedIn) {
               let logIn = JSON.parse(JSON.stringify(response.data.logIn));
               this.receiver = logIn.name;
-            } else{
+            } else {
               this.$router.push('/login')
             }
           })
@@ -185,7 +232,7 @@ export default {
             // 이런형태를 pub sub 구조라고 합니다.
             this.stompClient.subscribe("/send/" + this.receiver, res => {
               // 받은 데이터를 json으로 파싱하고 리스트에 넣어줍니다.
-              if((res.body !== 'cancel') && (res.body !=='read')) {
+              if ((res.body !== 'cancel') && (res.body !== 'read')) {
                 this.state = JSON.parse(res.body).state
                 if (this.alarmList != null) {
                   this.recvList = this.alarmList
@@ -194,8 +241,8 @@ export default {
                 }
                 this.settingRecvList()
                 setTimeout(() => this.state = "", 1501)
-              }else{
-                  this.settingRecvList()
+              } else {
+                this.settingRecvList()
               }
             });
           },
@@ -208,13 +255,13 @@ export default {
     },
     /* 새로운 메세지 수 */
     alarmLength() {
-      if(this.recvList != null) {
+      if (this.recvList != null) {
         this.count = this.recvList.filter(element => "new" === element.state).length
       }
       this.setAlarmCount(this.count)
     },
     sendLength() {
-      if(this.recvList != null) {
+      if (this.recvList != null) {
         this.count = this.recvList.filter(element => "new" === element.state).length
       }
       this.setSendCount(this.count)
@@ -246,7 +293,7 @@ export default {
               let receiveList = JSON.parse(JSON.stringify(response.data.receiveList));
               console.log(receiveList)
               this.setMessage(receiveList)
-              if(receiveList != null) {
+              if (receiveList != null) {
                 this.count = receiveList.filter(element => "new" === element.state).length
               }
               this.setCount(this.count)
@@ -294,6 +341,27 @@ export default {
           .catch(error => {
             console.error('세션 데이터를 가져오는 중 에러 발생: ', error);
           });
+
+
+      // Axios를 사용하여 RESTful API 호출
+      axios.get('/api/announcementList')
+          .then(response => {
+            console.log(response.data);
+            // 세션 데이터 사용 예시
+            if (response.data) {
+              this.isLogin = true
+              let announcementList = JSON.parse(JSON.stringify(response.data.announcementList));
+              console.log(announcementList)
+              this.announcement = announcementList
+              this.setAnnouncementList(this.announcement)
+              console.log(this.announcement)
+            } else {
+              console.log('로그인되어 있지 않습니다.');
+            }
+          })
+          .catch(error => {
+            console.error('세션 데이터를 가져오는 중 에러 발생: ', error);
+          });
     },
     showDetails() {
       this.showDetailsModal = true;
@@ -303,6 +371,27 @@ export default {
       this.showDetailsModal = false;
       this.setModal(this.showDetailsModal);
       this.setMessageModal(this.showDetailsModal);
+    },
+    closeRegisterModal() {
+      this.showDetailsModal = false;
+      this.setRegisterModal(this.showDetailsModal);
+    },
+    logOut() {
+      axios.post('/logOut', {}
+      ).then((response) => {
+        if (response.status === 200) {
+          if (response.data.logOut === 'success') {
+            this.setName('admin')
+            this.setRole('ROLE_ADMIN')
+            this.$router.push('/login')
+          } else {
+            console.log(response.data)
+          }
+        }
+      }).catch((err) => {
+        this.loginError = true;
+        throw new Error(err)
+      })
     }
   }
 }
@@ -320,7 +409,9 @@ a {
   color: var(--text-color);
 }
 
-.wide-popover { max-width: 320px; }
+.wide-popover {
+  max-width: 320px;
+}
 
 .b-navbar {
   position: sticky;
@@ -463,7 +554,7 @@ a {
   position: relative;
 }
 
-#message, #alarm {
+#message, #alarm, #logOut, #info {
   background-color: var(--background-color);
   border: none;
   outline: none;
@@ -485,10 +576,17 @@ a {
 }
 
 #alarmList {
-  height: 480px; overflow-y: auto;
+  height: 480px;
+  overflow-y: auto;
+}
+
+#infoList {
+  height: 480px;
+  overflow-y: auto;
 }
 
 #messageList {
-  height: 480px; overflow-y: auto;
+  height: 480px;
+  overflow-y: auto;
 }
 </style>

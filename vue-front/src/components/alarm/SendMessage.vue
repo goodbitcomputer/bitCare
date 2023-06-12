@@ -116,11 +116,9 @@ export default {
     send() {
       console.log("Send message:" + this.message);
       if (this.stompClient && this.stompClient.connected) {
-        if (this.sender != null) {
-          this.type = "message";
-        } else {
-          this.type = "announcement";
-        }
+
+        this.type = "message";
+
         const msg = {
           connectType: "send",
           receiver: this.receiver,

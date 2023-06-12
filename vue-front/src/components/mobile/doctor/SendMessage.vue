@@ -6,6 +6,7 @@
     <b-datalist id="employees">
       <option v-for="employee in this.$store.state.login.list" :key="employee.id">{{ employee.name }}</option>
     </b-datalist>
+    <input type="file" id="image" accept="image/*">
     <vue-editor v-model="messageContent" id="edit"></vue-editor>
   </div>
 </template>
@@ -127,11 +128,10 @@ export default {
           content: this.messageContent,
           receiveState: this.state,
           sendState: this.state,
-          messageFile: this.message_file,
           type: this.type,
-          entryDate: Date.now()
+          entryDate: Date.now(),
         };
-        this.stompClient.send("/app/receive/" + this.receiver, JSON.stringify(msg), {});
+        this.stompClient.send("/app/receive/" + this.receiver, JSON.stringify(msg), {'Content-type': 'multipart/form-data'});
       }
       console.log("메세지 전송 완료. 소켓 연결 해제")
       setTimeout(() => this.stompClient.disconnect(), 100)

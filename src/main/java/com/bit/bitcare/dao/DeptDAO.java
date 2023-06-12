@@ -9,4 +9,5 @@ import java.util.List;
 public interface DeptDAO {
     public List<DeptDTO> selectAll();
     public DeptDTO selectOne(int id);
+    public DeptDTO selectByName(String name);
 }

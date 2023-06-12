@@ -7,6 +7,7 @@
     <PatientHistory v-if="patientHistoryByStep"/>
     <MobileMessage v-if="messageByStep"/>
     <Waiting v-if="settingByStep"/>
+<!--    <Admin v-if="adminByStep"/>-->
 
     <Camera v-if="cameraByStep"/>
     <Gallery v-if="galleryByStep"/>
@@ -70,18 +71,21 @@ export default {
     settingByStep() {
       return this.nextStep===6 ? true : false;
     },
-    cameraByStep() {
+    adminByStep() {
       return this.nextStep===7 ? true : false;
     },
-    galleryByStep() {
+    cameraByStep() {
       return this.nextStep===8 ? true : false;
     },
-    photoDetailByStep() {
+    galleryByStep() {
       return this.nextStep===9 ? true : false;
+    },
+    photoDetailByStep() {
+      return this.nextStep===10 ? true : false;
     },
 
     isNavFooter(){
-      return this.nextStep<7 ? true : false;
+      return this.nextStep<8 ? true : false;
     },
   }
 }

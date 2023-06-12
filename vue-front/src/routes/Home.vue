@@ -1,25 +1,89 @@
 <template>
   <div>
     <NavBar/>
-    <div class="home container">
-      <!--    <img alt="Vue logo" src="../assets/logo.png">-->
-      <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <AnnouncementBoard/>
+    <div class="container">
+      <div class="detail border-box">
+        <profile/>
+      </div>
+      <div class="todayHistory border-box">
+
+      </div>
+      <div class="selectOne border-box">
+
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from "@/components/HelloWorld.vue";
+import "/public/assets/css/style.scss";
 import NavBar from "@/components/NavBar.vue";
+import AnnouncementBoard from "@/components/home/Announcement.vue";
 
 export default {
-  name: 'HomeView',
+  name: "DoctorView",
   components: {
+    AnnouncementBoard,
     NavBar,
-    HelloWorld
-  },
+  }
 }
 </script>
-
 <style lang="scss" scoped>
+.container {
+  font-family: 'Pretendard-Regular';
+  font-size: 13px;
+  padding-top: 20px;
+  //display: flex;
+}
+
+btn {
+  color: #0b2e13;
+  background-color: #0b2e13;
+}
+
+.detail {
+  width: 100%;
+}
+
+.todayHistory {
+  width: 100%;
+}
+
+.selectOne {
+  width: 100%;
+}
+
+.announcement{
+  width: 100%;
+}
+
+// sm
+//@media (min-width: 576px) { ... }
+// md
+//@media (min-width: 768px) { ... }
+// lg
+@media (min-width: 1200px) {
+  .container {
+    padding-top: 20px;
+    display: flex;
+  }
+  .announcement{
+    width: 100%;
+  }
+  .detail {
+    width: 60%;
+  }
+  .history {
+    width: 30%;
+  }
+  .write {
+    width: 30%;
+  }
+}
+
+// xl
+//@media (min-width: 1200px) { ... }
+// xxl
+//@media (min-width: 1400px) { ... }
 </style>

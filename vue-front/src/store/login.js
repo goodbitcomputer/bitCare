@@ -40,7 +40,7 @@ export default {
         },
         setRegisterModal : function (state, registerModal){
             return state.registerModal = registerModal;
-        }
+        },
     },
     actions: {
 

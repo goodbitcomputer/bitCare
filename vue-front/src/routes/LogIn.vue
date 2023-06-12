@@ -16,7 +16,7 @@
                        placeholder="아이디" type="text"/>
                 <input v-model="password" class="form-control PW" name="password"
                        placeholder="비밀번호" style="margin-bottom: 5px" type="password"/>
-                <b-checkbox v-model="autoLogIn" class="check-box autoLogIn" name="autoLogIn"> 자동 로그인
+                <b-checkbox v-model="rememberMe" class="check-box autoLogIn" name="autoLogIn"> 자동 로그인
                 </b-checkbox>
                 <button class="btn form-control bg-primary" style="color: white;font-weight: bold"
                         type="submit" variant="success">
@@ -52,13 +52,13 @@ export default {
   },
   computed: {
     ...mapState('login',
-        ['role','name']
+        ['role','name','dept']
     )
   },
   methods: {
     ...mapMutations('login', {
       setRole: 'setRole',
-      setName: 'setName'
+      setName: 'setName',
     }),
     autoLogin(){
       axios.get('/api/login')
@@ -106,6 +106,13 @@ export default {
             this.setRole(response.data.role)
             this.setName(response.data.name)
             this.$router.push('/home')
+          }else{
+            window.Swal.fire({
+              icon: 'error',
+              title: 'error',
+              html: '로그인 실패<br>로그인 정보를 정확하게 입력해주세요.',
+              timer: 3000
+            })
           }
         }
       }).catch((err) => {

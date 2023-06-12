@@ -8,6 +8,7 @@ import java.util.List;
 @Component
 public interface AlarmDAO {
     public List<AlarmDTO> selectByReceiver(String logInName);
+    public List<AlarmDTO> selectAllAnnouncement();
     public AlarmDTO selectOne(int id);
     public void insert(AlarmDTO alarmDTO);
     public void update(AlarmDTO alarmDTO);

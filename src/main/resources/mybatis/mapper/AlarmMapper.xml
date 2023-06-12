@@ -12,8 +12,14 @@
         order by `entry_date` desc
     </select>
 
-    <!-- 조회할 알람 선택 -->
+    <!-- 공지 select -->
+    <select id="selectAllAnnouncement" resultType="alarmDTO">
+        SELECT * FROM `alarm`
+        where `type`= 'announcement' and `receiver`='admin'
+        order by `entry_date` desc
+    </select>
 
+    <!-- 조회할 알람 선택 -->
     <select id="selectOne" parameterType="int" resultType="alarmDTO">
         SELECT * FROM `alarm`
         where `id`= #{id}

@@ -25,10 +25,16 @@
         where `id`= #{id} and `receive_state` != 'delete'
     </select>
 
+    <!-- 메세지 선택 -->
+    <select id="selectByEntryDate" parameterType="Date" resultType="messageDTO">
+        SELECT * FROM `message`
+        where `entry_date`= #{entryDate} and `receive_state` != 'delete'
+    </select>
+
     <!-- 메세지 생성 -->
     <insert id="insert" parameterType="messageDTO" useGeneratedKeys="true" keyProperty="id">
         insert into `message`(sender,receiver,content,message_file,receive_state,send_state,entry_date)
-        values(#{sender}, #{receiver}, #{content}, #{messageFile}, #{receiveState}, #{sendState}, now())
+        values(#{sender}, #{receiver}, #{content}, #{messageFile}, #{receiveState}, #{sendState}, now(3))
     </insert>
 
     <!-- 메세지 상태 변경 -->

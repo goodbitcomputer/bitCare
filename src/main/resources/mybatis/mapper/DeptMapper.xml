@@ -16,4 +16,9 @@
         where id=#{id}
     </select>
 
+    <!-- 진료과 찾기 -->
+    <select id="selectByName" parameterType="string" resultType="deptDTO">
+        select * from `dept`
+        where dept=#{dept}
+    </select>
 </mapper>

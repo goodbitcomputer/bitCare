@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Date;
 
 @RestController
 public class AlarmController {
@@ -97,7 +98,6 @@ public class AlarmController {
      */
     @GetMapping("/api/allDeleteAlarm")
     public void allDeleteAlarm(@RequestParam String name) throws IOException {
-        // 선택 메세지 삭제
         alarmService.allDeleteAlarm(name);
     }
 
@@ -111,7 +111,6 @@ public class AlarmController {
      */
     @GetMapping("/api/deleteMessage")
     public void deleteMessage(@RequestParam int id) throws IOException {
-        // 선택 메세지 삭제
         alarmService.deleteMessage(id);
     }
 
@@ -125,7 +124,6 @@ public class AlarmController {
      */
     @GetMapping("/api/deleteReceiveMessage")
     public void deleteReceiveMessage(@RequestParam int id) throws IOException {
-        // 선택 메세지 삭제
         alarmService.deleteReceiveMessage(id);
     }
 
@@ -139,7 +137,19 @@ public class AlarmController {
      */
     @GetMapping("/api/allDeleteReceiveMessage")
     public void allDeleteReceiveMessage(@RequestParam String name) throws IOException {
-        // 선택 메세지 삭제
         alarmService.allDeleteReceiveMessage(name);
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * 2023.06.09
+     *
+     * announcementList
+     * /api/announcementList 에 대한 Get 요청시 alarmService.getAnnouncementList 메소드를 실행
+     * alarmService.getAnnouncementList 메소드에선 공지 리스트를 리턴함
+     */
+    @GetMapping("/api/announcementList")
+    public ResponseEntity<String> announcementList() throws IOException {
+        return alarmService.getAnnouncementList();
     }
 }

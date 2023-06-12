@@ -133,4 +133,43 @@ public class LoginController {
     public ResponseEntity<String> register(EmployeeDTO attempt) throws IOException {
         return employeeService.register(attempt);
     }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * 2023.06.02
+     *
+     * logOut
+     * /logOut 에 대한 Post 요청시 employeeService.logOut 메소드를 실행
+     * employeeService.logOut 메소드에선 로그아웃 로직을 실행함
+     */
+    @PostMapping("/logOut")
+    public ResponseEntity<String> logOut(HttpServletRequest request, HttpServletResponse response) throws IOException, IllegalBlockSizeException, NoSuchPaddingException, BadPaddingException, NoSuchAlgorithmException, InvalidKeyException {
+        return employeeService.logOut(request,response);
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * 2023.06.07
+     *
+     * dept
+     * /api/dept 에 대한 Get 요청시 employeeService.getDept 메소드를 실행
+     * employeeService.getDept 메소드에선 id에 해당하는 진료과목명을 리턴함
+     */
+    @GetMapping("/api/dept")
+    public ResponseEntity<String> dept(@RequestParam int deptId) throws IOException{
+        return employeeService.getDept(deptId);
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * 2023.06.08
+     *
+     * update
+     * /api/infoUpdate 에 대한 Get 요청시 employeeService.updateInfo 메소드를 실행
+     * employeeService.updateInfo 메소드에선 입력된 수정 정보를 업데이트함
+     */
+    @PostMapping("/api/infoUpdate")
+    public ResponseEntity<String> update(EmployeeDTO employeeDTO, String dept, HttpServletRequest request) throws IOException{
+        return employeeService.updateInfo(employeeDTO, dept, request);
+    }
 }

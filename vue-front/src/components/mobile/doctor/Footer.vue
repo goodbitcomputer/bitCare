@@ -3,24 +3,21 @@
     <!-- ======= Header ======= -->
     <header id="footer" class="fixed-bottom d-flex align-items-center">
       <div id="main-box" class="container">
-
-        <button class="col text-center" @click="NextBtn(1)"><b-img src="/assets/mobile/img/home_house_icon2.png"/></button>
-        <button class="col text-center" @click="NextBtn(2)"><b-img src="/assets/mobile/img/persons_icon2.png"/></button>
-        <button class="col text-center" @click="NextBtn(3)"><b-img src="/assets/mobile/img/person_icon2.png"/></button>
-        <button class="col text-center" @click="NextBtn(5)"><b-img src="/assets/mobile/img/comment_message_icon2.png"/></button>
-        <button class="col text-center" @click="NextBtn(6)"><b-img src="/assets/mobile/img/dots_icon2.png"/></button>
+        <button id="main-content" class="col text-center" @click="NextBtn(1)"><b-img src="/assets/mobile/img/home_house_icon2.png"/></button>
+        <button id="main-content" class="col text-center" @click="NextBtn(2)"><b-img src="/assets/mobile/img/persons_icon2.png"/></button>
+        <button id="main-content" class="col text-center" @click="NextBtn(3)"><b-img src="/assets/mobile/img/person_icon2.png"/></button>
+        <button id="main-content" class="col text-center" @click="NextBtn(5)">
+          <span v-if="(state==='new') && (this.$store.state.alarm.messageCount > 0)" class="note-new">{{ this.$store.state.alarm.messageCount }}</span>
+          <span v-else-if="this.$store.state.alarm.messageCount > 0" class="note-num">{{ this.$store.state.alarm.messageCount }}</span>
+          <b-img id="icon" src="/assets/mobile/img/comment_message_icon2.png"/>
+        </button>
+        <button id="main-content" class="col text-center" @click="NextBtn(6)"><b-img src="/assets/mobile/img/dots_icon2.png"/></button>
         <!-- Uncomment below if you prefer to use an image logo -->
         <!-- <a href="index.html" class="logo me-auto me-lg-0"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
-
-        <nav id="navbar" class="navbar order-last order-lg-0">
-
-        </nav><!-- .navbar -->
 
       </div>
     </header>
     <!-- End Header -->
-    <span v-if="(state==='new') && (this.$store.state.alarm.messageCount > 0)" class="note-new">{{ this.$store.state.alarm.messageCount }}</span>
-    <span v-else-if="this.$store.state.alarm.messageCount > 0" class="note-num">{{ this.$store.state.alarm.messageCount }}</span>
   </div>
 </template>
 
@@ -121,28 +118,11 @@ export default {
               console.log(receiveList)
               this.setMessage(receiveList)
               if(receiveList != null) {
-                this.count = receiveList.filter(element => "new" === element.state).length
+                this.count = receiveList.filter(element => "new" === element.receiveState).length
               }
               this.setCount(this.count)
               console.log(receiveList)
-            } else {
-              console.log('로그인되어 있지 않습니다.');
-            }
-          })
-          .catch(error => {
-            console.error('세션 데이터를 가져오는 중 에러 발생: ', error);
-          });
-
-      axios.get('/api/sendMessageList')
-          .then(response => {
-            console.log(response.data);
-            // 세션 데이터 사용 예시
-            if (response.data && response.data.isLoggedIn) {
-              this.isLogin = true
-              let sendList = JSON.parse(JSON.stringify(response.data.sendList));
-              this.setSendList(sendList)
-              this.sendLength()
-              console.log(sendList)
+              console.log(this.$store.state.alarm.messageCount)
             } else {
               console.log('로그인되어 있지 않습니다.');
             }
@@ -171,13 +151,13 @@ export default {
     },
     alarmLength() {
       if (this.recvList != null) {
-        this.count = this.recvList.filter(element => "new" === element.state).length
+        this.count = this.recvList.filter(element => "new" === element.receiveState).length
       }
-      this.setCount(this.count)
+      this.setAlarmCount(this.count)
     },
     sendLength() {
       if(this.recvList != null) {
-        this.count = this.recvList.filter(element => "new" === element.state).length
+        this.count = this.recvList.filter(element => "new" === element.receiveState).length
       }
       this.setSendCount(this.count)
     },
@@ -235,14 +215,17 @@ export default {
 }
 #main-box {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 
+#main-content{
+  position: relative;
+  max-width: 50px;
+}
 
 .note-num {
-  position: relative;
-  top: -5px;
-  right: -25px;
+  position: absolute;
+  right: 5px;
   z-index: 3;
   height: 17px;
   width: 17px;
@@ -255,9 +238,8 @@ export default {
 }
 
 .note-new {
-  position: relative;
-  top: -5px;
-  right: -25px;
+  position: absolute;
+  right: 5px;
   z-index: 3;
   height: 17px;
   width: 17px;
@@ -270,9 +252,8 @@ export default {
 }
 
 .note-new:after {
-  position: relative;
-  top: -5px;
-  right: -25px;
+  position: absolute;
+  right: 5px;
   z-index: 3;
   height: 17px;
   width: 17px;
@@ -282,6 +263,11 @@ export default {
   border-radius: 15px;
   display: inline-block;
   animation: sonar 1.5s 1;
+}
+
+#icon {
+  position: relative;
+  top: 3px;
 }
 
 @keyframes sonar {

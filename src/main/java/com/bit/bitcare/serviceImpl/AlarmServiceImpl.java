@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +26,7 @@ import java.util.Map;
 /**
  * ---------------------------------------------------------------------------
  * 2023.05.16
- *
+ * <p>
  * AlarmServiceImpl
  * AlarmService 인터페이스에 대한 구현체
  * SimpleMessagingTemplate, AlarmDAO, EmployeeDAO, MessageDAO, ObjectMapper 객체 사용
@@ -35,7 +36,7 @@ import java.util.Map;
  * 3. deleteAlarm : Alarm 의 id를 전달받아 삭제시키는 메소드
  * ---------------------------------------------------------------------------
  * 2023.05.22
- *
+ * <p>
  * 메소드 목록 추가
  * 4. allDeleteAlarm : 로그인한 사용자의 name 을 전달받아 전체 알람을 삭제시키는 메소드
  * 5. getReceiveMessageList : 클라이언트 접속자의 받은 메세지 리스트를 MessageDAO 를 통해 List 객체로 변환 후 리턴하는 메소드
@@ -44,7 +45,7 @@ import java.util.Map;
  * 8. getSendMessageList : 클라이언트 접속자의 발송 메세지 리스트를 MessageDAO 를 통해 List 객체로 변환 후 리턴하는 메소드
  * ---------------------------------------------------------------------------
  * 2023.05.24
- *
+ * <p>
  * 메소드 목록 변경
  * deleteMessage -> deleteReceiveMessage : 받은 메시지 삭제
  * allDeleteMessage -> allDeleteReceiveMessage : 받은 모든 메시지 삭제
@@ -74,31 +75,44 @@ public class AlarmServiceImpl implements AlarmService {
         // vo에서 getter로 userName을 가져옵니다.
         MessageDTO selectMessage = messageDAO.selectOne(id);
 
-        if(connectType.equals("send")) {
-            String sender = messageDTO.getSender();
-            String receiver = messageDTO.getReceiver();
-            String content = messageDTO.getContent();
-            String messageFile = messageDTO.getMessageFile();
-            String state = messageDTO.getReceiveState();
-            String type;
-            if (messageDTO.getReceiver() != null) {
-                type = "message";
-            } else {
-                type = "announcement";
-            }
+        switch (connectType) {
+            case "send":
+                String sender = messageDTO.getSender();
+                String content = messageDTO.getContent();
+                String state = messageDTO.getReceiveState();
+                String type;
+                if (messageDTO.getReceiver() != null) {
+                    type = "message";
+                } else {
+                    type = "announcement";
+                }
 
-            messageDAO.insert(messageDTO);
+                messageDTO.setReceiver(receive);
+                messageDAO.insert(messageDTO);
 
-            // 생성자로 반환값을 생성합니다.
-            AlarmDTO alarm = new AlarmDTO(id, sender, receiver, content, type, alarmDTO.getEntryDate(), state);
-            alarmDAO.insert(alarm);
-            // 반환
-            simpMessagingTemplate.convertAndSend("/send/" + receiver, alarm);
-        } else if(connectType.equals("cancel")){
-            messageDAO.delete(id);
-            simpMessagingTemplate.convertAndSend("/send/" + selectMessage.getReceiver(), "cancel");
-        } else if(connectType.equals("read")){
-            simpMessagingTemplate.convertAndSend("/send/" + selectMessage.getSender(), "read");
+                List<EmployeeDTO> employeeList = employeeDAO.selectAll();
+
+                // 생성자로 반환값을 생성합니다.
+                AlarmDTO alarm = new AlarmDTO(id, sender, receive, content, type, alarmDTO.getEntryDate(), state);
+                alarmDAO.insert(alarm);
+                // 반환
+                if(!receive.equals("admin")) {
+                    simpMessagingTemplate.convertAndSend("/send/" + receive, alarm);
+                }else{
+                    for(EmployeeDTO e : employeeList){
+                        alarm.setReceiver(e.getName());
+                        alarmDAO.insert(alarm);
+                        simpMessagingTemplate.convertAndSend("/send/" + e.getName(), alarm);
+                    }
+                }
+                break;
+            case "cancel":
+                messageDAO.delete(id);
+                simpMessagingTemplate.convertAndSend("/send/" + selectMessage.getReceiver(), "cancel");
+                break;
+            case "read":
+                simpMessagingTemplate.convertAndSend("/send/" + selectMessage.getSender(), "read");
+                break;
         }
     }
 
@@ -119,6 +133,28 @@ public class AlarmServiceImpl implements AlarmService {
                 data.put("receiveList", receiveList);
             }
         }
+
+        // JSON 문자열 생성
+        String json = objectMapper.writeValueAsString(data);
+
+        // HTTP 응답 생성
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(json);
+    }
+
+    @Override
+    public ResponseEntity<String> getAnnouncementList() throws IOException {
+
+        // JSON 데이터 생성
+        Map<String, Object> data = new HashMap<>();
+        List<AlarmDTO> announcementList = alarmDAO.selectAllAnnouncement();
+        if (announcementList.isEmpty()) {
+            data.put("announcementList", null);
+        } else {
+            data.put("announcementList", announcementList);
+        }
+
 
         // JSON 문자열 생성
         String json = objectMapper.writeValueAsString(data);
@@ -162,7 +198,15 @@ public class AlarmServiceImpl implements AlarmService {
         // JSON 데이터 생성
         Map<String, Object> data = new HashMap<>();
 
-        MessageDTO receiveMessage = messageDAO.selectOne(messageId);
+        AlarmDTO alarm = alarmDAO.selectOne(messageId);
+
+        Date entryDate = alarm.getEntryDate();
+
+        MessageDTO receiveMessage = messageDAO.selectByEntryDate(entryDate);
+
+        alarm.setState("read");
+        alarmDAO.update(alarm);
+
         if (receiveMessage == null) {
             data.put("receiveMessage", null);
         } else {

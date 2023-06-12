@@ -19,7 +19,7 @@
             <div>{{ typeString(message.type) }}</div>
             <div>{{ formatDate(message.entryDate) }}</div>
             <div>
-              <button type="button" @click="showDetails(message.id)">
+              <button type="button" @click="showDetails(message)">
                 자세히 보기
               </button>
               <button type="button" class="btn btn-danger btn-sm" id="deleteButton" @click="deleteMessage(message.id)">
@@ -78,7 +78,7 @@ export default {
   },
   computed: {
     ...mapState('alarm',
-        ['alarmList', 'alarmCount', 'messageList', 'messageCount', 'showModal', 'selectedMessage', 'messageModal']
+        ['alarmList', 'alarmCount', 'messageList', 'messageCount', 'showModal', 'selectedMessage', 'messageModal', 'catastrophe', 'selectedAnnouncement']
     ),
   },
   methods: {
@@ -89,7 +89,9 @@ export default {
       setCount: 'setCount',
       setModal: 'setModal',
       setMessageModal: 'setMessageModal',
-      setSelectedMessage: 'setSelectedMessage'
+      setSelectedMessage: 'setSelectedMessage',
+      setCatastrophe: 'setCatastrophe',
+      setSelectedAnnouncement: 'setSelectedAnnouncement',
     }),
     formatDate(dateString) {
       const date = new Date(dateString);
@@ -274,27 +276,47 @@ export default {
       }
       this.setAlarmCount(this.count)
     },
-    showDetails(messageId) {
-      axios.get('api/receiveMessage', {
-        params: {
-          id: messageId
-        }
-      }).then(response => {
-        if (response.status === 200 && response.data.receiveMessage != null) {
-          console.log(response.data.receiveMessage)
-          this.readMessage = response.data.receiveMessage
-          this.setSelectedMessage(this.readMessage)
-          this.showDetailsModal = true;
-          this.setModal(this.showDetailsModal);
-          this.setMessageModal(this.showDetailsModal);
-        } else {
-          alert('삭제된 메시지입니다.')
-          this.deleteMessage(messageId)
-        }
-      })
+    showDetails(message) {
+      if(message.type==='message') {
+        axios.get('api/receiveMessage', {
+          params: {
+            id: message.id,
+          }
+        }).then(response => {
+          if (response.status === 200 && response.data.receiveMessage != null) {
+            console.log(response.data.receiveMessage)
+            this.readMessage = response.data.receiveMessage
+            this.setSelectedMessage(this.readMessage)
+            this.showDetailsModal = true;
+            this.setModal(this.showDetailsModal);
+            this.setMessageModal(this.showDetailsModal);
+          } else {
+            alert('삭제된 메시지입니다.')
+            this.deleteMessage(message.id)
+          }
+        })
 
-      setTimeout(() => this.readOn(this.readMessage),100)
-      this.readMessage = "";
+        setTimeout(() => this.readOn(this.readMessage), 100)
+        this.readMessage = "";
+      } else{
+        axios.get('api/receiveMessage', {
+          params: {
+            id: message.id,
+          }
+        }).then(response => {
+          if (response.status === 200 && response.data.receiveMessage != null) {
+            console.log(response.data.receiveMessage)
+            this.readMessage = response.data.receiveMessage
+          } else {
+            alert('삭제된 공지입니다.')
+            this.deleteMessage(message.id)
+          }
+        })
+        this.setCatastrophe(true);
+        this.setSelectedAnnouncement(message);
+        setTimeout(() => this.readOn(this.readMessage), 100)
+        this.readMessage = "";
+      }
     },
     readOn(message) {
       this.connect()
@@ -309,7 +331,7 @@ export default {
         };
         this.stompClient.send("/app/receive/" + message.sender, JSON.stringify(msg), {});
       }
-      console.log("전송 취소 요청 완료. 소켓 연결 해제")
+      console.log("읽기 처리 요청 완료. 소켓 연결 해제")
       setTimeout(() => this.stompClient.disconnect(), 100)
       this.messageContent = ''
       setTimeout(() => this.settingRecvList(), 100)

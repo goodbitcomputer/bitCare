@@ -3,7 +3,6 @@ package com.bit.bitcare.serviceImpl;
 import com.bit.bitcare.dao.DeptDAO;
 import com.bit.bitcare.dao.EmployeeDAO;
 import com.bit.bitcare.model.DeptDTO;
-import com.bit.bitcare.model.UserCustomDetails;
 import com.bit.bitcare.model.EmployeeDTO;
 import com.bit.bitcare.service.EmployeeService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -14,8 +13,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken;
 import org.springframework.stereotype.Service;
@@ -74,6 +71,24 @@ public class EmployeeServiceImpl implements EmployeeService {
         List<DeptDTO> list = deptDAO.selectAll();
 
         data.put("deptList",list);
+
+        // JSON 문자열 생성
+        String json = objectMapper.writeValueAsString(data);
+
+        // HTTP 응답 생성
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(json);
+    }
+
+    @Override
+    public ResponseEntity<String> getDept(int deptId) throws JsonProcessingException {
+        Map<String, Object> data = new HashMap<>();
+        DeptDTO dept = deptDAO.selectOne(deptId);
+
+        if(dept != null) {
+            data.put("dept", dept.getDept());
+        }
 
         // JSON 문자열 생성
         String json = objectMapper.writeValueAsString(data);
@@ -182,6 +197,37 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    public ResponseEntity<String> logOut(HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
+        HttpSession httpSession = request.getSession();
+        EmployeeDTO employeeDTO = (EmployeeDTO) httpSession.getAttribute("logIn");
+
+        Map<String, Object> data = new HashMap<>();
+
+        Cookie[] cookies = request.getCookies();
+        if ((cookies != null) || (employeeDTO != null)) { // 쿠키가 한개라도 있으면 실행
+            for (Cookie cookie : cookies) {
+                cookie.setMaxAge(0); // 유효시간을 0으로 설정
+                response.addCookie(cookie); // 응답에 추가하여 만료시키기.
+            }
+
+            persistentTokenRepository.removeUserTokens(employeeDTO.getUsername());
+            httpSession.invalidate();
+
+            data.put("logOut","success");
+        }else{
+            data.put("logOut","failed");
+        }
+
+        // JSON 문자열 생성
+        String json = objectMapper.writeValueAsString(data);
+
+        // HTTP 응답 생성
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(json);
+    }
+
+    @Override
     public ResponseEntity<String> auth(EmployeeDTO attempt, HttpServletRequest request, HttpServletResponse response, boolean rememberMe) throws IOException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
 
 
@@ -200,6 +246,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         if (isLogIn) {
             HttpSession session = request.getSession();
+            logIn.setPassword("");
             session.setAttribute("logIn", logIn);
             // 사용자 정보를 이용하여 인증 객체 생성
             Authentication auth = new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
@@ -288,6 +335,37 @@ public class EmployeeServiceImpl implements EmployeeService {
         } else {
             data.put("username", null);
         }
+
+        // JSON 문자열 생성
+        String json = objectMapper.writeValueAsString(data);
+
+        // HTTP 응답 생성
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(json);
+    }
+
+    @Override
+    public ResponseEntity<String> updateInfo(EmployeeDTO employeeDTO, String dept, HttpServletRequest request) throws IOException{
+        Map<String, Object> data = new HashMap<>();
+
+        EmployeeDTO selectOne = employeeDAO.selectOne(employeeDTO.getId());
+
+        if(!employeeDTO.getPassword().equals("")) {
+            selectOne.setPassword(passwordEncoder.encode(employeeDTO.getPassword()));
+        }
+        selectOne.setName(employeeDTO.getName());
+        selectOne.setDeptId(deptDAO.selectByName(dept).getId());
+        selectOne.setPhoneNumber(employeeDTO.getPhoneNumber());
+        selectOne.setDetail(employeeDTO.getDetail());
+
+        HttpSession session = request.getSession();
+
+        session.setAttribute("logIn",selectOne);
+
+        employeeDAO.update(selectOne);
+
+        data.put("update","success");
 
         // JSON 문자열 생성
         String json = objectMapper.writeValueAsString(data);
