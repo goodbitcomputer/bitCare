@@ -8,6 +8,7 @@ import com.bit.bitcare.model.PatientDTO;
 import com.bit.bitcare.service.MobileDoctorService;
 import com.bit.bitcare.service.MobileService;
 import com.bit.bitcare.serviceImpl.MobileServiceImpl;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,7 @@ public class MobileDoctorController {
 
         return mobileService.insertPatient(requestData).toString();
     }
+
     @ResponseBody
     @GetMapping("/getBodyCategoryData")
     public List<BodyCategoryDTO> getBodyCategoryData(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -55,15 +57,16 @@ public class MobileDoctorController {
 
     @ResponseBody
     @PostMapping("/photoSave_proc")
-    public Boolean photoSave(@RequestPart(value="uploadFiles", required = true) MultipartFile[] files, @RequestPart(value="bodyCategoryId", required = true) int bodyCategoryId, @RequestPart(value="historyId", required = true) int historyId , HttpServletRequest request ) throws IOException {
-        for(MultipartFile multipartFile : files) {
+    public Boolean photoSave(@RequestPart(value = "uploadFiles", required = true) MultipartFile[] files, @RequestPart(value = "bodyCategoryId", required = true) int bodyCategoryId, @RequestPart(value = "historyId", required = true) int historyId, HttpServletRequest request) throws IOException {
+        Boolean result = false;
+        for (MultipartFile multipartFile : files) {
 
-            AwsS3 awsS3 = awsS3Service.upload(multipartFile,"imgUpload/"+historyId);
+            AwsS3 awsS3 = awsS3Service.upload(multipartFile, "imgUpload/" + historyId);
 
 //            System.out.println("aws key: " +awsS3.getKey());      // aws 스토리지에 올라간 파일 key (삭제하려면 key가 필요함)
 //            System.out.println("aws path: " +awsS3.getPath());    // aws 스토리지에 올라간 파일 path (url)
 
-            mobileDoctorService.photoSave(awsS3, historyId, bodyCategoryId);
+            result = mobileDoctorService.photoSave(awsS3, historyId, bodyCategoryId);
 
             // 이미지 삭제
 //            AwsS3 removeS3 = new AwsS3();
@@ -72,7 +75,7 @@ public class MobileDoctorController {
 
         }
 
-        return true;
+        return result;
     }
 
 }

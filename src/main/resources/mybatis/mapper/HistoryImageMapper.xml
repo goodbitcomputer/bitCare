@@ -5,6 +5,11 @@
 
 <mapper namespace="com.bit.bitcare.dao.HistoryImageDAO">
 
+    <!-- 진료 기록의 id값으로 select -->
+    <select id="selectById" parameterType="int" resultType="historyImageDTO">
+        select * from `history_image`
+        where id = #{id}
+    </select>
     <!-- 진료 기록의 이미지부분(history_image) select -->
     <select id="selectByHistoryId" parameterType="int" resultType="historyImageDTO">
         select * from `history_image`
@@ -12,9 +17,20 @@
     </select>
 
     <!-- 진료 기록의 이미지부분(history_image) insert -->
-    <insert id="insert" parameterType="historyImageDTO">
+    <insert id="insert" parameterType="historyImageDTO" useGeneratedKeys="true" keyProperty="id">
         insert into `history_image`(history_id, image_path, image_key, category_id)
         values(#{historyId}, #{imagePath}, #{imageKey}, #{categoryId})
     </insert>
+    <update id="update" parameterType="historyImageDTO">
+        UPDATE `history_image` SET
+        history_id = #{historyId},
+        image_path = #{imagePath},
+        image_key = #{imageKey},
+        category_id = #{categoryId},
+        edited = #{edited},
+        entry_date = #{entryDate}
+        WHERE
+        id = #{id};
+    </update>
 
 </mapper>

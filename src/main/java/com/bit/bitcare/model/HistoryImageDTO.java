@@ -12,4 +12,5 @@ public class HistoryImageDTO {
     String imageKey;
     Date entryDate;
     int categoryId;
+    float edited;
 }
