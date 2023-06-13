@@ -81,10 +81,8 @@ export default {
   },
   computed: {
     ...mapState('editor', [
-      'historyImageId', 'bodyCategoryId',
+      'historyImageId', 'bodyCategoryId', 'waitingData'
     ]),
-    ...mapState('doctor',
-        ['waitingData']),
     identityNumberMsg() {
       if (this.waitingData === "") {
         return ""
@@ -336,6 +334,7 @@ export default {
   top: 18px;
   right: 50%;
   transform: translateX(50%);
-
+  text-align: center;
+  border-color: white;
 }
 </style>

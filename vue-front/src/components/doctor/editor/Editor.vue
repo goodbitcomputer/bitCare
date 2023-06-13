@@ -441,9 +441,4 @@ export default {
   margin-bottom: 5px;
 }
 
-.info-container {
-  color: red;
-//position: absolute; //top: 20px; right: 50%;
-//transform: translateX(50%);
-}
 </style>
