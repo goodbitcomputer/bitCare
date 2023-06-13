@@ -307,15 +307,17 @@ export default {
           if (response.status === 200 && response.data.receiveMessage != null) {
             console.log(response.data.receiveMessage)
             this.readMessage = response.data.receiveMessage
+            this.setCatastrophe(true);
+            this.setSelectedAnnouncement(message);
           } else {
             alert('삭제된 공지입니다.')
             this.deleteMessage(message.id)
           }
         })
-        this.setCatastrophe(true);
-        this.setSelectedAnnouncement(message);
         setTimeout(() => this.readOn(this.readMessage), 100)
         this.readMessage = "";
+
+        this.$router.push('/home')
       }
     },
     readOn(message) {

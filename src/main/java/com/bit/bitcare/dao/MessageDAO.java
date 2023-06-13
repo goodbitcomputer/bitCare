@@ -11,7 +11,7 @@ public interface MessageDAO {
     public List<MessageDTO> selectByReceiver(String logInName);
     public List<MessageDTO> selectBySender(String logInName);
     public MessageDTO selectOne(int id);
-    public MessageDTO selectByEntryDate(Date entryDate);
+    public MessageDTO selectByAlarmId(int alarmId);
     public void insert(MessageDTO messageDTO);
     public void delete(int id);
     public void update(MessageDTO messageDTO);

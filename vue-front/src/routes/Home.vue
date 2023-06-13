@@ -3,14 +3,15 @@
     <NavBar/>
     <AnnouncementBoard/>
     <div class="container">
+      <!-- 오늘의 접수/수납 건수 -->
       <div class="detail border-box">
-        <profile/>
+        <!-- 의사 목록 -->
       </div>
       <div class="todayHistory border-box">
-
+        <!-- 오늘의 의사가 본 진료목록 -->
       </div>
       <div class="selectOne border-box">
-
+        <!-- 진료 기록 -->
       </div>
     </div>
   </div>
