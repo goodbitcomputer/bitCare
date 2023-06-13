@@ -10,6 +10,7 @@ export default {
         historyImageId: "",
         bodyCategoryId: "",
         waitingData: '',
+        historyData: '',
     },
     getters: {},
     mutations: {
@@ -22,6 +23,9 @@ export default {
         },
         setWaitingData: (state, item) => {
             state.waitingData = item;
+        },
+        setHistoryData: (state, item) => {
+            state.historyData = item;
         },
 
     },
