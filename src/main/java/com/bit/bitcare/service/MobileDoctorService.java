@@ -11,5 +11,5 @@ import java.util.Map;
 
 public interface MobileDoctorService {
     public List<BodyCategoryDTO> getBodyCategoryAll();
-    public Boolean photoSave(AwsS3 awsS3, int historyId, int bodyCategoryId);
+    public Boolean photoSave(AwsS3 awsS3, int historyId, int bodyCategoryId, String memo);
 }
