@@ -16,4 +16,5 @@ public class MessageDTO {
     String receiveState;
     String sendState;
     Date entryDate;
+    int alarmId;
 }

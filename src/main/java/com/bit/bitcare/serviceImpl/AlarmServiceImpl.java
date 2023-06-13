@@ -87,14 +87,18 @@ public class AlarmServiceImpl implements AlarmService {
                     type = "announcement";
                 }
 
-                messageDTO.setReceiver(receive);
-                messageDAO.insert(messageDTO);
-
                 List<EmployeeDTO> employeeList = employeeDAO.selectAll();
 
                 // 생성자로 반환값을 생성합니다.
                 AlarmDTO alarm = new AlarmDTO(id, sender, receive, content, type, alarmDTO.getEntryDate(), state);
                 alarmDAO.insert(alarm);
+
+                System.out.println(alarm);
+
+                messageDTO.setReceiver(receive);
+                messageDTO.setAlarmId(alarm.getId());
+                messageDAO.insert(messageDTO);
+
                 // 반환
                 if(!receive.equals("admin")) {
                     simpMessagingTemplate.convertAndSend("/send/" + receive, alarm);
@@ -102,6 +106,11 @@ public class AlarmServiceImpl implements AlarmService {
                     for(EmployeeDTO e : employeeList){
                         alarm.setReceiver(e.getName());
                         alarmDAO.insert(alarm);
+
+                        messageDTO.setReceiver(e.getName());
+                        messageDTO.setAlarmId(alarm.getId());
+                        messageDAO.insert(messageDTO);
+
                         simpMessagingTemplate.convertAndSend("/send/" + e.getName(), alarm);
                     }
                 }
@@ -202,7 +211,7 @@ public class AlarmServiceImpl implements AlarmService {
 
         Date entryDate = alarm.getEntryDate();
 
-        MessageDTO receiveMessage = messageDAO.selectByEntryDate(entryDate);
+        MessageDTO receiveMessage = messageDAO.selectByAlarmId(messageId);
 
         alarm.setState("read");
         alarmDAO.update(alarm);
