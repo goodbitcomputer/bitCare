@@ -240,6 +240,9 @@ export default {
       setVisit: 'setVisit',
       setWaitingData: 'setWaitingData',
     }),
+    ...mapMutations('editor', {
+      setEditorWaitingData: 'setWaitingData',
+    }),
     ...mapActions('doctor', {
       getHistoryList: 'getHistoryList'
     }),
@@ -285,6 +288,7 @@ export default {
     editorBtn() {
       console.log("선택한 환자 번호: " + this.waitingData.patientId);
       console.log("선택한 진료 기록 번호: " + this.historyId);
+      this.setEditorWaitingData(this.waitingData);
       this.$router.push({
         path: '/doctor/editor/selectByPatientIdAndHistoryId',
         query: {
