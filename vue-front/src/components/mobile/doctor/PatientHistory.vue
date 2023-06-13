@@ -55,7 +55,10 @@
         <!--      진료기록 상세정보-->
         <!--      이미지 list-->
         <div class="border-box">
-          <span class="font-weight-bold">이미지</span>
+          <div class="d-flex">
+            <span class="font-weight-bold flex-grow-1">이미지</span>
+            <button @click="editorBtn">편집</button>
+          </div>
           <div class="img-list-box text-center">
             <div class="swiper-box">
               <swiper :options="swiperOptions" ref="swiper">
