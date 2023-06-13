@@ -3,9 +3,11 @@
     <div class="editor-container">
       <div v-if="selectedImage && !isImageOnCanvas(selectedImage)" class="editor-cover"/>
       <tui-image-editor
-          ref="mobileTuiImageEditor"
+          v-if="selectedImage && !isImageOnCanvas(selectedImage)"
+          ref="tuiImageEditor"
           :options="editorOptions"
           class="editor"
+          @click="handleImageClick(selectedImage)"
           @ready="onEditorReady"
       ></tui-image-editor>
 
@@ -26,7 +28,7 @@ import axios from "axios";
 import {mapMutations, mapState} from "vuex";
 
 export default {
-  name: "MobileImageEditor",
+  name: "ImageEditor",
   props: {
     selectedImage: {
       type: String,
@@ -67,19 +69,17 @@ export default {
     };
   },
   mounted() {
-    this.initEditor();
+    this.editorInstance = new ImageEditor(this.$refs.tuiImageEditor, this.editorOptions);
+    window.addEventListener("resize", this.adjustCanvasSize);
   },
   beforeUnmount() {
     window.removeEventListener("resize", this.adjustCanvasSize);
   },
   watch: {
-    selectedImage: {
-      immediate: true,
-      handler(newValue) {
-        if (this.editorInstance && newValue) {
-          this.loadImageFromURL(newValue);
-        }
-      },
+    selectedImage(newValue) {
+      if (this.editorInstance && newValue) {
+        this.loadImageFromURL(newValue);
+      }
     },
   },
   computed: {
@@ -121,39 +121,22 @@ export default {
     },
   },
   methods: {
-    ...mapMutations('editor', {
-      setImageEditor: 'setImageEditor'
+    ...mapMutations('doctor', {
+      setMemoEditor: 'setMemoEditor',
     }),
-    initEditor(){
-      this.editorInstance = new ImageEditor(this.$refs.mobileTuiImageEditor, this.editorOptions);
-      console.log(this.editorInstance);
-      this.setImageEditor(this.editorInstance);
-    },
-
     // 2023.06.08 유동준
     // 편집한 이미지 저장하기 기능
     saveEditedImage(imageList) {
-      console.log("saveEditedImage");
-      console.log(imageList);
       const canvas = this.editorInstance.toDataURL();
       const blob = this.dataURLtoBlob(canvas);
       const file = new File([blob], "edited.png", {type: "image/png"});
 
-      console.log(canvas);
-
-      let formData = new FormData();
+      const formData = new FormData();
 
       formData.append("uploadFile", file);
       formData.append("historyId", new Blob([JSON.stringify(this.historyData.id)], {type: "application/json"}));
       formData.append("bodyCategoryId", new Blob([JSON.stringify(this.bodyCategoryId)], {type: "application/json"}));
       formData.append("edited", new Blob([JSON.stringify(this.historyImageId)], {type: "application/json"}));
-
-      // 수정본 없을때
-      console.log('수정본 없을떄');
-      console.log(formData.get("uploadFile"));
-      console.log(formData.get("historyId"));
-      console.log(formData.get("bodyCategoryId"));
-      console.log(formData.get("edited"));
 
       let image = []
       let editedId = []
@@ -168,21 +151,13 @@ export default {
         const blob = this.dataURLtoBlob(canvas);
         const file = new File([blob], "editedUpdate.png", {type: "image/png"});
 
-        let editedData = new FormData();
+        const editedData = new FormData();
 
         editedData.append("id", setId);
         editedData.append("uploadFile", file);
         editedData.append("historyId", this.historyData.id);
         editedData.append("bodyCategoryId", this.bodyCategoryId);
         editedData.append("edited", (this.historyImageId + 0.1).toString());
-
-        // 수정본 없을때
-        console.log('수정본 있을때');
-        console.log(editedData.get("id"));
-        console.log(editedData.get("uploadFile"));
-        console.log(editedData.get("historyId"));
-        console.log(editedData.get("bodyCategoryId"));
-        console.log(editedData.get("edited"));
 
         axios
             .post("/doctor/editor/updateEditedImage", editedData, {
@@ -249,27 +224,37 @@ export default {
         this.loadImageFromURL(this.selectedImage);
       }
     },
+
     handleImageClick(url) {
       this.loadImageFromURL(url);
     },
-
     loadImageFromURL(url) {
-      this.editorInstance.loadImageFromURL(url)
-      this.editorInstance.ui.activeMenuEvent(); //편집 기능 활성화시키기
-      this.imageData = url;
+      // this.editorInstance.loadImageFromURL(url, "Sample Image");
+      // this.editorInstance.ui.activeMenuEvent();
+      // this.imageData = url; // 이미지가 선택되도록 데이터를 업데이트합니다.
+
+      this.editorInstance.loadImageFromURL(url, "Sample Image");
+      this.editorInstance.ui.activeMenuEvent();
+      this.imageData.imagePath = url; // 이미지가 선택되도록 데이터를 업데이트합니다.
+
+      // S3 서버 CORS 관리
+      // const tempImage = new Image()
+      url.crossOrigin = "Anonymous"
+      // url.src = url;
+      this.loadImageFromURL(tempImage.src + '?t=' + new Date().getTime());
     },
 
     // image-list에서 사진 드래그앤드랍했을 때
-    dropImage(event) {
-      event.preventDefault();
-      const url = event.dataTransfer.getData("text/plain");
-
-      // S3 서버 CORS 관리
-      const tempImage = new Image()
-      tempImage.crossOrigin = "Anonymous"
-      tempImage.src = url;
-      this.loadImageFromURL(tempImage.src + '?t=' + new Date().getTime());
-    },
+    // dropImage(event) {
+    //   event.preventDefault();
+    //   const url = event.dataTransfer.getData("text/plain");
+    //
+    //   S3 서버 CORS 관리
+    // const tempImage = new Image()
+    // tempImage.crossOrigin = "Anonymous"
+    // tempImage.src = url;
+    // this.loadImageFromURL(tempImage.src + '?t=' + new Date().getTime());
+    // },
 
     // canvas 사이즈 조절
     adjustCanvasSize() {
@@ -315,8 +300,9 @@ export default {
       return objects.some((obj) => obj._element.src === url);
     },
   },
-}
+};
 </script>
+
 
 <style scoped>
 .editor-container {
