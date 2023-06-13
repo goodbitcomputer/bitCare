@@ -9,6 +9,7 @@ import Mobile from "@/routes/mobile/Mobile.vue";
 import MobileRegister from "@/routes/mobile/Register.vue";
 import MobileLogin from "@/routes/mobile/Login.vue";
 import MobileDoctor from "@/routes/mobile/Doctor.vue";
+import MobileEditor from "@/routes/mobile/ImageEditor.vue";
 import MobileCamera from "@/routes/mobile/Camera.vue";
 import MobilePayment from "@/routes/mobile/Payment.vue";
 import MobileSearch from "@/routes/mobile/MobileSearch.vue";
@@ -174,6 +175,13 @@ export default new VueRouter({
     {
       path: '/mobile/doctor/',
       component: MobileDoctor,
+      meta: {
+        roles: ['ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_NURSE', 'ROLE_MASTER']
+      }
+    },
+    {
+      path: '/mobile/editor/',
+      component: MobileEditor,
       meta: {
         roles: ['ROLE_ADMIN', 'ROLE_DOCTOR', 'ROLE_NURSE', 'ROLE_MASTER']
       }
