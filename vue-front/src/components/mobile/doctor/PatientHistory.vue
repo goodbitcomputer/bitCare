@@ -21,7 +21,7 @@
         <div class="border-box">
           <span class="font-weight-bold">신체계측/바이탈</span>
           <div class="table-wrapper">
-            <b-table hover :items="physicalData" :fields="pyFields" small>
+            <b-table :fields="pyFields" :items="physicalData" hover small>
               <template #cell(code)="data">
                 <div class="">
                   {{ data.value }}
@@ -47,27 +47,30 @@
         <!--      진료기록 상세정보-->
         <!--      이미지 list-->
         <div class="border-box">
-          <span class="font-weight-bold">이미지</span>
+          <div class="d-flex">
+            <span class="font-weight-bold flex-grow-1">이미지</span>
+            <button @click="editorBtn">편집</button>
+          </div>
           <div class="img-list-box text-center">
             <div class="swiper-box">
-              <swiper :options="swiperOptions" ref="swiper">
+              <swiper ref="swiper" :options="swiperOptions">
                 <swiper-slide v-for="(slide, index) in addImgListLogic" :key="index">
                   <!-- 슬라이드 내용 -->
                   <img :src="imgUrl(slide)" alt="Slide Image">
                 </swiper-slide>
 
                 <!-- 네비게이션 버튼 -->
-                <div class="swiper-button-prev" slot="button-prev"></div>
-                <div class="swiper-button-next" slot="button-next"></div>
+                <div slot="button-prev" class="swiper-button-prev"></div>
+                <div slot="button-next" class="swiper-button-next"></div>
               </swiper>
               <!--          <b-button class="btn col mt-1" variant="primary">촬영 부위 선택</b-button>-->
               <div class="imageCategory-box">
                 <b-dropdown
                     :text="imageCategoryMsg"
                     block
-                    variant="primary"
                     class="btn-outline-dark mt-2 mb-2"
                     menu-class="w-100"
+                    variant="primary"
                 >
                   <b-dropdown-item v-for="(item) in bodyCategoryList" :key="item.id" @click="dropClick(item)">
                     {{ item.categoryName }}
@@ -90,8 +93,8 @@
           <span class="font-weight-bold">상병</span>
           <div>
             <div class="table-wrapper">
-              <b-table hover :items="sbList" :fields="sbFields"
-                       :tbody-tr-class="rowClass" small>
+              <b-table :fields="sbFields" :items="sbList" :tbody-tr-class="rowClass"
+                       hover small>
                 <template #cell(sb)="data">
                   <div class="ellipsis-sb td-box-sb">
                     {{ data.value }}
@@ -116,8 +119,8 @@
           <span class="font-weight-bold">처방</span>
           <div>
             <div class="table-wrapper">
-              <b-table hover :items="cbList" thead-class="hidden_header"
-                       :tbody-tr-class="rowClass" small>
+              <b-table :items="cbList" :tbody-tr-class="rowClass" hover
+                       small thead-class="hidden_header">
                 <template #cell(code)="data">
                   <div class="">
                     {{ data.value }}
@@ -244,6 +247,19 @@ export default {
       setPhotoListToNewCameraList: 'setPhotoListToNewCameraList',
       setNextStep: 'setNextStep',
     }),
+    ...mapMutations('editor', {
+      setEditorWaitingData: 'setWaitingData',
+      setEditorHistoryData: 'setHistoryData',
+    }),
+    editorBtn() {
+      console.log("선택한 환자 번호: " + this.waitingData.patientId);
+      console.log("선택한 진료 기록 번호: " + this.historyData.id);
+      this.setEditorWaitingData(this.waitingData);
+      this.setEditorHistoryData(this.historyData);
+      this.$router.push({
+        path: '/mobile/editor',
+      });
+    },
     divHeightFix() {
       let div = document.getElementById('mobileDoctor-box');
       let divHeight = div.offsetHeight;
@@ -335,7 +351,7 @@ export default {
             }).then(() => {
               this.setNextStep(3);
             })
-          }else {
+          } else {
             Swal.fire({
               icon: 'error',
               title: '실패 !!!',
