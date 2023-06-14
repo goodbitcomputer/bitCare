@@ -20,31 +20,14 @@
         <div
             v-for="(image, index) in images"
             :key="index"
-            :class="{ active: isSelected(image.imagePath) }"
             class="border-box img-select"
             draggable="true"
             style="margin-bottom: 15px;"
-            @click="handleImageClick(image.imagePath)"
-            @dragstart="[Number.isInteger(image.edited) ? dragImage($event, image) : dragFail()]"
+            @click="selectImage(image)"
         >
-          <img :src="image.imagePath" class="image-list-box" draggable="false"/>
-          <div v-if="isSelected(image.imagePath)" class="img-cover"></div>
+          <img :src="image.imagePath" class="image-list-box"/>
+          <div class="img-cover"></div>
           <p class="image-date">{{ formatDate(image.entryDate) }}</p>
-          <div v-if="isSelected(image.imagePath)" class="dropdown">
-            <ul class="draggable-list">
-              <li
-                  v-for="(dropdownImage, dropdownIndex) in getDropdownImages(image.imagePath)"
-                  :key="dropdownIndex"
-                  class="border-box img-select"
-                  draggable="true"
-                  style="margin-bottom: 15px;"
-                  @dragstart="dragImage($event, dropdownImage.imagePath)"
-              >
-                <img :src="image.imagePath" class="image-list-box"/>
-                <p class="image-date">{{ formatDate(image.entryDate) }}</p>
-              </li>
-            </ul>
-          </div>
         </div>
       </div>
       <br/>
@@ -63,7 +46,7 @@
           <p style="margin-bottom: 0">뷰어에서는 수정이 불가합니다.</p>
         </div>
       </div>
-      <div class="flex-grow-1 editor">
+      <div class="flex-grow-1 tuiEditor">
         <ImageEditor
             ref="tuiImageEditor"
             :disabled="showDiv"
@@ -74,7 +57,6 @@
             @update:image-list="updateImageList"
             @edit-complete="handleEditComplete"
         />
-
         <div v-if="showDiv" class="editor-cover" @click="removeCover">
           <p class="editor-text" style="margin-bottom: 0">
             편집할 이미지 변경 시 뷰어 해제
@@ -86,7 +68,7 @@
 </template>
 
 <script>
-import ImageEditor from "@/components/doctor/editor/ImageEditor.vue";
+import ImageEditor from "@/components/mobile/doctor/editor/ImageEditor.vue";
 import axios from "axios";
 import {mapMutations, mapState} from "vuex";
 
@@ -110,12 +92,6 @@ export default {
     document.addEventListener('keydown', this.handleKeyDown);
     let patientId = this.waitingData.patientId;
     let historyId = this.historyData.id;
-    console.log(patientId)
-    console.log(historyId)
-    console.log("patientData");
-    console.log(this.waitingData);
-    console.log("historyData");
-    console.log(this.historyData);
     axios
         .post('/doctor/editor/selectByPatientIdAndHistoryId', null, {
           params: {
@@ -136,13 +112,15 @@ export default {
   },
   computed: {
     ...mapState('editor',
-        ['waitingData', 'historyData']
+        ['waitingData', 'historyData', 'isViewer', 'tempImage', 'imageEditor']
     )
   },
   methods: {
     ...mapMutations('editor', {
       setHistoryImageId: 'setHistoryImageId',
       setBodyCategoryId: 'setBodyCategoryId',
+      setIsViewer: 'setIsViewer',
+      setTempImage: 'setTempImage',
     }),
     formatDate(date) {
       const formattedDate = new Date(date);
@@ -155,7 +133,7 @@ export default {
       this.images.push({imagePath: image});
     },
     toggleImage(url) {
-      if (this.showDiv) {
+      if (this.isViewer) {
         if (this.selectedViewerImage === url) {
           this.selectedViewerImage = null;
         } else {
@@ -167,6 +145,11 @@ export default {
     },
     toggleNewDiv() {
       this.showDiv = !this.showDiv;
+      if (this.showDiv === false) {
+        this.setIsViewer(false);
+      } else {
+        this.setIsViewer(true);
+      }
       // this.showViewerButton = this.showDiv;
     },
     toggleDeleteMode() {
@@ -186,9 +169,8 @@ export default {
         this.isDeletingImage = true;
       }
     },
-    // 2023. 06. 09 유동준
-    // 삭제 버튼 클릭 후 이미지 클릭하면 알람창 뜨고 이미지 삭제, db에서도 삭제 완료
-    handleImageClick(url) {
+    // select img
+    selectImage(image) {
       if (this.isDeletingImage) {
         window.Swal.fire({
           icon: 'question',
@@ -202,11 +184,11 @@ export default {
             axios
                 .post('/doctor/editor/deleteImage', null, {
                   params: {
-                    imagePath: url,
+                    imagePath: image.imagePath,
                   },
                 })
                 .then(() => {
-                  const index = this.images.findIndex((image) => image.imagePath === url);
+                  const index = this.images.findIndex((item) => item.imagePath === image.imagePath);
                   if (index !== -1) {
                     this.images.splice(index, 1);
                   }
@@ -217,7 +199,9 @@ export default {
                     html: '이미지가 삭제되었습니다.',
                     timer: 3000,
                   });
-                })
+                }).then(() => {
+              window.location.reload(); // 실시간으로 image_list에 안올라감 페이지 새로고침
+            })
                 .catch((error) => {
                   console.error(error);
                   window.Swal.fire({
@@ -230,6 +214,73 @@ export default {
           }
         });
       } else {
+        if (this.isViewer === false) {
+          const tempImage = new Image()
+          tempImage.crossOrigin = "Anonymous"
+          tempImage.src = image.imagePath + '?t=' + new Date().getTime();
+          // this.imageEditor.loadImageFromURL(tempImage.src + '?t=' + new Date().getTime(), "Sample Image");
+          this.imageEditor.loadImageFromURL(tempImage.src, "Sample Image");
+          this.imageEditor.ui.activeMenuEvent();
+          this.imageData = tempImage.src; // 이미지가 선택되도록 데이터를 업데이트합니다.
+        } else {
+          if (this.selectedViewerImage === image.imagePath) {
+            this.selectedViewerImage = null;
+          } else {
+            this.selectedViewerImage = image.imagePath;
+          }
+        }
+      }
+    },
+
+
+    // 2023. 06. 09 유동준
+    // 삭제 버튼 클릭 후 이미지 클릭하면 알람창 뜨고 이미지 삭제, db에서도 삭제 완료
+    handleImageClick(url) {
+      // 이미지 편집기를 호출하여 편집 가능한 이미지를 로드합니다.
+      if (this.isDeletingImage) {
+        // 이미지 삭제 모드에서는 삭제 확인 알림창을 표시
+        window.Swal.fire({
+          icon: 'question',
+          title: '이미지 삭제',
+          text: '정말로 이미지를 삭제하시겠습니까?',
+          showCancelButton: true,
+          confirmButtonText: '삭제',
+          cancelButtonText: '취소',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            if (result.isConfirmed) {
+              axios
+                  .post('/doctor/editor/deleteImage', null, {
+                    params: {
+                      imagePath: url,
+                    },
+                  })
+                  .then(() => {
+                    const index = this.images.findIndex((image) => image.imagePath === url);
+                    if (index !== -1) {
+                      this.images.splice(index, 1);
+                    }
+                    this.isDeletingImage = false;
+                    window.Swal.fire({
+                      icon: 'success',
+                      title: '삭제 성공',
+                      html: '이미지가 삭제되었습니다.',
+                      timer: 3000,
+                    });
+                  })
+                  .catch((error) => {
+                    console.error(error);
+                    window.Swal.fire({
+                      icon: 'error',
+                      title: '삭제 실패',
+                      html: '이미지 삭제 중 오류가 발생했습니다.',
+                      timer: 3000,
+                    });
+                  });
+            }
+          }
+        });
+      } else {
         if (this.showDiv) {
           if (this.selectedViewerImage === url) {
             this.selectedViewerImage = null;
@@ -237,9 +288,16 @@ export default {
             this.selectedViewerImage = url;
           }
         } else {
+          // 이미지 편집 모드에서는 선택한 이미지를 편집기에 로드
+          // let url = this.image.imagePath;
+          console.log(url);
+          // console.log(this.image.imagePath);
+          // console.log(this.images.imagePath);
+          // console.log(this.image.images.imagePath);
           this.selectedEditorImage = url;
-          this.$refs.tuiImageEditor.loadImageFromURL(url, 'Sample Image');
-          this.$refs.tuiImageEditor.adjustCanvasSize();
+          this.$refs.tuiImageEditor.loadImageFromURL(url);
+          this.$refs.tuiImageEditor.adjustCanvasSize(url);
+          this.showDiv = false; // 캔버스 보이도록 showDiv를 false로 설정
         }
       }
     },
@@ -248,14 +306,14 @@ export default {
       this.setHistoryImageId(image.id);
       this.setBodyCategoryId(image.categoryId);
     },
-    dragFail() {
-      window.Swal.fire({
-        icon: 'error',
-        title: '사진 편집 불가',
-        html: '편집본은 수정이 불가합니다.',
-        timer: 3000,
-      });
-    },
+    // dragFail() {
+    //   window.Swal.fire({
+    //     icon: 'error',
+    //     title: '사진 편집 불가',
+    //     html: '편집본은 수정이 불가합니다.',
+    //     timer: 3000,
+    //   });
+    // },
     isSelected(url) {
       if (this.showDiv) {
         return this.selectedViewerImage === url;
@@ -277,12 +335,6 @@ export default {
     handleSelectEditorImage(url) {
       this.selectedEditorImage = url;
     },
-    // handleKeyDown(event) {
-    //   if (event.keyCode === 113) {
-    //     event.preventDefault();
-    //     this.toggleNewDiv();
-    //   }
-    // },
     updateImageList(updatedImageList) {
       this.images = updatedImageList.map((image) => ({imagePath: image.imagePath}));
     },
@@ -296,6 +348,7 @@ export default {
 };
 </script>
 
+
 <style scoped>
 .editor-box {
   height: 90vh;
@@ -306,7 +359,7 @@ export default {
   position: sticky;
 }
 
-.editor {
+.tuiEditor {
   position: relative;
   width: 50%;
   background-color: #282828;
