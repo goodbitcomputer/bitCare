@@ -19,13 +19,23 @@ module.exports = {
     //// SpringBoot 서버 접속 주소
     // devServer: {
     //   // proxy: "http://localhost:8080"
-    //   proxy: {
+    //   proxy: {x
     //     '/': {
     //       target: "http://localhost:8080/",
     //       changeOrigin: true,
     //     }
     //   }
     // },
+    //
+    // devServer: {
+    //     proxy : 'http://localhost:8080',
+    //     headers: {
+    //         "Access-Control-Allow-Origin": "*",
+    //         "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+    //         "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
+    //     }
+    // },
+
 
     chainWebpack: config => {
         const svgRule = config.module.rule("svg");

@@ -11,6 +11,11 @@ export default {
         bodyCategoryId: "",
         waitingData: '',
         historyData: '',
+
+        // mobile
+        isViewer: false,
+        tempImage: "",
+        imageEditor: "",
     },
     getters: {},
     mutations: {
@@ -27,6 +32,17 @@ export default {
         setHistoryData: (state, item) => {
             state.historyData = item;
         },
+        // mobile
+        setIsViewer: (state, item) => {
+            state.isViewer = item;
+        },
+        setTempImage: (state, item) => {
+            state.tempImage = item;
+        },
+        setImageEditor: (state, item) => {
+            state.imageEditor = item;
+        },
+
 
     },
 
