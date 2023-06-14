@@ -29,6 +29,7 @@
     "vue-session": "^1.0.0",
     "vue-svg-loader": "^0.16.0",
     "vue2-editor": "^2.10.3",
+    "vuedraggable": "^2.24.3",
     "vuex": "^3.6.2",
     "vuex-persistedstate": "^4.1.0",
     "webstomp-client": "^1.2.6"
