@@ -7,16 +7,18 @@
 
     <!-- 받은 메세지 목록 -->
     <select id="selectByReceiver" parameterType="String" resultType="messageDTO">
-        SELECT * FROM `message`
-        where `receiver`= #{logInName} and `receive_state` != 'delete'
-        order by `entry_date` desc
+        SELECT `message`.* FROM `message`
+        left join `alarm` on `message`.`alarm_id` = `alarm`.`id`
+        where `message`.`receiver`= #{logInName} and `message`.`receive_state` != 'delete' and `alarm`.`type` = 'message'
+        order by `message`.`entry_date` desc
     </select>
 
     <!-- 보낸 메세지 목록 -->
     <select id="selectBySender" parameterType="String" resultType="messageDTO">
-        SELECT * FROM `message`
-        where `sender`= #{logInName} and `send_state` != 'delete'
-        order by `entry_date` desc
+        SELECT `message`.* FROM `message`
+        left join `alarm` on `message`.`alarm_id` = `alarm`.`id`
+        where `message`.`sender`= #{logInName} and `message`.`send_state` != 'delete' and `alarm`.`type` = 'message'
+        order by `message`.`entry_date` desc
     </select>
 
     <!-- 메세지 선택 -->
@@ -28,7 +30,7 @@
     <!-- 메세지 선택 -->
     <select id="selectByAlarmId" parameterType="int" resultType="messageDTO">
         SELECT * FROM `message`
-        where `alarm_id`= #{messageId} and `receive_state` != 'delete'
+        where `alarm_id`= #{alarmId} and `receive_state` != 'delete'
     </select>
 
     <!-- 메세지 생성 -->

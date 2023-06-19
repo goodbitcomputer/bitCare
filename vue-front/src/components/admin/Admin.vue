@@ -37,11 +37,20 @@
         </tbody>
       </table>
       <button type="button" class="btn btn-primary btn-sm" @click="showDetails()">계정 추가</button>
+      <button type="button" class="btn btn-primary btn-sm" @click="writeAnnouncement()">공지 쓰기</button>
     </div>
     <div>
       <b-modal v-model="this.$store.state.login.registerModal" id="modal" size="lg" title="계정 추가" @hidden="closeModal">
         <div id="register">
           <EmployeeRegister/>
+        </div>
+      </b-modal>
+    </div>
+
+    <div>
+      <b-modal v-model="this.$store.state.alarm.announcementModal" id="modal" size="lg" title="공지 쓰기" @hidden="closeModal">
+        <div id="announcement">
+          <WriteAnnouncement/>
         </div>
       </b-modal>
     </div>
@@ -52,10 +61,11 @@
 import axios from "axios";
 import {mapMutations, mapState} from "vuex";
 import EmployeeRegister from "@/components/admin/EmployeeRegister.vue";
+import WriteAnnouncement from "@/components/home/WriteAnnouncement.vue";
 
 export default {
   name: "AdminSetting",
-  components: {EmployeeRegister},
+  components: {WriteAnnouncement, EmployeeRegister},
   data(){
     return {
       showDetailsModal: false,
@@ -74,12 +84,19 @@ export default {
   computed: {
     ...mapState('login',
         ['list', 'registerModal']
+    ),
+    ...mapState('alarm',
+        ['announcementModal']
     )
+
   },
   methods: {
     ...mapMutations('login',{
       setList: 'setList',
       setRegisterModal: 'setRegisterModal',
+    }),
+    ...mapMutations('alarm',{
+      setAnnouncementModal: 'setAnnouncementModal',
     }),
     saveRole(employee, index) {
       // API를 호출해서 해당 메시지를 삭제합니다.
@@ -144,6 +161,11 @@ export default {
     closeModal() {
       this.showDetailsModal = false;
       this.setRegisterModal(this.showDetailsModal);
+      this.setAnnouncementModal(this.showDetailsModal);
+    },
+    writeAnnouncement() {
+      this.showDetailsModal = true;
+      this.setAnnouncementModal(this.showDetailsModal);
     },
   }
 }

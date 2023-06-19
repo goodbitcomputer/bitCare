@@ -5,6 +5,7 @@
         <div class="bg-left"></div>
         <keep-alive>
           <div v-if="!this.$store.state.alarm.catastrophe" class="inner">
+            <div class="inner__beforeLeft"/>
             <div class="inner__left">
               <h2>공지사항</h2>
               <swiper class="swiper" :options="swiperOption">
@@ -21,6 +22,7 @@
         </keep-alive>
         <keep-alive>
           <div v-if="this.$store.state.alarm.catastrophe" class="inner" style="height: 310px !important;">
+            <div class="inner__beforeLeft"/>
             <div class="inner__left">
               <h2 style="position: relative; height: 310px !important; top: 20px;">공지사항</h2>
               <swiper class="swiper" :options="catastropheOption" style="height: 310px !important;">
@@ -33,17 +35,18 @@
               </swiper>
               <button class="material-icons" style="position: relative; color: white; top: -124px;" @click="rollbackButton">remove_circle</button>
             </div>
-            <div class="inner__right">
-              <div class="border-box" v-html="this.$store.state.alarm.selectedAnnouncement.content"></div>
-            </div>
           </div>
         </keep-alive>
       </div>
     </section>
 
-    <div class="util d-flex" v-if="this.$store.state.login.role==='ROLE_MASTER'">
-      <button class="border-box col" @click="showDetails()">공지 쓰기</button>
+    <div>
+      <b-modal v-model="this.$store.state.alarm.showAnnouncementModal" size="lg" title="공지 내용" @hidden="closeAnnouncementModal">
+        <div v-html="this.$store.state.alarm.selectedAnnouncement.content"></div>
+      </b-modal>
     </div>
+
+
     <!--    <div class="list-box">-->
 
     <!--      &lt;!&ndash; 공지 목록 &ndash;&gt;-->
@@ -66,25 +69,16 @@
     <!--        <span v-html="this.$store.state.alarm.selectedAnnouncement.content"></span>-->
     <!--      </div>-->
     <!--    </div>-->
-    <div>
-      <b-modal v-model="this.$store.state.alarm.announcementModal" id="modal" size="lg" title="공지 쓰기"
-               @hidden="closeModal">
-        <div id="announcement">
-          <WriteAnnouncement/>
-        </div>
-      </b-modal>
-    </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
 import {mapMutations, mapState} from "vuex";
-import WriteAnnouncement from "@/components/home/WriteAnnouncement.vue";
 import {Swiper, SwiperSlide} from "vue-awesome-swiper";
 
 export default {
-  components: {WriteAnnouncement, Swiper, SwiperSlide},
+  components: {Swiper, SwiperSlide},
   data() {
     return {
       announcement: [],
@@ -118,7 +112,7 @@ export default {
   name: "AnnouncementBoard",
   computed: {
     ...mapState('alarm',
-        ['announcementList', 'selectedAnnouncement', 'announcementModal', 'catastrophe']
+        ['announcementList', 'selectedAnnouncement', 'announcementModal', 'catastrophe', 'showAnnouncementModal']
     ),
   },
   created() {
@@ -130,6 +124,7 @@ export default {
       setSelectedAnnouncement: 'setSelectedAnnouncement',
       setAnnouncementModal: 'setAnnouncementModal',
       setCatastrophe: 'setCatastrophe',
+      setShowAnnouncementModal: 'setShowAnnouncementModal',
     }),
     formatDate(dateString) {
       const date = new Date(dateString);
@@ -163,12 +158,8 @@ export default {
           });
     },
     selectAnnouncement(announcement) {
-      this.setCatastrophe(true);
       this.setSelectedAnnouncement(announcement);
-    },
-    showDetails() {
-      this.showDetailsModal = true;
-      this.setAnnouncementModal(this.showDetailsModal);
+      this.setShowAnnouncementModal(true);
     },
     closeModal() {
       this.showDetailsModal = false;
@@ -180,6 +171,10 @@ export default {
     rollbackButton() {
       this.setCatastrophe(false);
       this.setSelectedAnnouncement({});
+    },
+    closeAnnouncementModal(){
+      this.showDetailsModal = false;
+      this.setShowAnnouncementModal(this.showDetailsModal);
     },
   }
 }

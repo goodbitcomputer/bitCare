@@ -61,9 +61,17 @@
         temperature = #{temperature},
         symptom_detail = #{symptomDetail},
         entry_date = #{entryDate},
-        visit = #{visit}
+        visit = #{visit},
+        receipt = #{receipt}
         WHERE
         id = #{id}
     </update>
+
+    <select id="selectNotReceiptHistory" resultType="historyDTO">
+        select `history`.* from `history`
+        left join `receipt`
+        on `history`.`id` = `receipt`.`history_id`
+        where `receipt`.`history_id` is null;
+    </select>
 
 </mapper>
