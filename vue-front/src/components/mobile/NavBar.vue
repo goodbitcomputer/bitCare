@@ -356,4 +356,8 @@ export default {
   outline: none;
   box-shadow: none;
 }
+
+#header {
+  max-height: 59px;
+}
 </style>
