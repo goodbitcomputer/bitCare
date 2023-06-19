@@ -23,8 +23,6 @@ export default {
         announcementModal: false,
         catastrophe: false,
         showAnnouncementModal: false,
-        responseReceiver: '',
-        messageTab: 0,
     },
     getters: {
         getCount(state){
@@ -73,12 +71,6 @@ export default {
         },
         setShowAnnouncementModal : function(state, showAnnouncementModal) {
             return state.showAnnouncementModal = showAnnouncementModal;
-        },
-        setResponseReceiver : function(state, responseReceiver){
-            return state.responseReceiver = responseReceiver
-        },
-        setMessageTab : function(state, messageTab){
-            return state.messageTab = messageTab
         },
     },
     actions: {

@@ -180,9 +180,11 @@ public class EmployeeServiceImpl implements EmployeeService {
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
 
-            data.put("logIn", "success");
-            data.put("role", logIn.getRole());
-            data.put("name", logIn.getName());
+            if(logIn != null) {
+                data.put("logIn", "success");
+                data.put("role", logIn.getRole());
+                data.put("name", logIn.getName());
+            }
         }else{
             data.put("logIn", "failed");
         }

@@ -26,7 +26,6 @@
         <typeAlias type="com.bit.bitcare.model.ReceiptDTO" alias="receiptDTO"/>
         <typeAlias type="com.bit.bitcare.model.MessageDTO" alias="messageDTO"/>
         <typeAlias type="com.bit.bitcare.model.AlarmDTO" alias="alarmDTO"/>
-        <typeAlias type="com.bit.bitcare.model.SearchDTO" alias="searchDTO"/>
     </typeAliases>
 <!--    <mappers>-->
 <!--        <mapper resource="config/mybatis/mapper/UserMapper.xml"/>-->

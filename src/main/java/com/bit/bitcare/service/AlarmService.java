@@ -15,6 +15,7 @@ public interface AlarmService {
     public ResponseEntity<String> getReceiveMessageList(HttpServletRequest request) throws IOException;
     public ResponseEntity<String> getAnnouncementList() throws IOException;
     public ResponseEntity<String> getReceiveMessage(int messageId) throws IOException;
+    public ResponseEntity<String> getMessageByAlarmId(int alarmId) throws IOException;
     public ResponseEntity<String> getSendMessageList(HttpServletRequest request) throws IOException;
     public void deleteAlarm(int messageId);
     public void allDeleteAlarm(String name);

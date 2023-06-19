@@ -1,33 +1,33 @@
 <template>
   <div>
     <!-- ======= Top Bar ======= -->
-    <!--    <div id="topbar" class="d-flex align-items-center fixed-top">-->
-    <!--      <div class="container d-flex justify-content-center justify-content-md-between">-->
-    <!--      </div>-->
-    <!--    </div>-->
+<!--    <div id="topbar" class="d-flex align-items-center fixed-top">-->
+<!--      <div class="container d-flex justify-content-center justify-content-md-between">-->
+<!--      </div>-->
+<!--    </div>-->
 
     <!-- ======= Header ======= -->
     <header id="header" class="fixed-top d-flex align-items-center">
-      <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
+      <div class="container-fluid container-xl d-flex align-items-center justify-content-lg-between">
 
         <h1 class="logo me-auto me-lg-0">
           <router-link to="/mobile/home" tag="a">BitCare Platform</router-link>
         </h1>
         <!-- Uncomment below if you prefer to use an image logo -->
         <!-- <a href="index.html" class="logo me-auto me-lg-0"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
-        <form class="search d-flex justify-content-end align-items-center" @submit.prevent="search()">
-          <input class="form-control m-0" type="text" placeholder="Search" v-model="keyword">
-          <button class="" type="button" style="width: 33px;height: 33px">
-            <img src="/assets/img/main/search.png">
-          </button>
-        </form>
 
-
-        <!--        <nav id="navbar" class="navbar order-last order-lg-0">-->
-        <!--          <i class="bi bi-list mobile-nav-toggle"></i>-->
-        <!--        </nav>&lt;!&ndash; .navbar &ndash;&gt;-->
+        <nav id="navbar" class="navbar order-last order-lg-0">
+          <i class="bi bi-list mobile-nav-toggle"></i>
+        </nav><!-- .navbar -->
 
       </div>
+
+      <b-button v-if="this.$store.state.login.name !== 'admin'" type="button" class="nav-item nav-link" id="info" @click="goInfo()">
+        <div>
+          <b-icon-person-fill style="width: 24px; height: 24px;" title="내 정보"></b-icon-person-fill>
+          {{ this.$store.state.login.name }}님
+        </div>
+      </b-button>
     </header>
     <!-- End Header -->
 
@@ -35,24 +35,20 @@
 </template>
 
 <script>
+import {mapMutations} from "vuex";
+
 export default {
   name: "NavBar",
-  data(){
-    return {
-      keyword: "",
-    }
-  },
   mounted() {
   },
   methods: {
-    search() {
-      console.log("search");
-      console.log(this.keyword);
-      this.$router.push({path:"/mobile/search", query: {keyword:this.keyword}});
-      // window.location.reload(true);
-      this.$router.go();
-    }
-  },
+    ...mapMutations('mobileDoctor', {
+      setNextStep: 'setNextStep',
+    }),
+    goInfo() {
+      this.setNextStep(6);
+    },
+  }
 }
 </script>
 
@@ -334,4 +330,18 @@ export default {
 .navbar-mobile .dropdown > .dropdown-active {
   display: block;
 }
+
+#infoList {
+  height: 480px;
+  overflow-y: auto;
+}
+
+#info {
+  width: 40%;
+  background-color: var(--background-color);
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+
 </style>

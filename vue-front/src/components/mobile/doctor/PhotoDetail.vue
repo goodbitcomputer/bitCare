@@ -57,7 +57,7 @@ export default {
       }
     },
     galleryBtn() {
-      this.setNextStep(9);
+      this.setNextStep(8);
     },
     selectBtn() {
       if(this.photo.storeSelect ===false){
@@ -65,7 +65,7 @@ export default {
       }else{
         this.photo.storeSelect = false;
       }
-      this.setNextStep(9);
+      this.setNextStep(8);
     }
   }
 }

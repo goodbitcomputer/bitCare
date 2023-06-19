@@ -67,6 +67,35 @@ public class DoctorController {
     public List<WaitingDTO> getWaitingData(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         return doctorService.getWaitingData(request);
     }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * 2023.06.13 문희찬
+     * <p>
+     * HomePage waiting now service
+     * 현재 모든 부서의 waiting data를 가져오기
+     * ---------------------------------------------------------------------------
+     */
+    @ResponseBody
+    @GetMapping("/getWaitingNow")
+    public List<WaitingDTO> getWaitingNow(@RequestParam int deptId) {
+        return doctorService.getWaitingNow(deptId);
+    }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * 2023.06.15 문희찬
+     * <p>
+     * HomePage no receipt history service
+     * 현재 모든 수납요청 미처리 history data를 가져오기
+     * ---------------------------------------------------------------------------
+     */
+    @ResponseBody
+    @GetMapping("/getNotReceiptHistory")
+    public List<HistoryDTO> getNotReceiptHistory(){
+        return doctorService.getNotReceiptHistory();
+    }
+
     // 진료완료 버튼 로직
     @ResponseBody
     @GetMapping("/getWaitingCmopletedData")

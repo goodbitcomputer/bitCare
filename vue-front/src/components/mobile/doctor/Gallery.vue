@@ -109,11 +109,11 @@ export default {
       }
     },
     cameraBtn() {
-      this.setNextStep(8);
+      this.setNextStep(7);
     },
     photoSelect(item) {
       this.setPhoto(item);
-      this.setNextStep(10);
+      this.setNextStep(9);
     },
     selectBtn(item) {
       if (item.storeSelect === false) {
@@ -163,12 +163,6 @@ export default {
   position: relative;
   padding: 1px;
 }
-.photo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  /*object-fit: cover;*/
-}
 
 .expansion {
   width: 20px;
@@ -204,12 +198,12 @@ export default {
     overflow: hidden;
   }
 
-  /*.photo img {*/
-  /*  width: 500px;*/
-  /*  height: 500px;*/
-  /*  object-fit: cover;*/
-  /*  !*object-fit: cover;*!*/
-  /*}*/
+  .photo img {
+    width: 500px;
+    height: 500px;
+    object-fit: cover;
+    /*object-fit: cover;*/
+  }
 }
 
 @media (max-width: 995px) {
@@ -219,11 +213,11 @@ export default {
     overflow: hidden;
   }
 
-  /*.photo img {*/
-  /*  width: 332px;*/
-  /*  height: 332px;*/
-  /*  object-fit: cover;*/
-  /*}*/
+  .photo img {
+    width: 332px;
+    height: 332px;
+    object-fit: cover;
+  }
 }
 
 @media (max-width: 720px) {
@@ -233,11 +227,11 @@ export default {
     overflow: hidden;
   }
 
-  /*.photo img {*/
-  /*  width: 240px;*/
-  /*  height: 240px;*/
-  /*  object-fit: cover;*/
-  /*}*/
+  .photo img {
+    width: 240px;
+    height: 240px;
+    object-fit: cover;
+  }
 }
 
 @media (max-width: 540px) {
@@ -247,11 +241,11 @@ export default {
     overflow: hidden;
   }
 
-  /*.photo img {*/
-  /*  width: 200px;*/
-  /*  height: 200px;*/
-  /*  object-fit: cover;*/
-  /*}*/
+  .photo img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+  }
 }
 
 @media (max-width: 351px) {
@@ -261,10 +255,10 @@ export default {
     overflow: hidden;
   }
 
-  /*.photo img {*/
-  /*  width: 150px;*/
-  /*  height: 150px;*/
-  /*  object-fit: cover;*/
-  /*}*/
+  .photo img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+  }
 }
 </style>

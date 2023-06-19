@@ -152,4 +152,17 @@ public class AlarmController {
     public ResponseEntity<String> announcementList() throws IOException {
         return alarmService.getAnnouncementList();
     }
+
+    /**
+     * ---------------------------------------------------------------------------
+     * 2023.06.09
+     *
+     * getMessageByAlarmId
+     * /api/getMessageByAlarmId 에 대한 Get 요청시 alarmService.getMessageByAlarmId 메소드를 실행
+     * alarmService.getMessageByAlarmId 메소드에선 해당 알람 id 에 대한 메시지를 리턴함
+     */
+    @GetMapping("/api/getMessageByAlarmId")
+    public ResponseEntity<String> getMessageByAlarmId(@RequestParam int id) throws IOException {
+        return alarmService.getMessageByAlarmId(id);
+    }
 }

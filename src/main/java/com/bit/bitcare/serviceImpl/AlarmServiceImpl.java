@@ -72,6 +72,7 @@ public class AlarmServiceImpl implements AlarmService {
         String connectType = jsonNode.get("connectType").asText();
 
         int id = messageDTO.getId();
+
         // vo에서 getter로 userName을 가져옵니다.
         MessageDTO selectMessage = messageDAO.selectOne(id);
 
@@ -92,8 +93,6 @@ public class AlarmServiceImpl implements AlarmService {
                 // 생성자로 반환값을 생성합니다.
                 AlarmDTO alarm = new AlarmDTO(id, sender, receive, content, type, alarmDTO.getEntryDate(), state);
                 alarmDAO.insert(alarm);
-
-                System.out.println(alarm);
 
                 messageDTO.setReceiver(receive);
                 messageDTO.setAlarmId(alarm.getId());
@@ -207,14 +206,7 @@ public class AlarmServiceImpl implements AlarmService {
         // JSON 데이터 생성
         Map<String, Object> data = new HashMap<>();
 
-        AlarmDTO alarm = alarmDAO.selectOne(messageId);
-
-        Date entryDate = alarm.getEntryDate();
-
-        MessageDTO receiveMessage = messageDAO.selectByAlarmId(messageId);
-
-        alarm.setState("read");
-        alarmDAO.update(alarm);
+        MessageDTO receiveMessage = messageDAO.selectOne(messageId);
 
         if (receiveMessage == null) {
             data.put("receiveMessage", null);
@@ -223,6 +215,29 @@ public class AlarmServiceImpl implements AlarmService {
             messageDAO.update(receiveMessage);
             data.put("receiveMessage", receiveMessage);
         }
+
+        // JSON 문자열 생성
+        String json = objectMapper.writeValueAsString(data);
+
+        // HTTP 응답 생성
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(json);
+    }
+
+    @Override
+    public ResponseEntity<String> getMessageByAlarmId(int alarmId) throws IOException {
+
+        // JSON 데이터 생성
+        Map<String, Object> data = new HashMap<>();
+
+        AlarmDTO alarm = alarmDAO.selectOne(alarmId);
+        alarm.setState("read");
+        alarmDAO.update(alarm);
+
+        MessageDTO message = messageDAO.selectByAlarmId(alarmId);
+
+        data.put("receiveMessage", message);
 
         // JSON 문자열 생성
         String json = objectMapper.writeValueAsString(data);

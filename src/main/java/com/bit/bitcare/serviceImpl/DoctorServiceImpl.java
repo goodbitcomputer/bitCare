@@ -95,6 +95,15 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
+    public List<WaitingDTO> getWaitingNow(int deptId){
+        if(deptId == 0){
+            return waitingDAO.selectWaitAll();
+        } else{
+            return waitingDAO.selectWaitByDept(deptId);
+        }
+    }
+
+    @Override
     public List<WaitingDTO> getWaitingCmopletedData(HttpServletRequest request) {
         HttpSession session = request.getSession();
         EmployeeDTO logIn = (EmployeeDTO) session.getAttribute("logIn");
@@ -185,6 +194,11 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public List<HistoryDTO> getHistoryList(int patientId) {
         return historyDAO.selectByPatientId(patientId);
+    }
+
+    @Override
+    public List<HistoryDTO> getNotReceiptHistory() {
+        return historyDAO.selectNotReceiptHistory();
     }
 
     @Override

@@ -40,7 +40,8 @@ public class MobileDoctorController {
         this.mobileService = mobileService;
         this.mobileDoctorService = mobileDoctorService;
     }
-    
+
+
     @ResponseBody
     @PostMapping("/insertPatient")
     public String insertPatient(@RequestBody Map<String, Object> requestData, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -56,7 +57,7 @@ public class MobileDoctorController {
 
     @ResponseBody
     @PostMapping("/photoSave_proc")
-    public Boolean photoSave(@RequestPart(value = "uploadFiles", required = true) MultipartFile[] files, @RequestPart(value = "bodyCategoryId", required = true) int bodyCategoryId, @RequestPart(value = "historyId", required = true) int historyId, @RequestPart(value = "memo", required = true) String memo, HttpServletRequest request) throws IOException {
+    public Boolean photoSave(@RequestPart(value = "uploadFiles", required = true) MultipartFile[] files, @RequestPart(value = "bodyCategoryId", required = true) int bodyCategoryId, @RequestPart(value = "historyId", required = true) int historyId, HttpServletRequest request) throws IOException {
         Boolean result = false;
         for (MultipartFile multipartFile : files) {
 
@@ -65,7 +66,7 @@ public class MobileDoctorController {
 //            System.out.println("aws key: " +awsS3.getKey());      // aws 스토리지에 올라간 파일 key (삭제하려면 key가 필요함)
 //            System.out.println("aws path: " +awsS3.getPath());    // aws 스토리지에 올라간 파일 path (url)
 
-            result = mobileDoctorService.photoSave(awsS3, historyId, bodyCategoryId, memo);
+            result = mobileDoctorService.photoSave(awsS3, historyId, bodyCategoryId);
 
             // 이미지 삭제
 //            AwsS3 removeS3 = new AwsS3();

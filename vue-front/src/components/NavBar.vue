@@ -1,138 +1,141 @@
 <template>
-  <b-navbar toggleable="lg" class="b-navbar navbar-expand-md navbar-dark bg-dark">
-    <div id="nav" class="container">
-      <b-navbar-brand>
-        <img src="@/assets/history/logo.png" width="100px">
-      </b-navbar-brand>
+  <div id="sticky-navbar">
+    <b-navbar toggleable="lg" class="b-navbar navbar-expand-md navbar-dark bg-dark">
+      <div id="nav" class="container">
+        <b-navbar-brand>
+          <img src="@/assets/history/logo.png" width="100px">
+        </b-navbar-brand>
 
-      <b-navbar-toggle v-b-toggle.sidebar-backdrop>
-      </b-navbar-toggle>
-      <!-- 부트스트랩의 일부, 요소를 숨기거나 나타내게 할 수 있음 -->
-      <b-collapse id="nav-collapse" is-nav>
-        <b-navbar-nav>
-          <router-link to="/home" class="nav-item nav-link">Home</router-link>
-          <router-link to="/nurse" class="nav-item nav-link">Nurse</router-link>
-          <router-link to="/doctor" class="nav-item nav-link">Doctor</router-link>
-        </b-navbar-nav>
-        <b-navbar-nav class="ml-auto">
-          <b-button type="button" class="nav-item nav-link" id="alarm">
-            <div v-if="this.$store.state.alarm.alarmCount > 0">
-              <span v-if="state==='new'" class="note-new">{{ this.$store.state.alarm.alarmCount }}</span>
-              <span v-else class="note-num">{{ this.$store.state.alarm.alarmCount }}</span>
-              <b-icon-bell-fill title="새로운 알람!" id="notification"></b-icon-bell-fill>
-            </div>
-            <div v-else>
-              <b-icon-bell title="알람"></b-icon-bell>
-            </div>
-          </b-button>
+        <b-navbar-toggle v-b-toggle.sidebar-backdrop>
+        </b-navbar-toggle>
+        <!-- 부트스트랩의 일부, 요소를 숨기거나 나타내게 할 수 있음 -->
+        <b-collapse id="nav-collapse" is-nav>
+          <b-navbar-nav>
+            <router-link to="/home" class="nav-item nav-link">Home</router-link>
+            <router-link to="/nurse" class="nav-item nav-link">Nurse</router-link>
+            <router-link to="/doctor" class="nav-item nav-link">Doctor</router-link>
+          </b-navbar-nav>
+          <b-navbar-nav class="ml-auto">
+            <b-button type="button" class="nav-item nav-link" id="alarm">
+              <div v-if="this.$store.state.alarm.alarmCount > 0">
+                <span v-if="state==='new'" class="note-new">{{ this.$store.state.alarm.alarmCount }}</span>
+                <span v-else class="note-num">{{ this.$store.state.alarm.alarmCount }}</span>
+                <b-icon-bell-fill title="새로운 알람!" id="notification"></b-icon-bell-fill>
+              </div>
+              <div v-else>
+                <b-icon-bell title="알람"></b-icon-bell>
+              </div>
+            </b-button>
 
-          <b-button type="button" class="nav-item nav-link" id="message" @click="showDetails()">
-            <div>
-              <b-icon-messenger title="쪽지함" id="notification"></b-icon-messenger>
-            </div>
-          </b-button>
+            <b-button type="button" class="nav-item nav-link" id="message" @click="showDetails()">
+              <div>
+                <b-icon-messenger title="쪽지함" id="notification"></b-icon-messenger>
+              </div>
+            </b-button>
 
-          <router-link v-if="this.$store.state.login.role === 'ROLE_MASTER'" to="/admin" class="nav-item nav-link">
-            <div>
-              <b-icon-three-dots title="관리자 페이지"></b-icon-three-dots>
-            </div>
-          </router-link>
+            <router-link v-if="this.$store.state.login.role === 'ROLE_MASTER'" to="/admin" class="nav-item nav-link">
+              <div>
+                <b-icon-three-dots title="관리자 페이지"></b-icon-three-dots>
+              </div>
+            </router-link>
 
-          <b-button type="button" class="nav-item nav-link" id="info">
-            <div>
-              <b-icon-person-fill style="width: 24px; height: 24px;" title="내 정보"></b-icon-person-fill>
-              {{ this.$store.state.login.name }}님
-            </div>
-          </b-button>
+            <b-button type="button" class="nav-item nav-link" id="info">
+              <div>
+                <b-icon-person-fill style="width: 24px; height: 24px;" title="내 정보"></b-icon-person-fill>
+                {{ this.$store.state.login.name }}님
+              </div>
+            </b-button>
 
-          <b-button type="button" class="nav-item nav-link" id="logOut" @click="logOut()">
-            <div>
-              LogOut
-            </div>
-          </b-button>
-        </b-navbar-nav>
-      </b-collapse>
+            <b-button type="button" class="nav-item nav-link" id="logOut" @click="logOut()">
+              <div>
+                LogOut
+              </div>
+            </b-button>
+          </b-navbar-nav>
+        </b-collapse>
 
-      <b-sidebar
-          id="sidebar-backdrop"
-          title="Bit Care"
-          :backdrop-variant="variant"
-          backdrop
-          shadow
+        <b-sidebar
+            id="sidebar-backdrop"
+            title="Bit Care"
+            :backdrop-variant="variant"
+            backdrop
+            shadow
 
-      >
-        <div class="px-3 py-2">
-          <p>
-            <router-link to="/home" id="alarmSideBar">Home</router-link>
-          </p>
-          <p>
-            <router-link to="/nurse" id="alarmSideBar">Nurse</router-link>
-          </p>
-          <p>
-            <router-link to="/doctor" id="alarmSideBar">Doctor</router-link>
-          </p>
-          <p>
-            <router-link to="/home" id="alarmSideBar">환자 정보</router-link>
-          </p>
-          <p>
-            <router-link to="/nurse" id="alarmSideBar">의료진 정보</router-link>
-          </p>
-          <p>
-            <b-button type="button" id="alarmSideBar" @click="showDetails()">
+        >
+          <div class="px-3 py-2">
+            <p>
+              <router-link to="/home" id="alarmSideBar">Home</router-link>
+            </p>
+            <p>
+              <router-link to="/nurse" id="alarmSideBar">Nurse</router-link>
+            </p>
+            <p>
+              <router-link to="/doctor" id="alarmSideBar">Doctor</router-link>
+            </p>
+            <p>
+              <router-link to="/home" id="alarmSideBar">환자 정보</router-link>
+            </p>
+            <p>
+              <router-link to="/nurse" id="alarmSideBar">의료진 정보</router-link>
+            </p>
+            <p>
+              <b-button type="button" id="alarmSideBar" @click="showDetails()">
               <span v-if=" this.$store.state.alarm.alarmCount > 0">
                 알람 <span class="badge badge-danger">{{ this.$store.state.alarm.alarmCount }}</span>
               </span>
-              <span v-else>
+                <span v-else>
                 알람
               </span>
-            </b-button>
-          </p>
-        </div>
-      </b-sidebar>
-    </div>
-    <b-popover
-        custom-class="wide-popover"
-        fallback-placement="clockwise"
-        target="alarm"
-        placement="bottom"
-        width="320"
-        height="500"
-        triggers="hover focus blur">
-      <div id="alarmList">
-        <Alarm/>
+              </b-button>
+            </p>
+          </div>
+        </b-sidebar>
       </div>
-    </b-popover>
+      <b-popover
+          custom-class="wide-popover"
+          fallback-placement="clockwise"
+          target="alarm"
+          placement="bottom"
+          width="320"
+          height="500"
+          triggers="hover focus blur">
+        <div id="alarmList">
+          <Alarm/>
+        </div>
+      </b-popover>
 
-    <b-popover
-        custom-class="wide-popover"
-        fallback-placement="clockwise"
-        target="info"
-        placement="bottomleft"
-        width="320"
-        height="500"
-        triggers="hover focus blur">
-      <div id="infoList">
-        <Waiting/>
+      <b-popover
+          custom-class="wide-popover"
+          fallback-placement="clockwise"
+          target="info"
+          placement="bottomleft"
+          width="320"
+          height="500"
+          triggers="hover focus blur">
+        <div id="infoList">
+          <Waiting/>
+        </div>
+      </b-popover>
+
+      <div>
+        <b-modal v-model="this.$store.state.alarm.showModal" id="modal" size="lg" title="쪽지" @hidden="closeModal">
+          <div id="messageList">
+            <Message/>
+          </div>
+        </b-modal>
       </div>
-    </b-popover>
 
-    <div>
-      <b-modal v-model="this.$store.state.alarm.showModal" id="modal" size="lg" title="쪽지" @hidden="closeModal">
-        <div id="messageList">
-          <Message/>
-        </div>
-      </b-modal>
-    </div>
-
-    <div>
-      <b-modal v-model="this.$store.state.login.registerModal" id="modal" size="lg" title="내정보 수정" @hidden="closeRegisterModal">
-        <div id="register">
-          <EmployeeUpdate/>
-        </div>
-      </b-modal>
-    </div>
-
-  </b-navbar>
+      <div>
+        <b-modal v-model="this.$store.state.login.registerModal" id="modal" size="lg" title="내정보 수정"
+                 @hidden="closeRegisterModal">
+          <div id="register">
+            <EmployeeUpdate/>
+          </div>
+        </b-modal>
+      </div>
+    </b-navbar>
+    <AnnouncementBoard/>
+  </div>
 </template>
 
 <script>
@@ -151,9 +154,10 @@ import Message from "@/routes/message/Message.vue";
 import Alarm from "@/routes/alarm/Alarm.vue";
 import Waiting from "@/components/home/Wating.vue";
 import EmployeeUpdate from "@/components/mobile/doctor/EmployeeUpdate.vue";
+import AnnouncementBoard from "@/components/home/Announcement.vue";
 
 export default {
-  components: {Message, Alarm, Waiting, EmployeeUpdate},
+  components: {AnnouncementBoard, Message, Alarm, Waiting, EmployeeUpdate},
   data() {
     return {
       count: this.messageCount,
@@ -179,7 +183,7 @@ export default {
   },
   computed: {
     ...mapState('alarm',
-        ['alarmList', 'messageList', 'messageCount', 'alarmCount', 'sendList', 'sendCount', 'showModal', 'messageModal','announcementList']
+        ['alarmList', 'messageList', 'messageCount', 'alarmCount', 'sendList', 'sendCount', 'showModal', 'messageModal', 'announcementList']
     ),
     ...mapState('login',
         ['role', 'name', 'registerModal']
@@ -424,6 +428,8 @@ a {
   padding: 8px 12px;
 }
 
+
+
 .b-nav_logo {
   font-size: 24px;
   color: var(--text-color);
@@ -588,5 +594,11 @@ a {
 #messageList {
   height: 480px;
   overflow-y: auto;
+}
+
+#sticky-navbar{
+  position: sticky;
+  top: 0; /* 필수 */
+  z-index: 500;
 }
 </style>
