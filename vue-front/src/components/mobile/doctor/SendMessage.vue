@@ -1,7 +1,7 @@
 <template>
   <div class="patient-box border-box" data-aos="fade-up" data-aos-delay="200">
     받는이:
-    <input list="employees" v-model="receiver">
+    <input list="employees" v-model="this.$store.state.alarm.responseReceiver">
     <button type="button" class="btn btn-primary btn-sm" id="sendButton" @click="sendMessage">Send</button>
     <b-datalist id="employees">
       <option v-for="employee in this.$store.state.login.list" :key="employee.id">{{ employee.name }}</option>
@@ -31,7 +31,7 @@ export default {
   },
   computed: {
     ...mapState('alarm',
-        ['sendCount', 'sendList'],
+        ['sendCount', 'sendList', 'responseReceiver'],
     ),
     ...mapState('login',
         ['list']
@@ -50,7 +50,7 @@ export default {
     }),
     connect() {
       this.sender = this.$store.state.login.name;
-      const serverURL = "http://localhost:8080/receive"
+      const serverURL = "/receive"
       let socket = new SockJS(serverURL);
       this.stompClient = Stomp.over(socket);
       console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)
@@ -136,6 +136,8 @@ export default {
       console.log("메세지 전송 완료. 소켓 연결 해제")
       setTimeout(() => this.stompClient.disconnect(), 100)
       this.messageContent = ''
+      this.setResponseReceiver('');
+      this.setMessageTab(0);
       setTimeout(() => this.settingSendList(), 100)
     },
     sendLength() {

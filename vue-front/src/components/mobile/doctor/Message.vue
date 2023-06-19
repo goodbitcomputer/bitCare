@@ -6,13 +6,13 @@
         <button class="border-box col" @click="SendList()">보낸 메시지</button>
         <button class="border-box col" @click="SendMessage()">메시지 전송</button>
       </div>
-      <div v-if="this.tab === 1">
+      <div v-if="this.$store.state.alarm.messageTab === 0">
         <ReceiveMessage/>
       </div>
-      <div v-else-if="this.tab === 2">
+      <div v-else-if="this.$store.state.alarm.messageTab === 1">
         <SendList/>
       </div>
-      <div v-else-if="this.tab === 3">
+      <div v-else-if="this.$store.state.alarm.messageTab === 2">
         <SendMessage/>
       </div>
     </div>
@@ -28,7 +28,7 @@ export default {
   name: "MobileMessage",
   data() {
     return {
-      tab: 1,
+      tab: 0,
       count: this.messageCount,
       stompClient: null,
       recvList: this.alarmList,
@@ -49,21 +49,26 @@ export default {
   mounted() {
     this.divHeightFix();
   },
+  computed: {
+    ...mapState('alarm',
+        ['messageTab'],
+    ),
+  },
   methods: {
     ReceiveMessage() {
-      this.tab = 1
+      this.tab = 0
       let div = document.getElementById('patientList-box');
       div.style.height = 'auto';
       setTimeout(() => {this.divHeightFix()},10)
     },
     SendList() {
-      this.tab = 2
+      this.tab = 1
       let div = document.getElementById('patientList-box');
       div.style.height = 'auto';
       setTimeout(() => {this.divHeightFix()},10)
     },
     SendMessage() {
-      this.tab = 3
+      this.tab = 2
       let div = document.getElementById('patientList-box');
       div.style.height = 'auto';
       setTimeout(() => {this.divHeightFix()},10)

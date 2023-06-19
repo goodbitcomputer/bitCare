@@ -1,7 +1,7 @@
 <template>
   <div>
-    <b-tabs pills card vertical id="tabs">
-      <b-tab active>
+    <b-tabs pills card vertical id="tabs" v-model="this.$store.state.alarm.messageTab">
+      <b-tab>
         <template v-slot:title>
           <b-icon-envelope-fill/>ReceiveList
         </template>
@@ -29,13 +29,19 @@
 import MessageList from "@/components/alarm/MessageList.vue";
 import SendMessage from "@/components/alarm/SendMessage.vue";
 import SendList from "@/components/alarm/SendList.vue";
+import {mapState} from "vuex";
 export default {
   name: "MessageView",
   components: {
     SendMessage,
     MessageList,
     SendList
-  }
+  },
+  computed: {
+    ...mapState('alarm',
+        ['messageTab', 'responseReceiver']
+    ),
+  },
 }
 </script>
 
