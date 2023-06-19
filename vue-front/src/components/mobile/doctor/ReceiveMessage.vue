@@ -23,7 +23,7 @@
         <div>
           <h2>
             {{ this.$store.state.alarm.selectedMessage.sender }}
-            <button type="button" class="btn btn-primary btn-sm" @click="responseMessage(this.$store.state.alarm.selectedMessage.sender)">
+            <button type="button" class="btn btn-primary btn-sm" @click="responseMessage">
               답장
             </button>
           </h2>
@@ -53,7 +53,6 @@ export default {
       message_file: "",
       entryDate: "",
       type: "",
-      selectedMessage: "",
       showDetailsModal: false,
       readMessage: "",
     }
@@ -70,7 +69,7 @@ export default {
   },
   computed: {
     ...mapState('alarm',
-        ['messageList', 'messageCount', 'messageModal', 'selectedMessage']
+        ['messageList', 'messageCount', 'messageModal', 'selectedMessage', 'responseReceiver', 'messageTab']
     ),
   },
   methods: {
@@ -78,7 +77,10 @@ export default {
       setMessage: 'setMessage',
       setCount: 'setCount',
       setMessageModal: 'setMessageModal',
-      setSelectedMessage: 'setSelectedMessage'
+      setSelectedMessage: 'setSelectedMessage',
+      setResponseReceiver: 'setResponseReceiver',
+      setMessageTab: 'setMessageTab',
+      setModal: 'setModal',
     }),
     formatDate(dateString) {
       const date = new Date(dateString);
@@ -208,8 +210,10 @@ export default {
       this.showDetailsModal = false;
       this.setMessageModal(this.showDetailsModal);
     },
-    responseMessage(sender){
+    responseMessage(){
       this.setMessageTab(2)
+      let sender = this.selectedMessage.sender
+      console.log(sender)
       this.setResponseReceiver(sender)
       this.showDetailsModal = false;
       this.setMessageModal(this.showDetailsModal);

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-tabs pills card vertical id="tabs" v-model="this.$store.state.alarm.messageTab">
+    <b-tabs pills card vertical id="tabs" v-model="$store.state.alarm.messageTab">
       <b-tab>
         <template v-slot:title>
           <b-icon-envelope-fill/>ReceiveList

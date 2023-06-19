@@ -43,7 +43,8 @@ export default {
   methods: {
     ...mapMutations('alarm', {
       setSendList: 'setSendList',
-      setSendCount: 'setSendCount'
+      setSendCount: 'setSendCount',
+      setResponseReceiver: 'setResponseReceiver',
     }),
     ...mapMutations('login',{
       setList: 'setList'

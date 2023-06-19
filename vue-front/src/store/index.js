@@ -25,7 +25,7 @@ export default new Vuex.Store({
     },
     plugins: [
         createPersistedState({
-            paths: ['mobile', 'login', 'editor'],
+            paths: ['mobile', 'login', 'editor','alarm'],
         }),
     ]
 })

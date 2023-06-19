@@ -23,6 +23,7 @@
 import ReceiveMessage from "@/components/mobile/doctor/ReceiveMessage.vue"
 import SendList from "@/components/mobile/doctor/SendList.vue"
 import SendMessage from "@/components/mobile/doctor/SendMessage.vue"
+import {mapMutations, mapState} from "vuex";
 
 export default {
   name: "MobileMessage",
@@ -55,20 +56,23 @@ export default {
     ),
   },
   methods: {
+    ...mapMutations('alarm', {
+      setMessageTab: 'setMessageTab',
+    }),
     ReceiveMessage() {
-      this.tab = 0
+      this.setMessageTab(0)
       let div = document.getElementById('patientList-box');
       div.style.height = 'auto';
       setTimeout(() => {this.divHeightFix()},10)
     },
     SendList() {
-      this.tab = 1
+      this.setMessageTab(1)
       let div = document.getElementById('patientList-box');
       div.style.height = 'auto';
       setTimeout(() => {this.divHeightFix()},10)
     },
     SendMessage() {
-      this.tab = 2
+      this.setMessageTab(2)
       let div = document.getElementById('patientList-box');
       div.style.height = 'auto';
       setTimeout(() => {this.divHeightFix()},10)

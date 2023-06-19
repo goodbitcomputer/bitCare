@@ -34,7 +34,7 @@
         <div>
           <h2>
             {{ this.$store.state.alarm.selectedMessage.sender }}
-            <button type="button" class="btn btn-primary btn-sm" @click="responseMessage(this.$store.state.alarm.selectedMessage.sender)">
+            <button type="button" class="btn btn-primary btn-sm" @click="responseMessage">
               답장
             </button>
           </h2>
@@ -64,7 +64,6 @@ export default {
       message_file: "",
       entryDate: "",
       type: "",
-      selectedMessage: "",
       showDetailsModal: false,
       fields: [
         {key: 'sender', label: '보낸 사람'},
@@ -280,12 +279,14 @@ export default {
       this.showDetailsModal = false;
       this.setMessageModal(this.showDetailsModal);
     },
-    responseMessage(sender){
-      this.setMessageTab(2)
+    responseMessage(){
+      let sender = this.selectedMessage.sender
+      console.log(sender)
       this.setResponseReceiver(sender)
+      this.setMessageTab(2)
       this.showDetailsModal = false;
       this.setMessageModal(this.showDetailsModal);
-    }
+    },
   }
 }
 </script>
