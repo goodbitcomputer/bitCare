@@ -11,23 +11,29 @@
       <div class="container-fluid container-xl d-flex align-items-center justify-content-lg-between">
 
         <h1 class="logo me-auto me-lg-0">
-          <router-link to="/mobile/home" tag="a">BitCare Platform</router-link>
+          <router-link to="/mobile/home" tag="a">BitCare</router-link>
         </h1>
         <!-- Uncomment below if you prefer to use an image logo -->
         <!-- <a href="index.html" class="logo me-auto me-lg-0"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+        <form v-if="this.$store.state.login.name !== 'admin'" class="search d-flex justify-content-end align-items-center" @submit.prevent="search()">
+          <input class="form-control m-0" type="text" placeholder="Search" v-model="keyword">
+          <button class="" type="button" style="width: 33px;height: 33px">
+            <img src="/assets/img/main/search.png">
+          </button>
+        </form>
 
-        <nav id="navbar" class="navbar order-last order-lg-0">
-          <i class="bi bi-list mobile-nav-toggle"></i>
-        </nav><!-- .navbar -->
+<!--        <nav id="navbar" class="navbar order-last order-lg-0">-->
+<!--          <i class="bi bi-list mobile-nav-toggle"></i>-->
+<!--        </nav>&lt;!&ndash; .navbar &ndash;&gt;-->
+
+        <b-button v-if="this.$store.state.login.name !== 'admin'" type="button" class="nav-item nav-link" id="info" @click="goInfo()">
+          <div>
+            <b-icon-person-fill style="width: 24px; height: 24px;" title="내 정보"></b-icon-person-fill>
+            {{ this.$store.state.login.name }}님
+          </div>
+        </b-button>
 
       </div>
-
-      <b-button v-if="this.$store.state.login.name !== 'admin'" type="button" class="nav-item nav-link" id="info" @click="goInfo()">
-        <div>
-          <b-icon-person-fill style="width: 24px; height: 24px;" title="내 정보"></b-icon-person-fill>
-          {{ this.$store.state.login.name }}님
-        </div>
-      </b-button>
     </header>
     <!-- End Header -->
 
@@ -39,6 +45,11 @@ import {mapMutations} from "vuex";
 
 export default {
   name: "NavBar",
+  data(){
+    return {
+      keyword: "",
+    }
+  },
   mounted() {
   },
   methods: {
@@ -48,7 +59,14 @@ export default {
     goInfo() {
       this.setNextStep(6);
     },
-  }
+    search() {
+      console.log("search");
+      console.log(this.keyword);
+      this.$router.push({path:"/mobile/search", query: {keyword:this.keyword}});
+      // window.location.reload(true);
+      this.$router.go();
+    }
+  },
 }
 </script>
 
@@ -331,17 +349,10 @@ export default {
   display: block;
 }
 
-#infoList {
-  height: 480px;
-  overflow-y: auto;
-}
-
 #info {
-  width: 40%;
   background-color: var(--background-color);
   border: none;
   outline: none;
   box-shadow: none;
 }
-
 </style>
