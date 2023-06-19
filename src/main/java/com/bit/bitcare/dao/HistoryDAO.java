@@ -13,4 +13,5 @@ public interface HistoryDAO {
     public void delete(int id);
     public void insert(HistoryDTO historyDTO);
     public void update(HistoryDTO historyDTO);
+    public List<HistoryDTO> selectNotReceiptHistory();
 }

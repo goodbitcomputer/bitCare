@@ -32,7 +32,12 @@ export default {
         // 히스토리 페이지
         // 히스토리 리스트
         historyList: [],
-
+        selectDept: 0,
+        waitingList: [],
+        allWaitingCount: 0,
+        allHistoryList: [],
+        receiptOnList: [],
+        receiptCount : 0,
     },
     getters: {},
     mutations: {
@@ -179,8 +184,24 @@ export default {
             })
             // console.log(state.historyList);
         },
-
-
+        setSelectDept(state, selectDept){
+            return state.selectDept = selectDept;
+        },
+        setWaitingList(state, waitingList){
+            return state.waitingList = waitingList;
+        },
+        setAllWaitingCount(state, allWaitingCount){
+            return state.allWaitingCount = allWaitingCount;
+        },
+        setAllHistoryList(state, allHistoryList){
+            return state.allHistoryList = allHistoryList;
+        },
+        setReceiptOnList(state, receiptOnList){
+            return state.receiptOnList = receiptOnList
+        },
+        setReceiptCount(state, receiptCount){
+            return state.receiptCount = receiptCount
+        }
     },
 
     actions: {
@@ -210,7 +231,6 @@ export default {
         },
 
         // 선택된 히스토리 데이터 가져오기 (imgList, sbList, cbList)
-
 
     }
 };
