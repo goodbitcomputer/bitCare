@@ -1,22 +1,17 @@
 <template>
   <div>
     <NavBar/>
+    <AnnouncementBoard/>
     <div class="container">
+      <!-- 오늘의 접수/수납 건수 -->
       <div class="detail border-box">
-        <DeptSelect/>
+        <!-- 의사 목록 -->
       </div>
-      <div class="list">
-        <ClinicNow/>
-        <div>
-          <div class="container">
-            <div class="todayHistory border-box">
-              <WaitingNow/>
-            </div>
-            <div class="receipt border-box">
-              <ReceiptNow/>
-            </div>
-          </div>
-        </div>
+      <div class="todayHistory border-box">
+        <!-- 오늘의 의사가 본 진료목록 -->
+      </div>
+      <div class="selectOne border-box">
+        <!-- 진료 기록 -->
       </div>
     </div>
   </div>
@@ -25,18 +20,12 @@
 <script>
 import "/public/assets/css/style.scss";
 import NavBar from "@/components/NavBar.vue";
-import ClinicNow from "@/components/home/ClinicNow.vue";
-import WaitingNow from "@/components/home/WaitingNow.vue";
-import DeptSelect from "@/components/home/DeptSelect.vue";
-import ReceiptNow from "@/components/home/ReceiptNow.vue";
+import AnnouncementBoard from "@/components/home/Announcement.vue";
 
 export default {
   name: "DoctorView",
   components: {
-    ReceiptNow,
-    DeptSelect,
-    WaitingNow,
-    ClinicNow,
+    AnnouncementBoard,
     NavBar,
   }
 }
@@ -66,7 +55,7 @@ btn {
   width: 100%;
 }
 
-.announcement {
+.announcement{
   width: 100%;
 }
 
@@ -80,24 +69,19 @@ btn {
     padding-top: 20px;
     display: flex;
   }
+  .announcement{
+    width: 100%;
+  }
   .detail {
-    width: 20%;
+    width: 60%;
   }
-  .list{
-    width: 80%;
+  .history {
+    width: 30%;
   }
-  .todayHistory {
-    width: 50%;
-    height: 520px;
-    overflow-y: auto;
-  }
-  .receipt {
-    width: 50%;
-    height: 520px;
-    overflow-y: auto;
+  .write {
+    width: 30%;
   }
 }
-
 
 // xl
 //@media (min-width: 1200px) { ... }
