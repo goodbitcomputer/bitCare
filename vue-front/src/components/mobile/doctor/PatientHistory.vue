@@ -227,9 +227,6 @@ export default {
     this.divHeightFix();
     this.getBodyCategoryData();
     this.ckeditorSetting();
-    if (!this.isImgEmpty) {
-      this.searchBodyCategory();
-    }
   },
   computed: {
     ...mapState('mobileDoctor',
@@ -360,7 +357,7 @@ export default {
     // 사진촬영버튼
     photography() {
       this.setPhotoListToNewCameraList(this.savePhotoList);
-      this.setNextStep(7);
+      this.setNextStep(8);
     },
 
     // 저장 버튼
@@ -438,6 +435,10 @@ export default {
       return axios.get('/mobile/doctor/getBodyCategoryData', {}).then(response => {
         let list = response.data;
         this.bodyCategoryList = list;
+      }).then(()=>{
+        if (!this.isImgEmpty) {
+          this.searchBodyCategory();
+        }
       }).catch(function (error) {
         console.log(error);
       });
@@ -461,7 +462,8 @@ section {
 #mobile-doctor {
   width: 100%;
   /*height: 100vh;*/
-  background: url("/public/assets/img/main/hero-bg.jpg");
+  /*background: url("/public/assets/img/main/hero-bg.jpg");*/
+  background-color: #A1C7E0;
   background-size: cover;
   /* 배경이미지 반복여부 */
   background-repeat: no-repeat;
@@ -475,7 +477,7 @@ section {
 
 #mobile-doctor:before {
   content: "";
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.6);
   position: absolute;
   bottom: 0;
   top: 0;
@@ -484,7 +486,7 @@ section {
 }
 
 #mobileDoctor-box {
-  padding-top: 150px;
+  padding-top: 60px;
   padding-bottom: 65px;
   margin: 0 3px;
 }
@@ -579,9 +581,6 @@ section {
 }
 
 @media (max-width: 1200px) {
-  #mobileDoctor-box {
-    padding-top: 110px;
-  }
 
   .ellipsis-name {
     white-space: nowrap;
@@ -647,9 +646,6 @@ section {
 }
 
 @media (max-width: 351px) {
-  #mobileDoctor-box {
-    padding-top: 150px;
-  }
 
   body * {
     font-size: 8px;

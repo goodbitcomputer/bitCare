@@ -40,4 +40,23 @@
         values(#{name}, #{identityNumber}, #{gender}, #{birth}, #{phoneNumber}, #{addressId})
     </insert>
 
+    <!-- 환자 검색   -->
+    <select id="searchAll" parameterType="searchDTO" resultType="patientDTO">
+        SELECT * FROM `patient`
+        WHERE id like concat('%', #{keyword}, '%') or
+        name like concat('%', #{keyword}, '%') or
+        identity_number like concat('%', #{keyword}, '%') or
+        phone_number like concat('%', #{keyword}, '%')
+        LIMIT #{offset}, #{recordSize}
+    </select>
+
+    <!-- 환자 수 카운팅   -->
+    <select id="count" parameterType="searchDTO" resultType="int">
+        SELECT COUNT(*) FROM patient
+        WHERE id like concat('%', #{keyword}, '%') or
+        name like concat('%', #{keyword}, '%') or
+        identity_number like concat('%', #{keyword}, '%') or
+        phone_number like concat('%', #{keyword}, '%');
+    </select>
+
 </mapper>

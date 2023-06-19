@@ -220,7 +220,7 @@ export default {
           });
     },
     connect() {
-      const serverURL = "http://localhost:8080/receive"
+      const serverURL = "/receive"
       let options = {debug: false, protocols: Stomp.VERSIONS.supportedProtocols()};
       let socket = new SockJS(serverURL);
       this.stompClient = Stomp.over(socket, options);

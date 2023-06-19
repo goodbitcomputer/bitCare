@@ -163,7 +163,7 @@ export default {
     },
     connect() {
       console.log("연결 시도")
-      const serverURL = "http://localhost:8080/receive"
+      const serverURL = "/receive"
       let options = {debug: false, protocols: Stomp.VERSIONS.supportedProtocols()};
       let socket = new SockJS(serverURL);
       this.stompClient = Stomp.over(socket, options);
