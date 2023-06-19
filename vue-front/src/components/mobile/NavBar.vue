@@ -42,6 +42,8 @@
 </template>
 
 <script>
+import {mapMutations} from "vuex";
+
 export default {
   name: "NavBar",
   data() {
@@ -52,6 +54,12 @@ export default {
   mounted() {
   },
   methods: {
+    ...mapMutations('mobileDoctor', {
+      setNextStep: 'setNextStep',
+    }),
+    goInfo() {
+      this.setNextStep(6);
+    },
     search() {
       console.log("search");
       console.log(this.keyword);
