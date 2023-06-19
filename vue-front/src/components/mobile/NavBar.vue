@@ -11,7 +11,7 @@
       <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
 
         <h1 class="logo me-auto me-lg-0">
-          <router-link to="/mobile/home" tag="a">BitCare Platform</router-link>
+          <router-link to="/mobile/home" tag="a">BitCare</router-link>
         </h1>
         <!-- Uncomment below if you prefer to use an image logo -->
         <!-- <a href="index.html" class="logo me-auto me-lg-0"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
