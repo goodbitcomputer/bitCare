@@ -1,6 +1,6 @@
 <template>
   <div class="temp">
-    <NavBar/>
+    <NavBarHome/>
     <Home/>
 
   </div>
@@ -10,14 +10,14 @@
 import "/public/assets/css/style.scss";
 import Swiper from "swiper";
 import AOS from 'aos';
-import NavBar from "@/components/mobile/NavBar.vue";
 import Home from "@/components/mobile/Home.vue"
+import NavBarHome from "@/components/mobile/NavBarHome.vue";
 
 export default {
 
   name: "MobileMain",
   components: {
-    NavBar,
+    NavBarHome,
     Home,
   },
 

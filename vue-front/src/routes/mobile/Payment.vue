@@ -1,6 +1,6 @@
 <template>
   <div>
-    <nav-bar/>
+    <NavBarHome/>
     <Auth v-if="authByStep"/>
     <ReceiptList v-if="receiptListByStep"/>
     <paymentDetail v-if="paymentDetailByStep"/>
@@ -12,12 +12,12 @@ import paymentDetail from "@/components/mobile/payment/PaymentDetail.vue";
 import Auth from "@/components/mobile/payment/Auth.vue";
 import ReceiptList from "@/components/mobile/payment/ReceiptList.vue";
 import {mapState} from "vuex";
-import NavBar from "@/components/mobile/NavBar.vue";
+import NavBarHome from "@/components/mobile/NavBarHome.vue";
 
 export default {
   name: "MobilePayment",
   components: {
-    NavBar,
+    NavBarHome,
     ReceiptList,
     Auth,
     paymentDetail,

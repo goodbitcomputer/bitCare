@@ -1,6 +1,6 @@
 <template>
   <div class="temp">
-    <NavBar/>
+    <NavBarHome/>
     <!-- ======= Hero Section ======= -->
     <section id="hero" class="d-flex align-items-center">
       <div class="pt-0" data-aos="zoom-in" data-aos-delay="100">
@@ -35,14 +35,14 @@
 
 <script>
 import "/public/assets/css/style.scss";
-import NavBar from "@/components/mobile/NavBar.vue";
 import axios from "axios";
 import {mapMutations, mapState} from "vuex";
+import NavBarHome from "@/components/mobile/NavBarHome.vue";
 
 export default {
   name: "MobileLogin",
   components: {
-    NavBar,
+    NavBarHome,
   },
   data() {
     return {

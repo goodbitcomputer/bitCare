@@ -15,24 +15,10 @@
         </h1>
         <!-- Uncomment below if you prefer to use an image logo -->
         <!-- <a href="index.html" class="logo me-auto me-lg-0"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
-        <form class="search d-flex justify-content-end align-items-center" @submit.prevent="search()">
-          <input class="form-control m-0" type="text" placeholder="Search" v-model="keyword">
-          <button class="" type="button" style="width: 33px;height: 33px">
-            <img src="/assets/img/main/search.png">
-          </button>
-        </form>
-
 
         <!--        <nav id="navbar" class="navbar order-last order-lg-0">-->
         <!--          <i class="bi bi-list mobile-nav-toggle"></i>-->
         <!--        </nav>&lt;!&ndash; .navbar &ndash;&gt;-->
-
-        <b-button type="button" class="nav-item nav-link" id="info" @click="goInfo()">
-          <div>
-            <b-icon-person-fill style="width: 24px; height: 24px;" title="내 정보"></b-icon-person-fill>
-            {{ this.$store.state.login.name }}님
-          </div>
-        </b-button>
 
       </div>
     </header>
@@ -45,7 +31,7 @@
 import {mapMutations} from "vuex";
 
 export default {
-  name: "NavBar",
+  name: "NavBarHome",
   data() {
     return {
       keyword: "",

@@ -1,6 +1,6 @@
 <template>
   <div class="temp">
-    <NavBar/>
+    <NavBarHome/>
     <Auth v-if="authByStep"/>
     <InsertPhoneIdentity v-if="insertPhoneIdentityByStep"/>
     <InsertName v-if="insertNameByStep"/>
@@ -13,19 +13,19 @@
 
 <script>
 import {mapState} from "vuex";
-import NavBar from "@/components/mobile/NavBar.vue";
 import Auth from "@/components/mobile/Auth.vue";
 import InsertPhoneIdentity from "@/components/mobile/InsertPhoneIdentity.vue";
 import InsertName from "@/components/mobile/InsertName.vue";
 import InsertAddress from "@/components/mobile/InsertAddress.vue";
 import SelectDept from "@/components/mobile/SelectDept.vue";
 import RegisterClear from "@/components/mobile/RegisterClear.vue";
+import NavBarHome from "@/components/mobile/NavBarHome.vue";
 
 export default {
   name: "MobileRegister",
   components: {
+    NavBarHome,
     RegisterClear,
-    NavBar,
     Auth,
     InsertPhoneIdentity,
     InsertName,

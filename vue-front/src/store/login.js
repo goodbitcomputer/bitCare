@@ -12,6 +12,7 @@ export default {
         list : [],
         deptList : [],
         registerModal : false,
+        dept : 0,
     },
     getters: {
         getRole(state){
@@ -40,6 +41,9 @@ export default {
         },
         setRegisterModal : function (state, registerModal){
             return state.registerModal = registerModal;
+        },
+        setDept : function (state, dept){
+            return state.dept = dept;
         },
     },
     actions: {
