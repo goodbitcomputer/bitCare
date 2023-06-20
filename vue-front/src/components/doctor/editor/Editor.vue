@@ -66,13 +66,13 @@
       <div class="flex-grow-1 editor">
         <ImageEditor
             ref="tuiImageEditor"
+            :disabled="showDiv"
             :image-list="images"
             :selectedImage="selectedEditorImage"
             class="tui-editor"
             @ready="onEditorReady"
             @update:image-list="updateImageList"
             @edit-complete="handleEditComplete"
-            :disabled="showDiv"
         />
 
         <div v-if="showDiv" class="editor-cover" @click="removeCover">
