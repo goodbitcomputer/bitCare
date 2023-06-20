@@ -32,13 +32,8 @@ export default {
   created() {
     this.getDeptList()
     this.getSessionLogIn()
-  },
-  mounted() {
-    this.getWaitingData();
-    // waitingList 새로고침
-    this.$EventBus.$on('completedRefresh', () => {
-      this.waitingRefresh();
-    });
+    this.getWaitingData()
+    this.setSelectDept(0)
   },
   computed: {
     ...mapState('login',
@@ -141,12 +136,6 @@ export default {
       }).catch(function (error) {
         console.log(error);
       });
-    },
-    // 환자대기리스트 새로고침
-    waitingRefresh() {
-      this.getWaitingData();
-      this.setWaitingData("");
-      this.initHistoryList();
     },
     selectDeptButton(item){
       this.setSelectDept(item.id)

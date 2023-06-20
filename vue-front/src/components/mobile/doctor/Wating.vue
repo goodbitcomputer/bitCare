@@ -28,9 +28,6 @@
       <b-button pills card vertical class="admin col text-center" data-aos="fade-up" @click="showDetails">
         <span>내정보 수정</span>
       </b-button>
-      <b-button pills card vertical class="admin col text-center" data-aos="fade-up" @click="NextBtn(7)">
-        <span>관리자 페이지</span>
-      </b-button>
     </div>
 
     <div>

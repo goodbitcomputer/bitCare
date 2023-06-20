@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import {mapActions, mapMutations} from "vuex";
+import {mapActions, mapMutations, mapState} from "vuex";
 import axios from "axios";
 
 export default {
@@ -34,9 +34,14 @@ export default {
     return {
       waitingList: [],
       dept: '',
+      loginDeptId: 0,
     }
   },
-  computed: {},
+  computed: {
+    ...mapState('doctor',
+        ['selectDept']
+    )
+  },
   methods: {
     ...mapMutations('doctor', {
       setWaitingData: 'setWaitingData',
@@ -47,11 +52,13 @@ export default {
       getHistoryList: 'getHistoryList'
     }),
     selectPatientBtn(item) {
-      this.setWaitingData(item);
-      this.getHistoryList(item.patientId);
+      if(this.$store.state.doctor.selectDept === this.loginDeptId) {
+        this.setWaitingData(item);
+        this.getHistoryList(item.patientId);
 
-      // historyPage의 historyData 초기화
-      this.$EventBus.$emit('initHistory')
+        // historyPage의 historyData 초기화
+        this.$EventBus.$emit('initHistory')
+      }
     },
 
     dateMsg(item) {
@@ -92,6 +99,21 @@ export default {
 
         return this.dept
       }
+    },
+    getSessionLogIn() {
+      // Axios를 사용하여 RESTful API 호출
+      axios.get('/api/login')
+          .then(response => {
+            console.log(response.data);
+            // 세션 데이터 사용 예시
+            if (response.data && response.data.isLoggedIn) {
+              let logIn = JSON.parse(JSON.stringify(response.data.logIn));
+              this.loginDeptId = logIn.deptId;
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
     },
   }
 }

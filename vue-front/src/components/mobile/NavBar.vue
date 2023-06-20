@@ -15,20 +15,24 @@
         </h1>
         <!-- Uncomment below if you prefer to use an image logo -->
         <!-- <a href="index.html" class="logo me-auto me-lg-0"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
-        <form class="search d-flex justify-content-end align-items-center" @submit.prevent="search()">
-          <input class="form-control m-0" type="text" placeholder="Search" v-model="keyword">
-          <button class="" type="button" style="width: 33px;height: 33px">
-            <img src="/assets/img/main/search.png">
-          </button>
-        </form>
 
+        <div class="search-box d-flex justify-content-center">
+          <b-collapse id="collapseWidthExample">
+            <form class="search d-flex justify-content-end align-items-center" style="min-width: 80px;" @submit.prevent="search()">
+              <input class="form-control m-0" type="text" placeholder="Search" v-model="keyword">
+            </form>
+          </b-collapse>
+          <b-button v-b-toggle.collapseWidthExample id="searchButton">
+            <img src="/assets/img/main/search.png" style="width: 24px; height: 24px; min-width: 24px; min-height: 24px;">
+          </b-button>
+        </div>
 
         <!--        <nav id="navbar" class="navbar order-last order-lg-0">-->
         <!--          <i class="bi bi-list mobile-nav-toggle"></i>-->
         <!--        </nav>&lt;!&ndash; .navbar &ndash;&gt;-->
 
         <b-button type="button" class="nav-item nav-link" id="info" @click="goInfo()">
-          <div>
+          <div style="min-width: 84px">
             <b-icon-person-fill style="width: 24px; height: 24px;" title="내 정보"></b-icon-person-fill>
             {{ this.$store.state.login.name }}님
           </div>
@@ -37,7 +41,6 @@
       </div>
     </header>
     <!-- End Header -->
-
   </div>
 </template>
 
@@ -350,7 +353,20 @@ export default {
   display: block;
 }
 
-#info {
+@media (min-width: 581px) {
+  /*class="fixed-top d-flex justify-content-center"*/
+  .search-box {
+    position: relative;
+  }
+}
+
+@media (max-width: 580px) {
+  .search {
+    top: 59px;
+  }
+}
+
+#info, #searchButton {
   background-color: var(--background-color);
   border: none;
   outline: none;
@@ -359,5 +375,9 @@ export default {
 
 #header {
   max-height: 59px;
+}
+
+#collapse {
+  top: 69px;
 }
 </style>

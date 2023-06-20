@@ -10,11 +10,23 @@
         </b-navbar-toggle>
         <!-- 부트스트랩의 일부, 요소를 숨기거나 나타내게 할 수 있음 -->
         <b-collapse id="nav-collapse" is-nav>
-          <b-navbar-nav>
+          <b-navbar-nav class="mr-auto">
             <router-link to="/home" class="nav-item nav-link">Home</router-link>
             <router-link to="/nurse" class="nav-item nav-link">Nurse</router-link>
             <router-link to="/doctor" class="nav-item nav-link">Doctor</router-link>
           </b-navbar-nav>
+
+          <div class="search-box d-flex justify-content-center">
+            <b-collapse id="collapseWidthExample">
+              <form class="search d-flex justify-content-end align-items-center" @submit.prevent="search()">
+                <input class="form-control m-0" type="text" placeholder="Search" v-model="keyword">
+              </form>
+            </b-collapse>
+            <b-button v-b-toggle.collapseWidthExample id="searchButton">
+              <img src="/assets/img/main/search.png" style="width: 24px;height: 24px">
+            </b-button>
+          </div>
+
           <b-navbar-nav class="ml-auto">
             <b-button type="button" class="nav-item nav-link" id="alarm">
               <div v-if="this.$store.state.alarm.alarmCount > 0">
@@ -40,7 +52,7 @@
             </router-link>
 
             <b-button type="button" class="nav-item nav-link" id="info">
-              <div>
+              <div style="min-width: 84px">
                 <b-icon-person-fill style="width: 24px; height: 24px;" title="내 정보"></b-icon-person-fill>
                 {{ this.$store.state.login.name }}님
               </div>
@@ -169,7 +181,8 @@ export default {
       state: "",
       message_file: "",
       showDetailsModal: this.showModal,
-      isLogin: false
+      isLogin: false,
+      keyword: "",
     }
   },
   created() {
@@ -396,7 +409,14 @@ export default {
         this.loginError = true;
         throw new Error(err)
       })
-    }
+    },
+    search() {
+      console.log("search");
+      console.log(this.keyword);
+      this.$router.push({path: "/mobile/search", query: {keyword: this.keyword}});
+      // window.location.reload(true);
+      this.$router.go();
+    },
   }
 }
 </script>
@@ -560,7 +580,7 @@ a {
   position: relative;
 }
 
-#message, #alarm, #logOut, #info {
+#message, #alarm, #logOut, #info, #searchButton {
   background-color: var(--background-color);
   border: none;
   outline: none;
@@ -601,4 +621,18 @@ a {
   top: 0; /* 필수 */
   z-index: 500;
 }
+
+@media (min-width: 581px) {
+  /*class="fixed-top d-flex justify-content-center"*/
+  .search-box {
+    top: 8px;
+  }
+}
+
+@media (max-width: 580px) {
+  .search-box {
+    top: 59px;
+  }
+}
+
 </style>
