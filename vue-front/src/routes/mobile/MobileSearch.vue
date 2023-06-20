@@ -8,7 +8,6 @@
 <script>
 import MobileSearchPatient from "@/components/mobile/search/Patient.vue";
 import NavBar from "@/components/mobile/NavBar.vue";
-import axios from "axios";
 
 export default {
   name: "MobileSearch",
