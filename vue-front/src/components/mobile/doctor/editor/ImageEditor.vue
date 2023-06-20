@@ -124,7 +124,7 @@ export default {
     ...mapMutations('editor', {
       setImageEditor: 'setImageEditor'
     }),
-    initEditor(){
+    initEditor() {
       this.editorInstance = new ImageEditor(this.$refs.mobileTuiImageEditor, this.editorOptions);
       console.log(this.editorInstance);
       this.setImageEditor(this.editorInstance);
