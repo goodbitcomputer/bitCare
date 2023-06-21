@@ -7,6 +7,7 @@ import alarm from './alarm'
 import mobile from './mobile'
 import mobileDoctor from './mobileDoctor'
 import mobilePayment from './mobilePayment'
+import search from './search'
 import createPersistedState from 'vuex-persistedstate';
 import login from "./login";
 Vue.use(Vuex)
@@ -22,6 +23,7 @@ export default new Vuex.Store({
         login,
         mobileDoctor,
         mobilePayment,
+        search,
     },
     plugins: [
         createPersistedState({

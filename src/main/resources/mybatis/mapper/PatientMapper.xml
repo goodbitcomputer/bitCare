@@ -42,11 +42,20 @@
 
     <!-- 환자 검색   -->
     <select id="searchAll" parameterType="searchDTO" resultType="patientDTO">
-        SELECT * FROM `patient`
-        WHERE id like concat('%', #{keyword}, '%') or
-        name like concat('%', #{keyword}, '%') or
-        identity_number like concat('%', #{keyword}, '%') or
-        phone_number like concat('%', #{keyword}, '%')
+        SELECT p.*, h.symptom_detail FROM bit_care.patient as p
+        LEFT JOIN (
+        SELECT * FROM history as a
+        WHERE a.id = (
+        SELECT id FROM history as b
+        WHERE b.patient_id = a.patient_id
+        ORDER BY b.id desc
+        LIMIT 1)
+        ) AS h
+        ON p.id = h.patient_id
+        WHERE p.id like concat('%', #{keyword}, '%') or
+        p.name like concat('%', #{keyword}, '%') or
+        p.identity_number like concat('%', #{keyword}, '%') or
+        p.phone_number like concat('%', #{keyword}, '%')
         LIMIT #{offset}, #{recordSize}
     </select>
 

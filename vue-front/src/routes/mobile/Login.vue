@@ -17,12 +17,14 @@
             <!--            <h2>All in One EMR Cloud Platform</h2>-->
 
             <div class="login-info-box">
-              <b-input class="m-auto" v-model="username" name="username" placeholder="ID"></b-input>
-              <b-input class="m-auto" v-model="password" name="password" style="margin: 5px 0 !important;"
-                       type="password" placeholder="Password"></b-input>
-              <input type="checkbox" name="remember-me" v-model="rememberMe"/>
-              <label for="remember-me">자동 로그인</label>
-              <button @click="login" class="w-25 btn btn-primary" variant="success" type="submit">Login</button>
+              <form @submit.prevent="login()">
+                <b-input class="m-auto" v-model="username" name="username" placeholder="ID"></b-input>
+                <b-input class="m-auto" v-model="password" name="password" style="margin: 5px 0 !important;"
+                         type="password" placeholder="Password"></b-input>
+                <input type="checkbox" name="remember-me" v-model="rememberMe"/>
+                <label for="remember-me">자동 로그인</label>
+                <button class="w-25 btn btn-primary" variant="success" type="submit">Login</button>
+              </form>
             </div>
           </div>
 
@@ -86,7 +88,7 @@ export default {
       setRole: 'setRole',
       setName: 'setName',
     }),
-    autoLogin(){
+    autoLogin() {
       axios.get('/api/login')
           .then(response => {
             console.log(response.data)
@@ -98,7 +100,7 @@ export default {
               this.setName(logIn.name)
               this.setRole(logIn.role)
               this.$router.push('/mobile/doctor')
-            } else{
+            } else {
               this.setName('admin')
               this.setRole('ROLE_ADMIN')
             }

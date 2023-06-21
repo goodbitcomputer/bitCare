@@ -13,4 +13,5 @@ public class PatientDTO {
     String gender;
     String name;
     int addressId;
+    String symptomDetail;
 }

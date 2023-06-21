@@ -91,7 +91,10 @@ export default {
     },
     setWaitingList(items) {
       this.waitingList = [];
+      console.log("setWaitingList");
       items.forEach((item) => {
+        console.log(item.birth);
+        console.log(typeof item.birth);
         this.waitingList.push(item);
       })
     },

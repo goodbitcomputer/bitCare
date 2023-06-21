@@ -12,7 +12,7 @@ public class SearchDTO {
 
     public SearchDTO() {
         this.recordSize = 10;
-        this.pageSize = 10;
+        this.pageSize = 5;
     }
     public int getOffset() {    // limit 시작구문에 사용
         return (page-1) * recordSize;

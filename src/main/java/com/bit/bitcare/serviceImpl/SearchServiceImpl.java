@@ -50,6 +50,7 @@ public class SearchServiceImpl implements SearchService {
             object.addProperty("gender", p.getGender());
             object.addProperty("name", p.getName());
             object.addProperty("addressId", p.getAddressId());
+            object.addProperty("symptomDetail", p.getSymptomDetail());
 
             patientArray.add(object);
         }
