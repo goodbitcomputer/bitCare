@@ -1,6 +1,9 @@
 <template>
   <div>
     <NavBar/>
+    <div>
+      <AnnouncementBoard/>
+    </div>
     <div class="container">
       <div class="waiting border-box">
         <waiting/>
@@ -25,10 +28,12 @@ import Physical from "@/components/doctor/Physical.vue";
 import History from "@/components/doctor/History.vue";
 import HistoryWrite from "@/components/doctor/HistoryWrite.vue";
 import NavBar from "@/components/NavBar.vue";
+import AnnouncementBoard from "@/components/home/Announcement.vue";
 
 export default {
   name: "DoctorView",
   components: {
+    AnnouncementBoard,
     NavBar,
     Waiting,
     Patient,

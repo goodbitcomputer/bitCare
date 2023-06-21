@@ -1,6 +1,6 @@
 <template>
   <div class="waiting-info-box">
-    <b-badge pills card vertical class="admin col text-center" data-aos="fade-up" @click="selectAllButton()">
+    <b-badge pills card vertical class="admin col text-center" @click="selectAllButton()">
       <div>
         <span class="font-weight-bold" style="font-weight: 200; font-size: 20px;"> 전체 대기 목록 </span>
       </div>
