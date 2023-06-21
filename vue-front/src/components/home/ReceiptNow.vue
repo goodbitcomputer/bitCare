@@ -1,6 +1,6 @@
 <template>
   <div class="waiting-info-box">
-    <b-badge pills card vertical class="admin col text-center" data-aos="fade-up">
+    <b-badge pills card vertical class="admin col text-center">
       <span style="font-weight: 200; font-size: 30px;"> 수납 요청 미처리 목록 </span>
     </b-badge>
     <div class="border-box" v-for="(item) in this.$store.state.doctor.receiptOnList" :key="item.id">

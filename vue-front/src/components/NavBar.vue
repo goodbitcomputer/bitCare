@@ -146,7 +146,6 @@
         </b-modal>
       </div>
     </b-navbar>
-    <AnnouncementBoard/>
   </div>
 </template>
 
@@ -166,10 +165,9 @@ import Message from "@/routes/message/Message.vue";
 import Alarm from "@/routes/alarm/Alarm.vue";
 import Waiting from "@/components/home/Wating.vue";
 import EmployeeUpdate from "@/components/mobile/doctor/EmployeeUpdate.vue";
-import AnnouncementBoard from "@/components/home/Announcement.vue";
 
 export default {
-  components: {AnnouncementBoard, Message, Alarm, Waiting, EmployeeUpdate},
+  components: {Message, Alarm, Waiting, EmployeeUpdate},
   data() {
     return {
       count: this.messageCount,
@@ -446,6 +444,7 @@ a {
   align-items: center;
   background-color: var(--background-color);
   padding: 8px 12px;
+  max-height: 50px;
 }
 
 
