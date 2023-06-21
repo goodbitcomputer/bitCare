@@ -198,6 +198,18 @@ export default {
     // });
 
   },
+  created() {
+    this.$nextTick(() => {
+      if (!this.isSelectEmpty) {
+        if (this.ckeditor == 0) {
+          this.ckeditorSetting();
+          this.ckeditor = this.ckeditor + 1;
+        }
+      } else {
+        this.ckeditor = 0;
+      }
+    })
+  },
 // 환자데이터가 활성화되면 ckeditor 세팅하기
   updated() {
     this.$nextTick(() => {

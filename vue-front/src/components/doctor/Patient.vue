@@ -68,6 +68,17 @@ export default {
           height: var(--ck-toolbar-height) !important;
         }
       `;
+
+    this.$nextTick(()=>{
+      if(!this.isEmpty) {
+        if(this.ckeditor==0) {
+          this.ckeditorSetting();
+          this.ckeditor= this.ckeditor+1;
+        }
+      } else{
+        this.ckeditor= 0;
+      }
+    })
   },
   // 환자데이터가 활성화되면 ckeditor 세팅하기
   updated() {

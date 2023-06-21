@@ -42,6 +42,9 @@ export default {
         ['selectDept']
     )
   },
+  created(){
+    this.getSessionLogIn()
+  },
   methods: {
     ...mapMutations('doctor', {
       setWaitingData: 'setWaitingData',
@@ -58,6 +61,10 @@ export default {
 
         // historyPage의 historyData 초기화
         this.$EventBus.$emit('initHistory')
+
+        if(this.$store.state.login.role === 'ROLE_DOCTOR') {
+          this.$router.push('/doctor')
+        }
       }
     },
 

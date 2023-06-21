@@ -6,7 +6,6 @@
     <b-datalist id="employees">
       <option v-for="employee in this.$store.state.login.list" :key="employee.id">{{ employee.name }}</option>
     </b-datalist>
-    <input type="file" id="image" accept="image/*">
     <vue-editor v-model="messageContent" id="edit"></vue-editor>
   </div>
 </template>
