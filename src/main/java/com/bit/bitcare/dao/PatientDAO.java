@@ -1,6 +1,7 @@
 package com.bit.bitcare.dao;
 
 import com.bit.bitcare.model.PatientDTO;
+import com.bit.bitcare.model.SearchDTO;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -13,4 +14,6 @@ public interface PatientDAO {
     public List<PatientDTO> selectAll();
     public void delete(int id);
     public void insert(PatientDTO patientDTO);
+    public List<PatientDTO> searchAll(SearchDTO searchDTO);
+    public int count(SearchDTO searchDTO);
 }

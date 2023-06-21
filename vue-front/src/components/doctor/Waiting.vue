@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="border-box">
+    <div class="title-border-box">
       <div class="d-flex">
         <span class="flex-grow-1" style="font-size: 1.2em; font-weight: 700">대기 환자</span>
         <span style="cursor:pointer" @click="waitingRefresh">새로고침</span>
@@ -136,6 +136,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.title-border-box {
+  margin: 5px;
+  padding: 0 5px;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #003A63;
+  border-image: initial;
+  border-radius: 10px;
+}
 .util button {
   background: rgba(12, 11, 9, 0.7);
   color: white;

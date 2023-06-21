@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="border-box">
-      <span style="font-size: 1.2em; font-weight: 700">환자 정보</span>
+    <div class="title-border-box">
+      <span style="font-size: 1.2em; font-weight: 700">진료 기록 작성</span>
     </div>
     <div class="empty-box border-box" v-if="isEmpty">
       <div class="empty-img-box">
@@ -177,6 +177,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.title-border-box {
+  margin: 5px;
+  padding: 0 5px;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #003A63;
+  border-image: initial;
+  border-radius: 10px;
+}
 .empty-box {
   height: 140px;
   display: flex;

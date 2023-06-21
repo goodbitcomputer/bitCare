@@ -6,11 +6,11 @@
         <waiting/>
       </div>
       <div class="history border-box">
-        <patient/>
-        <physical/>
         <history/>
       </div>
       <div class="write border-box">
+        <patient/>
+        <physical/>
         <history-write/>
       </div>
     </div>

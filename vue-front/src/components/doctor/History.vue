@@ -1,131 +1,49 @@
 <template>
-  <div class="history-box border-box">
-    <div class="border-box d-flex">
-      <span style="font-size: 1.2em; font-weight: 700; flex-grow: 1">진료 기록</span>
-      <span style="cursor:pointer" @click="refreshBtn">새로고침</span>
-    </div>
-    <!--      history 리스트-->
-    <div class="empty-list-box border-box" v-if="isListEmpty">
-      <div class="empty-img-box">
-        <img src="@/assets/img/empty-box.png">
+  <div>
+    <div class="history-box">
+      <div class="title-border-box d-flex">
+        <span style="font-size: 1.2em; font-weight: 700; flex-grow: 1">진료 기록</span>
+        <span style="cursor:pointer" @click="refreshBtn">새로고침</span>
       </div>
-    </div>
-    <div class="d-flex" v-if="!isListEmpty">
-      <div class="waiting-list-box">
-        <div class="border-box" v-for="(item) in historyList" :key="item.id">
-          <div @click="selectHistoryBtn(item)">
-            <div>
-              <span>{{ dateMsg(item.entryDate) }}</span>
-            </div>
-            <div>
-              <span>{{ item.dept }}</span>
-            </div>
-            <div>
-              <span>{{ item.visit }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="empty-box border-box flex-grow-1" v-if="isSelectEmpty">
+      <!--      history 리스트-->
+      <div class="empty-list-box border-box" v-if="isListEmpty">
         <div class="empty-img-box">
           <img src="@/assets/img/empty-box.png">
         </div>
       </div>
-      <div class="history-detail-box border-box" v-if="!isSelectEmpty">
-        <!--      진료기록title-->
-        <div class="d-flex">
-          <span>진료기록</span>
-          <span class="flex-grow-1">[{{ dateMsg(selectHistoryData.entryDate) }}]</span>
-          <span style="cursor:pointer" @click="updateBtn" v-if="isCheckUpdate">편집</span>
-        </div>
-        <!--      신체계측/바이탈-->
-        <div>
-          <span class="font-weight-bold">신체계측/바이탈</span>
-          <div class="table-wrapper">
-            <b-table hover :items="pyItems" :fields="pyFields" small>
-              <template #cell(code)="data">
-                <div class="">
-                  {{ data.value }}
-                </div>
-              </template>
-              <template #cell(name)="data">
-                <div class="ellipsis-name">
-                  {{ data.value }}
-                </div>
-              </template>
-            </b-table>
-          </div>
-        </div>
-        <!--      의사정보-->
-        <div class="doctor-info">
-          <span>{{ selectHistoryData.visit }}</span>
-          <span>외래진료</span>
-          <span>{{ selectHistoryData.dept }}</span>
-          <span>{{ selectHistoryData.name }}</span>
-        </div>
-        <!--      진료기록 상세정보-->
-        <!--      이미지 list-->
-        <div class="border-box">
-          <span class="font-weight-bold">이미지</span>
-          <div class="img-list-box">
-            <swiper :options="swiperOptions" ref="swiper">
-              <swiper-slide v-for="(slide, index) in slides" :key="index">
-                <!-- 슬라이드 내용 -->
-                <img :src="slide.imagePath" alt="Slide Image">
-              </swiper-slide>
-
-              <!-- 네비게이션 버튼 -->
-              <div class="swiper-button-prev" slot="button-prev"></div>
-              <div class="swiper-button-next" slot="button-next"></div>
-            </swiper>
-          </div>
-          <!--          <b-button class="btn col mt-1" variant="primary">촬영 부위 선택</b-button>-->
-          <div class="imageCategory-box">
-
-          </div>
-        </div>
-
-
-        <div>
-          <span class="font-weight-bold">증상</span>
-          <div style="padding: 5px; border: 1px solid #DBDFE5; border-radius: 5px;"
-               v-html="selectHistoryData.symptomDetail">
-          </div>
-
-        </div>
-        <!--      상병-->
-        <div>
-          <span class="font-weight-bold">상병</span>
-          <div>
-            <div class="table-wrapper">
-              <b-table hover :items="sbItems" :fields="sbFields"
-                       :tbody-tr-class="rowClass" small>
-                <template #cell(sb)="data">
-                  <div class="ellipsis-sb td-box-sb">
-                    {{ data.value }}
-                  </div>
-                </template>
-                <template #cell(code)="data">
-                  <div class="ellipsis-code td-box-code">
-                    {{ data.value }}
-                  </div>
-                </template>
-                <template #cell(name)="data">
-                  <div class="ellipsis-name td-box-name">
-                    {{ data.value }}
-                  </div>
-                </template>
-              </b-table>
+      <div class="d-flex" v-if="!isListEmpty">
+        <div class="waiting-list-box">
+          <div class="border-box" v-for="(item) in historyList" :key="item.id">
+            <div @click="selectHistoryBtn(item)">
+              <div>
+                <span>{{ dateMsg(item.entryDate) }}</span>
+              </div>
+              <div>
+                <span>{{ item.dept }}</span>
+              </div>
+              <div>
+                <span>{{ item.visit }}</span>
+              </div>
             </div>
           </div>
         </div>
-        <!--      처방-->
-        <div>
-          <span class="font-weight-bold">처방</span>
+        <div class="empty-box border-box flex-grow-1" v-if="isSelectEmpty">
+          <div class="empty-img-box">
+            <img src="@/assets/img/empty-box.png">
+          </div>
+        </div>
+        <div class="history-detail-box border-box" v-if="!isSelectEmpty">
+          <!--      진료기록title-->
+          <div class="d-flex">
+            <span>진료기록</span>
+            <span class="flex-grow-1">[{{ dateMsg(selectHistoryData.entryDate) }}]</span>
+            <span style="cursor:pointer" @click="updateBtn" v-if="isCheckUpdate">편집</span>
+          </div>
+          <!--      신체계측/바이탈-->
           <div>
+            <span class="font-weight-bold">신체계측/바이탈</span>
             <div class="table-wrapper">
-              <b-table hover :items="cbItems" thead-class="hidden_header"
-                       :tbody-tr-class="rowClass" small>
+              <b-table hover :items="pyItems" :fields="pyFields" small>
                 <template #cell(code)="data">
                   <div class="">
                     {{ data.value }}
@@ -137,6 +55,90 @@
                   </div>
                 </template>
               </b-table>
+            </div>
+          </div>
+          <!--      의사정보-->
+          <div class="doctor-info">
+            <span>{{ selectHistoryData.visit }}</span>
+            <span>외래진료</span>
+            <span>{{ selectHistoryData.dept }}</span>
+            <span>{{ selectHistoryData.name }}</span>
+          </div>
+          <!--      진료기록 상세정보-->
+          <!--      이미지 list-->
+          <div class="border-box">
+            <span class="font-weight-bold">이미지</span>
+            <div class="img-list-box">
+              <swiper :options="swiperOptions" ref="swiper">
+                <swiper-slide v-for="(slide, index) in slides" :key="index">
+                  <!-- 슬라이드 내용 -->
+                  <img :src="slide.imagePath" alt="Slide Image">
+                </swiper-slide>
+
+                <!-- 네비게이션 버튼 -->
+                <div class="swiper-button-prev" slot="button-prev"></div>
+                <div class="swiper-button-next" slot="button-next"></div>
+              </swiper>
+            </div>
+            <!--          <b-button class="btn col mt-1" variant="primary">촬영 부위 선택</b-button>-->
+            <div class="imageCategory-box">
+
+            </div>
+          </div>
+
+
+          <div>
+            <span class="font-weight-bold">증상</span>
+            <div style="padding: 5px; border: 1px solid #DBDFE5; border-radius: 5px;"
+                 v-html="selectHistoryData.symptomDetail">
+            </div>
+
+          </div>
+          <!--      상병-->
+          <div>
+            <span class="font-weight-bold">상병</span>
+            <div>
+              <div class="table-wrapper">
+                <b-table hover :items="sbItems" :fields="sbFields"
+                         :tbody-tr-class="rowClass" small>
+                  <template #cell(sb)="data">
+                    <div class="ellipsis-sb td-box-sb">
+                      {{ data.value }}
+                    </div>
+                  </template>
+                  <template #cell(code)="data">
+                    <div class="ellipsis-code td-box-code">
+                      {{ data.value }}
+                    </div>
+                  </template>
+                  <template #cell(name)="data">
+                    <div class="ellipsis-name td-box-name">
+                      {{ data.value }}
+                    </div>
+                  </template>
+                </b-table>
+              </div>
+            </div>
+          </div>
+          <!--      처방-->
+          <div>
+            <span class="font-weight-bold">처방</span>
+            <div>
+              <div class="table-wrapper">
+                <b-table hover :items="cbItems" thead-class="hidden_header"
+                         :tbody-tr-class="rowClass" small>
+                  <template #cell(code)="data">
+                    <div class="">
+                      {{ data.value }}
+                    </div>
+                  </template>
+                  <template #cell(name)="data">
+                    <div class="ellipsis-name">
+                      {{ data.value }}
+                    </div>
+                  </template>
+                </b-table>
+              </div>
             </div>
           </div>
         </div>
@@ -338,6 +340,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.title-border-box {
+  margin: 5px;
+  padding: 0 5px;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #003A63;
+  border-image: initial;
+  border-radius: 10px;
+}
+
 .empty-list-box {
   height: 140px;
   display: flex;
@@ -367,6 +379,7 @@ export default {
   overflow-y: scroll;
   max-height: 600px;
 }
+
 /* 스크롤바 숨기기 */
 .waiting-list-box::-webkit-scrollbar {
   width: 0;
