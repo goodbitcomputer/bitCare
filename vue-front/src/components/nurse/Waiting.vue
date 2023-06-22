@@ -8,7 +8,9 @@
         <div class="main-left title-border-box">
           <div class="d-flex">
             <span class="flex-grow-1" style="font-size: 1.2em; font-weight: 700">대기 환자</span>
-            <span style="cursor:pointer" @click="waitingRefresh">새로고침</span>
+            <div class="refresh-img-box" style="cursor:pointer" @click="waitingRefresh">
+              <img src="@/assets/img/refresh.png">
+            </div>
           </div>
           <div class="util d-flex">
             <button class="border-box col" @click="waitingBtn">진료대기</button>
@@ -159,6 +161,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.refresh-img-box {
+  width: 25px;
+  margin: 0 auto;
+  display: flex;
+  vertical-align: middle;
+  justify-content: center;
+}
+
+.refresh-img-box img {
+  width: inherit;
+  object-fit: contain;
+}
 //.main-left {
 //  transition: 0.3s;
 //  height: 100%;

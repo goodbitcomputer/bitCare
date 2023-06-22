@@ -2,7 +2,9 @@
   <div>
     <div class="title-border-box d-flex">
       <span style="font-size: 1.2em; font-weight: 700; flex-grow: 1">수납 내역</span>
-      <span style="cursor:pointer" @click="refreshBtn">새로고침</span>
+      <div class="refresh-img-box" style="cursor:pointer" @click="refreshBtn">
+        <img src="@/assets/img/refresh.png">
+      </div>
     </div>
     <div class="empty-box border-box" v-if="isSelectEmpty">
       <div class="empty-img-box">
@@ -249,6 +251,18 @@ export default {
 </script>
 
 <style scoped>
+.refresh-img-box {
+  width: 25px;
+  margin: 0 auto;
+  display: flex;
+  vertical-align: middle;
+  justify-content: center;
+}
+
+.refresh-img-box img {
+  width: inherit;
+  object-fit: contain;
+}
 .title-border-box {
   margin: 5px;
   padding: 0 5px;

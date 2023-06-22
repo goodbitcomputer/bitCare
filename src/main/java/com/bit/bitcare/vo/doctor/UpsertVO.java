@@ -10,9 +10,9 @@ public class UpsertVO {
     String memo;
     int bpSystolic;
     int bpDiastolic;
-    int height;
-    int weight;
-    int temperature;
+    double height;
+    double weight;
+    double temperature;
     String symptomDetail;
     String visit;
     DiseaseVO[] writeSbList;

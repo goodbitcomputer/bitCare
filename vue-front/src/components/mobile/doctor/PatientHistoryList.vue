@@ -153,7 +153,8 @@ export default {
 #mobile-doctor {
   width: 100%;
   /*height: 100vh;*/
-  background: url("/public/assets/img/main/hero-bg.jpg");
+  /*background: url("/public/assets/img/main/hero-bg.jpg");*/
+  background-color: #A1C7E0;
   background-size: cover;
   /* 배경이미지 반복여부 */
   background-repeat: no-repeat;
@@ -167,7 +168,7 @@ export default {
 
 #mobile-doctor:before {
   content: "";
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.6);
   position: absolute;
   bottom: 0;
   top: 0;
@@ -176,7 +177,7 @@ export default {
 }
 
 #mobileDoctor-box {
-  padding-top: 150px;
+  padding-top: 60px;
   padding-bottom: 65px;
   margin : 0 3px;
 }
@@ -230,18 +231,6 @@ export default {
   max-width: 100%; /* 요소의 최대 너비를 지정합니다. */
 }
 
-
-@media (max-width: 1200px) {
-  #mobileDoctor-box {
-    padding-top: 110px;
-  }
-}
-
-@media (max-width: 335px) {
-  #mobileDoctor-box {
-    padding-top: 140px;
-  }
-}
 
 p {
   margin: 0 !important;

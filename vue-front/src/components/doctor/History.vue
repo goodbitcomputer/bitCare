@@ -3,7 +3,9 @@
     <div class="history-box">
       <div class="title-border-box d-flex">
         <span style="font-size: 1.2em; font-weight: 700; flex-grow: 1">진료 기록</span>
-        <span style="cursor:pointer" @click="refreshBtn">새로고침</span>
+        <div class="refresh-img-box" style="cursor:pointer" @click="refreshBtn">
+          <img src="@/assets/img/refresh.png">
+        </div>
       </div>
       <!--      history 리스트-->
       <div class="empty-list-box border-box" v-if="isListEmpty">
@@ -346,6 +348,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.refresh-img-box {
+  width: 25px;
+  margin: 0 auto;
+  display: flex;
+  vertical-align: middle;
+  justify-content: center;
+}
+
+.refresh-img-box img {
+  width: inherit;
+  object-fit: contain;
+}
 .title-border-box {
   margin: 5px;
   padding: 0 5px;
