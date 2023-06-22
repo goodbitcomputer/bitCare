@@ -10,8 +10,7 @@
       ></tui-image-editor>
 
       <div class="info-container">
-        차트 넘버 : CN.{{ this.waitingData.patientId }}, 환자 이름 : {{ this.waitingData.name }}<br/>
-        성별 : {{ this.waitingData.gender }}, 연령 : {{ ageMsg }}세, 주민번호 : {{ identityNumberMsg }}
+        차트 넘버 : CN.{{ this.waitingData.patientId }}, 환자 이름 : {{ this.waitingData.name }}, 성별 : {{ this.waitingData.gender }}, 연령 : {{ ageMsg }}세, 주민번호 : {{ identityNumberMsg }}
       </div>
       <button class="btn btn-primary save-button" @click="saveEditedImage(imageList)">편집 완료</button>
     </div>
