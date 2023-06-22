@@ -127,6 +127,7 @@ export default {
         let list = response.data;
         this.setWaitingList(list);
         this.setWaitingData("");
+        this.initHistoryList();
       }).catch(function (error) {
         console.log(error);
       });
@@ -137,6 +138,7 @@ export default {
         let list = response.data;
         this.setWaitingList(list);
         this.setWaitingData("");
+        this.initHistoryList();
       }).catch(function (error) {
         console.log(error);
       });

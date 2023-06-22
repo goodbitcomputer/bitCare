@@ -4,9 +4,11 @@
       <div class="bg">
         <div class="bg-cover">
           <nav-bar/>
-          <MobileSearchPatient class="search-patient-box" v-if="patientListByStep"/>
-          <PatientHistoryList class="search-patient-box" v-if="patientHistoryListByStep"/>
-          <PatientHistory class="search-patient-box" v-if="patientHistoryByStep"/>
+          <div class="container">
+            <MobileSearchPatient class="search-patient-box" v-if="patientListByStep"/>
+            <PatientHistoryList class="search-patient-box" v-if="patientHistoryListByStep"/>
+            <PatientHistory class="search-patient-box" v-if="patientHistoryByStep"/>
+          </div>
         </div>
       </div>
     </div>

@@ -157,7 +157,7 @@ export default {
 
 
     addCbCheck(item) {
-      let isCheck = this.cbAddItems.some(obj => obj.id == item.id);
+      let isCheck = this.cbAddItems.some(obj => obj.name === item.name);
       return isCheck;
     },
 
@@ -188,7 +188,7 @@ export default {
     },
     // remove cbList        add 처방테이블 한줄 삭제
     removeCbList(item) {
-      this.cbAddItems = this.cbAddItems.filter(param => param.id != item.id);
+      this.cbAddItems = this.cbAddItems.filter(param => param.name != item.name);
     },
     // 모달창 상병(더미) 리스트 필터후 저장
     setCbDummyList(items) {

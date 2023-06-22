@@ -125,11 +125,11 @@ export default {
         },
         // remove sbList        add 상병테이블 한줄 삭제
         removeSbList: (state, item) => {
-            state.sbList = state.sbList.filter(param => param.id != item.id);
+            state.sbList = state.sbList.filter(param => param.name != item.name);
         },
         // remove writeSbList   write상병테이블 한줄 삭제
         removeWriteSbList: (state, item) => {
-            state.writeSbList = state.writeSbList.filter(param => param.id != item.id);
+            state.writeSbList = state.writeSbList.filter(param => param.name != item.name);
         },
 
         // 모달창 상병(더미) 리스트 필터후 저장
@@ -153,7 +153,7 @@ export default {
         },
         // remove writeSbList   write상병테이블 한줄 삭제
         removeWriteCbList: (state, item) => {
-            state.writeCbList = state.writeCbList.filter(param => param.id != item.id);
+            state.writeCbList = state.writeCbList.filter(param => param.name != item.name);
         },
 
         // 히스토리 리스트 초기화

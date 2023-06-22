@@ -302,13 +302,13 @@ export default {
 }
 
 
-@media (min-width: 1500px) {
-  .patient-box {
-    width: calc(20% - 10px);
-  }
-}
+/*@media (min-width: 1500px) {*/
+/*  .patient-box {*/
+/*    width: calc(20% - 10px);*/
+/*  }*/
+/*}*/
 
-@media (max-width: 1500px) {
+@media (min-width: 1250px) {
   .patient-box {
     width: calc(25% - 10px);
   }
@@ -320,19 +320,15 @@ export default {
   }
 }
 
-@media (max-width: 950px) {
+@media (max-width: 991px) {
   .patient-box {
     width: calc(50% - 10px);
   }
 }
 
-@media (max-width: 650px) {
+@media (max-width: 770px) {
   .patient-box {
     width: 100%;
-  }
-}
-@media (max-width: 590px) {
-  #patient-page-box {
   }
 }
 
