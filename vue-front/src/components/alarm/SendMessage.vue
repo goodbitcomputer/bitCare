@@ -72,7 +72,7 @@ export default {
       );
     },
     getEmployeeList(){
-      axios.get('/api/selectAll')
+      axios.get('/api/selectAllRole')
           .then(response => {
             console.log(response.data);
             // 세션 데이터 사용 예시

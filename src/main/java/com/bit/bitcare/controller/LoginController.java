@@ -89,12 +89,25 @@ public class LoginController {
      *
      * selectAll
      * /api/selectAll 에 대한 Get 요청시 employeeService.selectAll 메소드를 실행
-     * employeeService.selectAll 메소드에선 모든 직원의 정보를 리턴
+     * employeeService.selectAll 메소드에선 관리자를 제외한 모든 직원의 정보를 리턴
      */
     @GetMapping("/api/selectAll")
     public ResponseEntity<String> selectAll() throws IOException {
-        // 모든 직원의 정보를 받아옴
+        // 관리자를 제외한 모든 직원의 정보를 받아옴
         return employeeService.selectAll();
+    }
+
+    /**---------------------------------------------------------------------------
+     * 2023.06.22.
+     *
+     * selectAll
+     * /api/selectAllRole 에 대한 Get 요청시 employeeService.selectAllRole 메소드를 실행
+     * employeeService.selectAllRole 메소드에선 모든 직원의 정보를 리턴
+     */
+    @GetMapping("/api/selectAllRole")
+    public ResponseEntity<String> selectAllRole() throws IOException {
+        // 모든 직원의 정보를 받아옴
+        return employeeService.selectAllRole();
     }
 
     /**---------------------------------------------------------------------------

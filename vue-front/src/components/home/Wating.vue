@@ -51,7 +51,7 @@ export default {
   },
   computed: {
     ...mapState('login',
-        ['role','name','list','registerModal']
+        ['role','name','list','registerModal','updateModal']
     ),
   },
   methods: {
@@ -63,6 +63,7 @@ export default {
       setName: 'setName',
       setList: 'setList',
       setRegisterModal: 'setRegisterModal',
+      setUpdateModal: 'setUpdateModal',
     }),
     NextBtn(item) {
       this.setNextStep(item);
@@ -127,7 +128,7 @@ export default {
     },
     showDetails() {
       this.showDetailsModal = true;
-      this.setRegisterModal(this.showDetailsModal);
+      this.setUpdateModal(this.showDetailsModal);
     },
     closeModal() {
       this.showDetailsModal = false;

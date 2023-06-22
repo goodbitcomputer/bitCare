@@ -129,6 +129,25 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    public ResponseEntity<String> selectAllRole() throws JsonProcessingException
+    {
+        Map<String, Object> data = new HashMap<>();
+        List<EmployeeDTO> employeeList = employeeDAO.selectAllRole();
+        for(EmployeeDTO i : employeeList){
+            i.setPassword("");
+        }
+        data.put("employeeList", employeeList);
+
+        // JSON 문자열 생성
+        String json = objectMapper.writeValueAsString(data);
+
+        // HTTP 응답 생성
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(json);
+    }
+
+    @Override
     public void update(int employeeId, String role) {
         EmployeeDTO employeeDTO = employeeDAO.selectOne(employeeId);
         employeeDTO.setRole(role);

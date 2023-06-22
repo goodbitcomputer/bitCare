@@ -62,7 +62,7 @@ export default {
         // historyPage의 historyData 초기화
         this.$EventBus.$emit('initHistory')
 
-        if(this.$store.state.login.role === 'ROLE_DOCTOR') {
+        if(this.$store.state.login.role === 'ROLE_DOCTOR' || this.$store.state.login.role === 'ROLE_MASTER') {
           this.$router.push('/doctor')
         }
       }

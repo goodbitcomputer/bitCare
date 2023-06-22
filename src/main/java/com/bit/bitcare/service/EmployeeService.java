@@ -21,6 +21,7 @@ public interface EmployeeService {
     public ResponseEntity<String> autoLogin(HttpServletRequest request) throws IOException;
     public ResponseEntity<String> auth(EmployeeDTO attempt, HttpServletRequest request, HttpServletResponse response, boolean rememberMe) throws IOException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException;
     public ResponseEntity<String> selectAll() throws JsonProcessingException;
+    public ResponseEntity<String> selectAllRole() throws JsonProcessingException;
     ResponseEntity<String> getDept(int deptId) throws JsonProcessingException;
     public boolean validate(String username);
     public EmployeeDTO selectOne(int id);

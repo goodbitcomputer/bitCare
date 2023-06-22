@@ -4,7 +4,7 @@
       <span style="font-weight: 200; font-size: 30px;"> 수납 요청 미처리 목록 </span>
     </b-badge>
     <div class="border-box" v-for="(item) in this.$store.state.doctor.receiptOnList" :key="item.id">
-      <div @click="selectPatientBtn(item)">
+      <div @click="selectHistoryBtn(item)">
         <div>
           <span class="font-weight-bold"> cn.{{ item.patientId }} </span>
         </div>
@@ -39,20 +39,98 @@ export default {
   },
   computed: {},
   methods: {
-    ...mapMutations('doctor', {
-      setWaitingData: 'setWaitingData',
-      initHistoryList: 'initHistoryList',
-      setAllHistoryList: 'setAllHistoryList',
+    ...mapMutations('nurse', {
+      setVuexHistoryData: 'setHistoryData',
+      setVisitList: 'setVisitList',
+      setReceiptData: 'setReceiptData',
+      initHistoryData: 'initHistoryData',
     }),
-    ...mapActions('doctor', {
-      getHistoryList: 'getHistoryList'
+    ...mapActions('nurse', {
+      getHistoryList: 'getHistoryList',
     }),
-    selectPatientBtn(item) {
-      this.setWaitingData(item);
-      this.getHistoryList(item.patientId);
 
-      // historyPage의 historyData 초기화
-      this.$EventBus.$emit('initHistory')
+    selectHistoryBtn(item) {
+      // 선택시 class에 select 추가
+
+      axios.post('/doctor/getHistoryAddData', {
+        historyId: item.id,
+      }).then(response => {
+        let diseaseList = JSON.parse(response.data.diseaseList);
+        let diagnoseList = JSON.parse(response.data.diagnoseList);
+        let imgList = JSON.parse(response.data.imgList);
+        this.setSelectSbList(diseaseList);
+        this.setSelectCbList(diagnoseList);
+        this.setSelectImgList(imgList);
+      }).catch(function (error) {
+        console.log(error);
+      });
+
+      this.setHistoryData(item);
+      this.setVuexHistoryData(item);  // vuex에 저장 (수납내역에 사용하기위해)
+      this.getVisitData(item.visit);
+      this.getReceiptData(item);
+      this.pyItems = [];
+      this.pyItems.push({
+        height: item.height,
+        weight: item.weight,
+        bpSystolic: item.bpSystolic,
+        bpDiastolic: item.bpDiastolic,
+        temperature: item.temperature
+      });
+
+      if(this.$store.state.login.role === 'ROLE_NURSE' || this.$store.state.login.role === 'ROLE_MASTER') {
+        this.$router.push('/nurse')
+      }
+    },
+
+    // 선택된 진료기록데이터 저장
+    setHistoryData(item) {
+      this.selectHistoryData = item;
+    },
+    setSelectSbList(item) {
+      this.selectSbList = [];
+      this.sbItems = [];
+      let degree = (degreeItem) => {
+        return degreeItem === "주상병" ? true : false;
+      }
+      item.forEach((i) => {
+        this.selectSbList.push({main: degree(i.degree), code: i.code, name: i.name, historyId: i.historyId})
+        this.sbItems.push({main: i.degree, code: i.code, name: i.name});
+      })
+    },
+    setSelectCbList(item) {
+      this.selectCbList = item;
+      this.cbItems = [];
+      item.forEach((i) => {
+        this.cbItems.push({code: i.code, name: i.name, dose: i.dose, time: i.time, days: i.days});
+      })
+    },
+    setSelectImgList(item) {
+      this.selectImgList = item;
+      this.slides = [];
+      item.forEach((i) => {
+        this.slides.push({imagePath: i.imagePath})
+      })
+    },
+    getVisitData(item) {
+      return axios.post('/nurse/getVisitData', {
+        visitType: item,
+      }).then(response => {
+        let list = response.data;
+        this.setVisitList(list);
+      }).catch(function (error) {
+        console.log(error);
+      });
+    },
+    getReceiptData(item) {
+      return axios.post('/nurse/getReceiptData', {
+        historyId: item.id,
+      }).then(response => {
+        let data = response.data;
+        this.setReceiptData(data);
+      }).catch(function (error) {
+        console.log(error);
+      });
     },
 
     dateMsg(item) {
