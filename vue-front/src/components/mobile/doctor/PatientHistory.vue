@@ -17,6 +17,14 @@
           <span>진료기록</span>
           <span>[{{ dateMsg(historyData.entryDate) }}]</span>
         </div>
+        <!--      메모-->
+        <div class="border-box">
+          <span class="font-weight-bold">진료메모</span>
+          <div class="memoInfo-box">
+            <textarea ref="memoEditor" id="memoEditor" name="memo"></textarea>
+          </div>
+
+        </div>
         <!--      신체계측/바이탈-->
         <div class="border-box">
           <span class="font-weight-bold">신체계측/바이탈</span>
@@ -61,7 +69,10 @@
                 <div class="swiper-button-next" slot="button-next"></div>
               </swiper>
               <!--          <b-button class="btn col mt-1" variant="primary">촬영 부위 선택</b-button>-->
-              <div class="imageCategory-box">
+              <div v-if="!isImgEmpty">
+                <span>촬영부위: </span><span>{{this.bodyCategoryName}}</span>
+              </div>
+              <div class="imageCategory-box" v-if="isImgEmpty">
                 <b-dropdown
                     :text="imageCategoryMsg"
                     block
@@ -150,6 +161,7 @@
 
 import {mapMutations, mapState} from "vuex";
 import axios from "axios";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 const Swal = window.Swal;
 
@@ -157,6 +169,8 @@ export default {
   name: "MobileHome",
   data() {
     return {
+      // 메모 에디터 데이터
+      memoEditor: "",
       // 신체계측/바이탈 테이블 로직
       pyFields: [
         {key: 'height', label: '키'},
@@ -211,7 +225,8 @@ export default {
   },
   mounted() {
     this.divHeightFix();
-    this.getBodyCategoryData()
+    this.getBodyCategoryData();
+    this.ckeditorSetting();
   },
   computed: {
     ...mapState('mobileDoctor',
@@ -237,6 +252,14 @@ export default {
         addImgList.push(item);
       });
       return addImgList;
+    },
+    isImgEmpty() {
+      console.log(this.imgList.length);
+      if (this.imgList.length === 0) {
+        return true;
+      } else {
+        return false;
+      }
     }
   },
   methods: {
@@ -244,6 +267,21 @@ export default {
       setPhotoListToNewCameraList: 'setPhotoListToNewCameraList',
       setNextStep: 'setNextStep',
     }),
+    searchBodyCategory() {
+      console.log("searchBodyCategory");
+      console.log(this.imgList[0]);
+      console.log(this.bodyCategoryList);
+      let count =0;
+      this.bodyCategoryList.forEach((item) => {
+        console.log(count);
+        count++;
+        console.log(item);
+        if (item.id === this.imgList[0].categoryId) {
+          this.bodyCategoryId = item.id;
+          this.bodyCategoryName = item.categoryName;
+        }
+      })
+    },
     divHeightFix() {
       let div = document.getElementById('mobileDoctor-box');
       let divHeight = div.offsetHeight;
@@ -282,6 +320,39 @@ export default {
         return "font-weight-bold ellipsis"; // 굵은 글꼴 클래스 반환
       }
     },
+    setMemo() {
+      this.memoEditor.setData(this.historyData.memo);
+    },
+    // ckEditor 세팅
+    ckeditorSetting() {
+      ClassicEditor.create(document.querySelector('#memoEditor'), {
+        contentCss: this.contentCss,
+        toolbar: [
+          // 'heading',
+          // '|',
+          'bold',
+          'italic',
+          'link',
+          'bulletedList',
+          '|',
+          'undo',
+          'redo',
+          // '|',
+          // 'imageUpload',
+          // 'alignment',
+          // 'numberedList',
+          // 'imageInsert',
+          // 'blockQuote',
+          // '|',
+          // 'ckfinder',
+        ],
+      }).then(newEditor => {
+        this.memoEditor = newEditor;
+        this.setMemo();
+      }).catch((error) => {
+        console.error(error);
+      });
+    },
 
     // 사진촬영버튼
     photography() {
@@ -317,6 +388,7 @@ export default {
         let formData = new FormData();
         formData.append("bodyCategoryId", new Blob([JSON.stringify(this.bodyCategoryId)], {type: "application/json"}));
         formData.append("historyId", new Blob([JSON.stringify(this.historyData.id)], {type: "application/json"}));
+        formData.append("memo", new Blob([JSON.stringify(this.memoEditor.getData())], {type: "application/json"}));
         for (let i = 0; i < this.saveFileList.length; i++) {
           formData.append("uploadFiles", this.saveFileList[i]);// 키,값으로 append
         }
@@ -335,7 +407,7 @@ export default {
             }).then(() => {
               this.setNextStep(3);
             })
-          }else {
+          } else {
             Swal.fire({
               icon: 'error',
               title: '실패 !!!',
@@ -363,6 +435,10 @@ export default {
       return axios.get('/mobile/doctor/getBodyCategoryData', {}).then(response => {
         let list = response.data;
         this.bodyCategoryList = list;
+      }).then(()=>{
+        if (!this.isImgEmpty) {
+          this.searchBodyCategory();
+        }
       }).catch(function (error) {
         console.log(error);
       });
@@ -386,7 +462,8 @@ section {
 #mobile-doctor {
   width: 100%;
   /*height: 100vh;*/
-  background: url("/public/assets/img/main/hero-bg.jpg");
+  /*background: url("/public/assets/img/main/hero-bg.jpg");*/
+  background-color: #A1C7E0;
   background-size: cover;
   /* 배경이미지 반복여부 */
   background-repeat: no-repeat;
@@ -400,7 +477,7 @@ section {
 
 #mobile-doctor:before {
   content: "";
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.6);
   position: absolute;
   bottom: 0;
   top: 0;
@@ -409,7 +486,7 @@ section {
 }
 
 #mobileDoctor-box {
-  padding-top: 150px;
+  padding-top: 60px;
   padding-bottom: 65px;
   margin: 0 3px;
 }
@@ -504,9 +581,6 @@ section {
 }
 
 @media (max-width: 1200px) {
-  #mobileDoctor-box {
-    padding-top: 110px;
-  }
 
   .ellipsis-name {
     white-space: nowrap;
@@ -572,9 +646,6 @@ section {
 }
 
 @media (max-width: 351px) {
-  #mobileDoctor-box {
-    padding-top: 150px;
-  }
 
   body * {
     font-size: 8px;

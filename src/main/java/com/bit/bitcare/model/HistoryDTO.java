@@ -13,9 +13,9 @@ public class HistoryDTO {
     String memo;
     int bpSystolic;
     int bpDiastolic;
-    int height;
-    int weight;
-    int temperature;
+    double height;
+    double weight;
+    double temperature;
     String symptomDetail;
     Date entryDate;
     String visit;
