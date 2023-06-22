@@ -3,7 +3,7 @@
     <b-badge pills card vertical class="admin col text-center">
       <span style="font-weight: 200; font-size: 30px;"> {{ formatDept(this.$store.state.doctor.selectDept) }}</span>
     </b-badge>
-    <div class="border-box" v-for="(item) in this.$store.state.doctor.waitingList" :key="item.id">
+    <div class="border-box" v-for="(item) in this.$store.state.doctor.waitingList" :key="item.id" style="height: 70px">
       <div @click="selectPatientBtn(item)">
         <div>
           <span class="font-weight-bold">{{ item.name }} </span>

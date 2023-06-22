@@ -3,13 +3,14 @@
     <b-badge pills card vertical class="admin col text-center">
       <span style="font-weight: 200; font-size: 30px;"> 수납 요청 미처리 목록 </span>
     </b-badge>
-    <div class="border-box" v-for="(item) in this.$store.state.doctor.receiptOnList" :key="item.id">
+    <div class="border-box" v-for="(item) in this.$store.state.doctor.receiptOnList" :key="item.id" style="height: 70px">
       <div @click="selectHistoryBtn(item)">
         <div>
-          <span class="font-weight-bold"> cn.{{ item.patientId }} </span>
+          <span class="font-weight-bold"> 진료기록 번호 : {{ item.id }} </span>
         </div>
         <div class="patient-info">
-          <span>진료기록 번호 : {{ item.id }} </span>
+          <span>cn.{{ item.patientId }} </span>
+<!--          <span>{{ formatName(item.patientId)}}</span>-->
           <span>{{ formatDept(item.deptId) }} </span>
           <span>{{ item.visit }}</span>
           <span>{{ formatDate(item.entryDate) }}</span>
@@ -23,7 +24,7 @@
 </template>
 
 <script>
-import {mapActions, mapMutations} from "vuex";
+import {mapActions, mapMutations, mapState} from "vuex";
 import axios from "axios";
 
 export default {
@@ -35,22 +36,80 @@ export default {
       receiptRequest: false,
       receiptCount: 0,
       receipts: [],
+      // 선택된 히스토리데이터
+      selectHistoryData: "",
+      selectSbList: [],
+      selectCbList: [],
+      selectImgList: [],
+
+      // 신체계측/바이탈 테이블 로직
+      pyFields: [
+        {key: 'height', label: '키'},
+        {key: 'weight', label: '체중'},
+        {key: 'bpSystolic', label: '혈압(수축)'},
+        {key: 'bpDiastolic', label: '혈압(이완)'},
+        {key: 'temperature', label: '체온'},
+      ],
+      pyItems: [],
+
+      // 상병 테이블 로직
+      sbFields: [
+        {key: 'main', label: '주/부', sortable: true},
+        {key: 'code', label: '코드', sortable: true},
+        {key: 'name', label: '명칭', sortable: true},
+      ],
+      sbItems: [],
+      specialData: "주상병", // 특정 속성 데이터
+
+      // 처방 테이블 로직
+      // cbFields: ["sb", "code", "name"],
+      cbItems: [],
+
+      //   swiper
+      slides: [],
+      swiperOptions: {
+        slidesPerView: 3, // 한번에 보여줄 슬라이드 개수
+        spaceBetween: 10, // 슬라이드 사이 여백
+        centeredSlides: true, // 1번 슬라이드가 가운데 보이기
+        // loop: true,
+        pagination: {
+          el: '.swiper-pagination'
+        },
+        // Swiper 설정
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
+      },
+      selectedIndex: -1,
     }
   },
-  computed: {},
+  computed: {
+    ...mapState('nurse',
+        ['historyList', 'waitingData']
+    ),
+    isWaitingData() {
+      if (this.waitingData === undefined) return false;
+      else return this.waitingData === "" ? false : true;
+    }
+  },
   methods: {
     ...mapMutations('nurse', {
       setVuexHistoryData: 'setHistoryData',
       setVisitList: 'setVisitList',
       setReceiptData: 'setReceiptData',
       initHistoryData: 'initHistoryData',
+      setWaitingData: 'setWaitingData',
     }),
     ...mapActions('nurse', {
       getHistoryList: 'getHistoryList',
     }),
 
     selectHistoryBtn(item) {
-      // 선택시 class에 select 추가
+      this.setWaitingData("");
+
+      this.initHistoryData();
+      this.getHistoryList(item.patientId);
 
       axios.post('/doctor/getHistoryAddData', {
         historyId: item.id,

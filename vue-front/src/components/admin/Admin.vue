@@ -1,6 +1,6 @@
 <template>
   <div class="row justify-content-center">
-    <div class = "col-11">
+    <div class = "col-7" style="top: 50px">
       <table class="table table-primary table-hover">
         <thead>
         <tr>
@@ -9,7 +9,6 @@
           <th>현재 권한</th>
           <th>권한 설정</th>
           <th>설정 저장</th>
-          <th>계정 삭제</th>
         </tr>
         </thead>
         <tbody>
@@ -29,9 +28,6 @@
           </td>
           <td>
             <button type="button" class="btn btn-primary btn-sm" @click="saveRole(employee,index)">저장</button>
-          </td>
-          <td>
-            <button type="button" class="btn btn-danger btn-sm">삭제</button>
           </td>
         </tr>
         </tbody>
