@@ -11,8 +11,9 @@
       </div>
     </div>
     <div class="waiting-info-box">
-      <div class="border-box" v-for="(item) in waitingList" :key="item.id">
-        <div @click="selectPatientBtn(item)">
+      <div v-for="(item, index) in waitingList" :key="item.id">
+        <div class="waiting-box border-box" :class="{'waiting-select' : (isWaitingData && (index === selectedIndex) ? true:false)}"
+             @click="selectPatientBtn(item, index)">
           <div>
             <span class="font-weight-bold">{{ item.name }} </span>
             <span>외래진료</span>
@@ -36,13 +37,14 @@
 
 <script>
 import axios from "axios";
-import {mapActions, mapMutations} from "vuex";
+import {mapActions, mapMutations, mapState} from "vuex";
 
 export default {
   name: "DoctorWait",
   data() {
     return {
       waitingList: [],
+      selectedIndex: -1,
     }
   },
   mounted() {
@@ -52,7 +54,16 @@ export default {
       this.waitingRefresh();
     });
   },
-  computed: {},
+
+  computed: {
+    ...mapState('doctor',
+        ['waitingData']
+    ),
+    isWaitingData() {
+      if (this.waitingData === undefined) return false;
+      else return this.waitingData === "" ? false : true;
+    }
+  },
   methods: {
     ...mapMutations('doctor', {
       setWaitingData: 'setWaitingData',
@@ -61,9 +72,12 @@ export default {
     ...mapActions('doctor', {
       getHistoryList: 'getHistoryList'
     }),
-    selectPatientBtn(item) {
+    selectPatientBtn(item, index) {
       this.setWaitingData(item);
       this.getHistoryList(item.patientId);
+
+      // 선택시 class에 select 추가
+      this.selectedIndex = index;
 
       // historyPage의 historyData 초기화
       this.$EventBus.$emit('initHistory')
@@ -112,6 +126,7 @@ export default {
       return axios.get('/doctor/getWaitingData', {}).then(response => {
         let list = response.data;
         this.setWaitingList(list);
+        this.setWaitingData("");
       }).catch(function (error) {
         console.log(error);
       });
@@ -121,6 +136,7 @@ export default {
       return axios.get('/doctor/getWaitingCmopletedData', {}).then(response => {
         let list = response.data;
         this.setWaitingList(list);
+        this.setWaitingData("");
       }).catch(function (error) {
         console.log(error);
       });
@@ -145,6 +161,14 @@ export default {
   border-image: initial;
   border-radius: 10px;
 }
+.waiting-box:hover {
+  background-color: #cccccc;
+  cursor: pointer;
+}
+.waiting-select {
+  background-color: #cccccc;
+}
+
 .util button {
   background: rgba(12, 11, 9, 0.7);
   color: white;
@@ -160,6 +184,7 @@ export default {
 }
 
 .patient-info {
+  display: flex;
   flex-wrap: nowrap;
 }
 

@@ -3,11 +3,12 @@
 <!--    <div class="border-box">-->
 <!--      <span style="font-size: 1.2em; font-weight: 700">진료 기록 작성</span>-->
 <!--    </div>-->
-    <div v-if="isSelectEmpty" class="empty-list-box border-box">
-      <div class="empty-img-box">
-        <img src="@/assets/img/empty-box.png">
-      </div>
-    </div>
+
+<!--    <div v-if="isSelectEmpty" class="empty-list-box border-box">-->
+<!--      <div class="empty-img-box">-->
+<!--        <img src="@/assets/img/empty-box.png">-->
+<!--      </div>-->
+<!--    </div>-->
     <div v-if="!isSelectEmpty">
       <div class="border-box">
         <b-dropdown :text="visitMsg" class="m-0" size="sm">

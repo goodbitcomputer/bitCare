@@ -109,11 +109,11 @@ export default {
       }
     },
     cameraBtn() {
-      this.setNextStep(7);
+      this.setNextStep(8);
     },
     photoSelect(item) {
       this.setPhoto(item);
-      this.setNextStep(9);
+      this.setNextStep(10);
     },
     selectBtn(item) {
       if (item.storeSelect === false) {

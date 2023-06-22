@@ -1,5 +1,5 @@
 <template>
-  <div class="border-box">
+  <div class="border-box" v-if="!isSelectEmpty">
     <span class="font-weight-bold">신체계측/바이탈</span>
     <div class="table-wrapper">
       <b-table hover :items="physicalData" :fields="fields" small>
@@ -44,17 +44,21 @@ export default {
   },
   computed: {
     ...mapState('doctor',
-      ['physicalData']
+        ['physicalData', 'waitingData']
     ),
+    // 선택된 환자 데이터가 있는지 확인
+    isSelectEmpty() {
+      return this.waitingData === "" ? true : false;
+    },
     msg() {
       return this.cbItems;
-    }
+    },
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.physical-input{
-  margin:0 auto;
+.physical-input {
+  margin: 0 auto;
 }
 </style>
