@@ -69,20 +69,20 @@ export default {
       return this.nextStep===5 ? true : false;
     },
     settingByStep() {
-      return this.nextStep===6 ? true : false;
-    },
-    cameraByStep() {
       return this.nextStep===7 ? true : false;
     },
-    galleryByStep() {
+    cameraByStep() {
       return this.nextStep===8 ? true : false;
     },
-    photoDetailByStep() {
+    galleryByStep() {
       return this.nextStep===9 ? true : false;
+    },
+    photoDetailByStep() {
+      return this.nextStep===10 ? true : false;
     },
 
     isNavFooter(){
-      return this.nextStep<7 ? true : false;
+      return this.nextStep<8 ? true : false;
     },
   }
 }
