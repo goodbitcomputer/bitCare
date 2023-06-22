@@ -2,10 +2,10 @@
   <!-- 쪽지 작성 페이지 -->
     <div>
           받는이:
-      <input list="employees" v-model="this.$store.state.alarm.responseReceiver">
+      <input list="employees" v-model="$store.state.alarm.responseReceiver">
       <button type="button" class="btn btn-primary btn-sm" id="sendButton" @click="sendMessage">Send</button>
       <b-datalist id="employees">
-        <option v-for="employee in this.$store.state.login.list" :key="employee.id">{{employee.name}}</option>
+        <option v-for="employee in $store.state.login.list" :key="employee.id">{{employee.name}}</option>
       </b-datalist>
       <vue-editor v-model="messageContent" id="edit"></vue-editor>
     </div>
@@ -45,6 +45,7 @@ export default {
       setSendList: 'setSendList',
       setSendCount: 'setSendCount',
       setResponseReceiver: 'setResponseReceiver',
+      setMessageTab: 'setMessageTab',
     }),
     ...mapMutations('login',{
       setList: 'setList'
@@ -109,20 +110,20 @@ export default {
           });
     },
     sendMessage() {
-      if (this.sender !== '' && this.message !== '') {
+      if (this.sender !== '' && this.messageContent !== '') {
         this.connect()
         setTimeout(() => this.send(), 100)
       }
     },
     send() {
-      console.log("Send message:" + this.message);
+      console.log("Send message:" + this.messageContent);
       if (this.stompClient && this.stompClient.connected) {
 
         this.type = "message";
 
         const msg = {
           connectType: "send",
-          receiver: this.receiver,
+          receiver: this.$store.state.alarm.responseReceiver,
           sender: this.$store.state.login.name,
           content: this.messageContent,
           receiveState: this.state,
