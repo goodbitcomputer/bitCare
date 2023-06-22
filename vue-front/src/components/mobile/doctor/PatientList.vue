@@ -132,7 +132,8 @@ export default {
 #mobile-doctor {
   width: 100%;
   /*height: 100vh;*/
-  background: url("/public/assets/img/main/hero-bg.jpg");
+  /*background: url("/public/assets/img/main/hero-bg.jpg");*/
+  background-color: #A1C7E0;
   background-size: cover;
   /* 배경이미지 반복여부 */
   background-repeat: no-repeat;
@@ -146,7 +147,7 @@ export default {
 
 #mobile-doctor:before {
   content: "";
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.6);
   position: absolute;
   bottom: 0;
   top: 0;
@@ -155,7 +156,7 @@ export default {
 }
 
 .patientList-box {
-  padding-top: 150px;
+  padding-top: 60px;
   margin : 0 3px;
 }
 
@@ -213,10 +214,4 @@ export default {
   border-radius: 5px;
 }
 
-
-@media (max-width: 1200px) {
-  .patientList-box {
-    padding-top: 110px;
-  }
-}
 </style>
