@@ -31,7 +31,7 @@
     </div>
 
     <div>
-      <b-modal v-model="this.$store.state.login.updateModal" id="modal" size="lg" title="내정보 수정" @hidden="closeModal">
+      <b-modal v-model="this.$store.state.login.updateModal" id="modal" hide-footer size="lg" title="내정보 수정" @hidden="closeModal">
         <div id="register">
           <EmployeeUpdate/>
         </div>

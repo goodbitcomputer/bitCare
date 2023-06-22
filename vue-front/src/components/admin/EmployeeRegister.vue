@@ -86,10 +86,11 @@ export default {
       phoneNumber: '',
       role: '',
       detail: '',
-      roles: ['ROLE_DOCTOR', 'ROLE_NURSE'],
+      roles: ['의사', '간호사'],
       customToolbar: [
         ["bold", "italic", "underline"]
-      ]
+      ],
+      selectRole: ""
     }
   },
   created(){
@@ -159,6 +160,11 @@ export default {
           timer: 3000
         })
       }else {
+        if(this.role === '간호사'){
+          this.selectRole = 'ROLE_NURSE'
+        } else if(this.role === '의사'){
+          this.selectRole = 'ROLE_DOCTOR'
+        }
         axios.post('/api/register', {}, {
           params: {
             dept: this.dept,
@@ -166,7 +172,7 @@ export default {
             password: this.password,
             name: this.name,
             phoneNumber: phoneStr,
-            role: this.role,
+            role: this.selectRole,
             detail: this.detail
           }
         }).then((response) => {

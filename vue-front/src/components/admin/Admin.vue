@@ -33,10 +33,10 @@
         </tbody>
       </table>
       <button type="button" class="btn btn-primary btn-sm" @click="showDetails()">계정 추가</button>
-      <button type="button" class="btn btn-primary btn-sm" @click="writeAnnouncement()">공지 쓰기</button>
+      <button type="button" class="btn btn-primary btn-sm" @click="writeAnnouncement()" style="margin: 20px">공지 쓰기</button>
     </div>
     <div>
-      <b-modal v-model="this.$store.state.login.registerModal" id="modal" size="lg" title="계정 추가" @hidden="closeModal">
+      <b-modal v-model="this.$store.state.login.registerModal" id="modal" size="lg" title="계정 추가" hide-footer @hidden="closeModal">
         <div id="register">
           <EmployeeRegister/>
         </div>
@@ -44,7 +44,7 @@
     </div>
 
     <div>
-      <b-modal v-model="this.$store.state.alarm.announcementModal" id="modal" size="lg" title="공지 쓰기" @hidden="closeModal">
+      <b-modal v-model="this.$store.state.alarm.announcementModal" id="modal" size="lg" title="공지 쓰기" hide-footer @hidden="closeModal">
         <div id="announcement">
           <WriteAnnouncement/>
         </div>
