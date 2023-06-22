@@ -130,7 +130,7 @@
       </b-popover>
 
       <div>
-        <b-modal v-model="this.$store.state.alarm.showModal" id="modal" size="lg" title="쪽지" @hidden="closeModal">
+        <b-modal v-model="this.$store.state.alarm.showModal" id="modal" hide-footer size="lg" title="쪽지" @hidden="closeModal">
           <div id="messageList">
             <Message/>
           </div>
@@ -138,7 +138,7 @@
       </div>
 
       <div>
-        <b-modal v-model="this.$store.state.login.updateModal" id="modal" size="lg" title="내정보 수정"
+        <b-modal v-model="this.$store.state.login.updateModal" id="modal" hide-footer size="lg" title="내정보 수정"
                  @hidden="closeUpdateModal">
           <div id="register">
             <EmployeeUpdate/>

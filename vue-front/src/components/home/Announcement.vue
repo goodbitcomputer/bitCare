@@ -41,7 +41,7 @@
     </section>
 
     <div>
-      <b-modal v-model="this.$store.state.alarm.showAnnouncementModal" size="lg" title="공지 내용" @hidden="closeAnnouncementModal">
+      <b-modal v-model="this.$store.state.alarm.showAnnouncementModal" size="lg" title="공지 내용" hide-footer @hidden="closeAnnouncementModal">
         <div v-html="this.$store.state.alarm.selectedAnnouncement.content"></div>
       </b-modal>
     </div>

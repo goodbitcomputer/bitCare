@@ -19,7 +19,7 @@
       </div>
     </div>
     <div>
-      <b-modal v-model="showDetailsModal" size="lg" title="쪽지 내용">
+      <b-modal v-model="showDetailsModal" size="lg" hide-footer title="쪽지 내용">
         <button v-if="selectedMessage.receiveState === 'new'" type="button" @click="sendCancel(selectedMessage)">
           발송 취소
         </button>
