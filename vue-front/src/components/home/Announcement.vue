@@ -21,11 +21,11 @@
           </div>
         </keep-alive>
         <keep-alive>
-          <div v-if="this.$store.state.alarm.catastrophe" class="inner" style="height: 310px !important;">
+          <div v-if="this.$store.state.alarm.catastrophe" class="inner" style="height: 175px !important;">
             <div class="inner__beforeLeft"/>
             <div class="inner__left">
-              <h2 style="position: relative; height: 310px !important; top: 20px;">공지사항</h2>
-              <swiper class="swiper" :options="catastropheOption" style="height: 310px !important;">
+              <h2 style="position: relative; height: 175px !important; top: 7px;">공지사항</h2>
+              <swiper class="swiper" :options="catastropheOption" style="height: 175px !important;">
                 <swiper-slide v-for="announcement in this.$store.state.alarm.announcementList" :key="announcement.id">
                   <span class="font-weight-bold" style="font-size: 1.0em; color: white;"
                         @click="selectAnnouncement(announcement)">
@@ -33,7 +33,7 @@
                   </span>
                 </swiper-slide>
               </swiper>
-              <button class="material-icons" style="position: relative; color: white; top: -124px;" @click="rollbackButton">remove_circle</button>
+              <button class="material-icons" style="position: relative; color: white; top: -70px;" @click="rollbackButton">remove_circle</button>
             </div>
           </div>
         </keep-alive>
@@ -90,7 +90,7 @@ export default {
         allowTouchMove: false, // 터치 이동  x
 
         direction: 'vertical',
-        height: 62,
+        height: 35,
         autoplay: {
           delay: 3000,
         },
@@ -103,7 +103,7 @@ export default {
         allowTouchMove: true, // 터치 이동  x
 
         direction: 'vertical',
-        height: 62,
+        height: 35,
         autoplay: false,
         loop: false,
       },

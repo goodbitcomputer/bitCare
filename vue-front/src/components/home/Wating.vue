@@ -1,10 +1,10 @@
 <template>
   <section id="mobile-doctor">
-    <div id="patientList-box" class="patientList-box container text-center text-lg-start" data-aos="fade-up">
-      <div class="util d-flex" data-aos="fade-up">
+    <div id="patientList-box" class="patientList-box container text-center text-lg-start">
+      <div class="util d-flex">
         <span>로그인 정보</span>
       </div>
-      <div class="patient-box border-box" data-aos="fade-up" data-aos-delay="200">
+      <div class="patient-box border-box">
         <div class="title">
           <span class="font-weight-bold">{{ this.$store.state.login.name }}</span>
         </div>
@@ -15,16 +15,16 @@
         </div>
       </div>
 
-      <div class="util d-flex" data-aos="fade-up">
+      <div class="util d-flex">
         <span>프로필</span>
       </div>
-      <div class="profile-box border-box" data-aos="fade-up" data-aos-delay="200">
+      <div class="profile-box border-box">
         <div class="profile">
           <span v-html="detail"></span>
         </div>
       </div>
 
-      <b-button pills card vertical class="admin col text-center" data-aos="fade-up" @click="showDetails">
+      <b-button pills card vertical class="admin col text-center" @click="showDetails">
         <span>내정보 수정</span>
       </b-button>
     </div>

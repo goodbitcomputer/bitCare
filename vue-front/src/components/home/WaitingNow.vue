@@ -1,6 +1,6 @@
 <template>
   <div class="waiting-info-box">
-    <b-badge pills card vertical class="admin col text-center" data-aos="fade-up">
+    <b-badge pills card vertical class="admin col text-center">
       <span style="font-weight: 200; font-size: 30px;"> {{ formatDept(this.$store.state.doctor.selectDept) }}</span>
     </b-badge>
     <div class="border-box" v-for="(item) in this.$store.state.doctor.waitingList" :key="item.id">

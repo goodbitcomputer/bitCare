@@ -1,9 +1,9 @@
 <template>
-  <div id="patientList-box" class="patientList-box container text-center text-lg-start" data-aos="fade-up">
-    <b-badge pills card vertical class="admin col text-center" data-aos="fade-up">
+  <div id="patientList-box" class="patientList-box container text-center text-lg-start">
+    <b-badge pills card vertical class="admin col text-center">
       <span style="font-weight: 200; font-size: 30px;"> 총 진료 대기 인원 : {{ this.$store.state.doctor.allWaitingCount }} 명</span>
     </b-badge>
-    <b-badge pills card vertical class="admin col text-center" data-aos="fade-up">
+    <b-badge pills card vertical class="admin col text-center">
       <span style="font-weight: 200; font-size: 30px;"> 수납 요청 처리 : {{ this.$store.state.doctor.receiptCount }} 건 </span>
     </b-badge>
   </div>

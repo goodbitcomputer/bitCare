@@ -41,7 +41,7 @@
 }
 
 .notice .notice-line .inner {
-    height: 62px;
+    height: 35px;
     display: flex;
 }
 
@@ -80,13 +80,13 @@
 
 .notice .notice-line .inner__left .swiper-container {
     overflow: hidden;
-    height: 62px;
+    height: 35px;
     flex-grow: 1;
     /* 수평으로 최대한 늘어나라 */
 }
 
 .notice .notice-line .inner__left .swiper-slide {
-    height: 62px;
+    height: 35px;
     display: flex;
     align-items: center;
 }
@@ -96,8 +96,8 @@
 }
 
 .notice .notice-line .inner__left .notice-line__more {
-    width: 62px;
-    height: 62px;
+    width: 35px;
+    height: 35px;
     display: flex;
     /* justify-content- 수평 가운데 정렬 */
     justify-content: center;
@@ -117,8 +117,8 @@
 }
 
 .notice .notice-line .inner__right .toggle-promotion {
-    width: 62px;
-    height: 62px;
+    width: 35px;
+    height: 35px;
     cursor: pointer;
     display: flex;
     justify-content: center;

@@ -1,6 +1,9 @@
 <template>
   <div>
     <NavBar/>
+    <div>
+      <AnnouncementBoard/>
+    </div>
     <div class="container">
       <div class="detail border-box">
         <DeptSelect/>
@@ -29,10 +32,12 @@ import ClinicNow from "@/components/home/ClinicNow.vue";
 import WaitingNow from "@/components/home/WaitingNow.vue";
 import DeptSelect from "@/components/home/DeptSelect.vue";
 import ReceiptNow from "@/components/home/ReceiptNow.vue";
+import AnnouncementBoard from "@/components/home/Announcement.vue";
 
 export default {
   name: "DoctorView",
   components: {
+    AnnouncementBoard,
     ReceiptNow,
     DeptSelect,
     WaitingNow,

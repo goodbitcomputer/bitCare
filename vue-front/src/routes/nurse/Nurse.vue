@@ -1,6 +1,9 @@
 <template>
   <div>
     <NavBar/>
+    <div>
+      <AnnouncementBoard/>
+    </div>
     <div class="container">
       <NurseWait/>
       <NurseHistory class="history-box flex-grow-1" />
@@ -14,10 +17,11 @@ import NavBar from "@/components/NavBar.vue";
 import NurseWait from "@/components/nurse/Waiting.vue"
 import NurseHistory from "@/components/nurse/History.vue";
 import NurseReceipt from "@/components/nurse/Receipt.vue";
+import AnnouncementBoard from "@/components/home/Announcement.vue";
 
 export default {
   name: "NurseView",
-  components: {NavBar, NurseWait, NurseReceipt, NurseHistory},
+  components: {AnnouncementBoard, NavBar, NurseWait, NurseReceipt, NurseHistory},
   data() {
     return {};
   },
