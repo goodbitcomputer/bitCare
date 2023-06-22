@@ -71,21 +71,18 @@ export default {
     settingByStep() {
       return this.nextStep===6 ? true : false;
     },
-    adminByStep() {
+    cameraByStep() {
       return this.nextStep===7 ? true : false;
     },
-    cameraByStep() {
+    galleryByStep() {
       return this.nextStep===8 ? true : false;
     },
-    galleryByStep() {
-      return this.nextStep===9 ? true : false;
-    },
     photoDetailByStep() {
-      return this.nextStep===10 ? true : false;
+      return this.nextStep===9 ? true : false;
     },
 
     isNavFooter(){
-      return this.nextStep<8 ? true : false;
+      return this.nextStep<7 ? true : false;
     },
   }
 }
