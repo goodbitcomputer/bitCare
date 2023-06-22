@@ -89,28 +89,31 @@ public class AlarmServiceImpl implements AlarmService {
                 }
 
                 List<EmployeeDTO> employeeList = employeeDAO.selectAll();
+                EmployeeDTO employeeDTO = employeeDAO.selectByName(receive);
 
                 // 생성자로 반환값을 생성합니다.
-                AlarmDTO alarm = new AlarmDTO(id, sender, receive, content, type, alarmDTO.getEntryDate(), state);
-                alarmDAO.insert(alarm);
 
-                messageDTO.setReceiver(receive);
-                messageDTO.setAlarmId(alarm.getId());
-                messageDAO.insert(messageDTO);
+                if(employeeDTO != null || receive.equals("admin")) {
+                    AlarmDTO alarm = new AlarmDTO(id, sender, receive, content, type, alarmDTO.getEntryDate(), state);
+                    alarmDAO.insert(alarm);
 
-                // 반환
-                if(!receive.equals("admin")) {
-                    simpMessagingTemplate.convertAndSend("/send/" + receive, alarm);
-                }else{
-                    for(EmployeeDTO e : employeeList){
-                        alarm.setReceiver(e.getName());
-                        alarmDAO.insert(alarm);
+                    messageDTO.setReceiver(receive);
+                    messageDTO.setAlarmId(alarm.getId());
+                    messageDAO.insert(messageDTO);
+                    // 반환
+                    if (!receive.equals("admin")) {
+                        simpMessagingTemplate.convertAndSend("/send/" + employeeDTO.getName(), alarm);
+                    } else {
+                        for (EmployeeDTO e : employeeList) {
+                            alarm.setReceiver(e.getName());
+                            alarmDAO.insert(alarm);
 
-                        messageDTO.setReceiver(e.getName());
-                        messageDTO.setAlarmId(alarm.getId());
-                        messageDAO.insert(messageDTO);
+                            messageDTO.setReceiver(e.getName());
+                            messageDTO.setAlarmId(alarm.getId());
+                            messageDAO.insert(messageDTO);
 
-                        simpMessagingTemplate.convertAndSend("/send/" + e.getName(), alarm);
+                            simpMessagingTemplate.convertAndSend("/send/" + e.getName(), alarm);
+                        }
                     }
                 }
                 break;

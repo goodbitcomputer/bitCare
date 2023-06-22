@@ -20,6 +20,10 @@
         where `role` != 'ROLE_MASTER'
     </select>
 
+    <select id="selectAllRole" resultType="employeeDTO">
+        SELECT * FROM employee
+    </select>
+
     <update id="update" parameterType="employeeDTO">
         UPDATE `employee` SET
         password = #{password},
@@ -48,5 +52,10 @@
     <select id="validate" parameterType="string" resultType="employeeDTO">
         SELECT * FROM employee
         WHERE username = #{username}
+    </select>
+
+    <select id="selectByName" parameterType="string" resultType="employeeDTO">
+        SELECT * FROM employee
+        WHERE name = #{receive}
     </select>
 </mapper>
