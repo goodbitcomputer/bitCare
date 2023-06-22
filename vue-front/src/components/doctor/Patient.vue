@@ -187,7 +187,7 @@ export default {
   border-radius: 10px;
 }
 .empty-box {
-  height: 140px;
+  height: 700px;
   display: flex;
 }
 

@@ -286,7 +286,7 @@ export default {
     // 사진촬영버튼
     photography() {
       this.setPhotoListToNewCameraList(this.savePhotoList);
-      this.setNextStep(7);
+      this.setNextStep(8);
     },
 
     // 저장 버튼

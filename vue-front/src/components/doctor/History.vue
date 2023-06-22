@@ -13,8 +13,10 @@
       </div>
       <div class="d-flex" v-if="!isListEmpty">
         <div class="waiting-list-box">
-          <div class="border-box" v-for="(item) in historyList" :key="item.id">
-            <div @click="selectHistoryBtn(item)">
+          <div v-for="(item, index) in historyList" :key="item.id">
+            <div class="waiting-box border-box"
+                 :class="{'history-select' : (!isSelectEmpty && (index === selectedIndex) ? true:false)}"
+                 @click="selectHistoryBtn(item, index)">
               <div>
                 <span>{{ dateMsg(item.entryDate) }}</span>
               </div>
@@ -27,7 +29,7 @@
             </div>
           </div>
         </div>
-        <div class="empty-box border-box flex-grow-1" v-if="isSelectEmpty">
+        <div class="empty-box border-box flex-grow-1" style="width: 400px" v-if="isSelectEmpty">
           <div class="empty-img-box">
             <img src="@/assets/img/empty-box.png">
           </div>
@@ -202,6 +204,7 @@ export default {
           prevEl: '.swiper-button-prev',
         },
       },
+      selectedIndex: -1,
     }
   },
   mounted() {
@@ -256,7 +259,10 @@ export default {
       return year + "." + month + "." + date;
     },
     // 진료기록리스트에서 특정 진료기록 선택
-    selectHistoryBtn(item) {
+    selectHistoryBtn(item, index) {
+      // 선택시 class에 select 추가
+      this.selectedIndex = index;
+
       axios.post('/doctor/getHistoryAddData', {
         historyId: item.id,
       }).then(response => {
@@ -350,15 +356,16 @@ export default {
   border-radius: 10px;
 }
 
+
 .empty-list-box {
-  height: 140px;
+  height: 700px;
   display: flex;
   flex-grow: 1;
   width: inherit;
 }
 
 .empty-box {
-  height: 140px;
+  height: 700px;
   display: flex;
 }
 
@@ -378,6 +385,13 @@ export default {
 .waiting-list-box {
   overflow-y: scroll;
   max-height: 600px;
+}
+.waiting-box:hover {
+  background-color: #cccccc;
+  cursor: pointer;
+}
+.history-select {
+  background-color: #cccccc;
 }
 
 /* 스크롤바 숨기기 */
@@ -460,6 +474,7 @@ b-table * * {
 
 
 .history-detail-box {
+  width: 400px;
   flex-grow: 1;
 }
 

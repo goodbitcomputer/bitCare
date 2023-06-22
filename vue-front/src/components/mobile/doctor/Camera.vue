@@ -366,7 +366,7 @@ export default {
       // this.localStream.removeTrack(vidTrack);
       this.initStream();
 
-      this.setNextStep(8);
+      this.setNextStep(9);
     },
     takePicture() {
       const video = this.$refs.video;
