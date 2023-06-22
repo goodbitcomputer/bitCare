@@ -1,7 +1,7 @@
 <template>
   <div class="patient-box border-box" data-aos="fade-up" data-aos-delay="200">
     받는이:
-    <input list="employees" v-model="this.$store.state.alarm.responseReceiver">
+    <input list="employees" v-model="$store.state.alarm.responseReceiver">
     <button type="button" class="btn btn-primary btn-sm" id="sendButton" @click="sendMessage">Send</button>
     <b-datalist id="employees">
       <option v-for="employee in this.$store.state.login.list" :key="employee.id">{{ employee.name }}</option>
@@ -69,7 +69,7 @@ export default {
       );
     },
     getEmployeeList(){
-      axios.get('/api/selectAll')
+      axios.get('/api/selectAllRole')
           .then(response => {
             console.log(response.data);
             // 세션 데이터 사용 예시
@@ -122,13 +122,14 @@ export default {
         }
         const msg = {
           connectType: "send",
-          receiver: this.receiver,
+          receiver: this.$store.state.alarm.responseReceiver,
           sender: this.$store.state.login.name,
           content: this.messageContent,
           receiveState: this.state,
           sendState: this.state,
+          messageFile: this.message_file,
           type: this.type,
-          entryDate: Date.now(),
+          entryDate: Date.now()
         };
         this.stompClient.send("/app/receive/" + this.receiver, JSON.stringify(msg), {'Content-type': 'multipart/form-data'});
       }

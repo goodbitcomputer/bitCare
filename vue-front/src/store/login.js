@@ -12,6 +12,7 @@ export default {
         list : [],
         deptList : [],
         registerModal : false,
+        updateModal : false,
         dept : 0,
     },
     getters: {
@@ -44,6 +45,9 @@ export default {
         },
         setDept : function (state, dept){
             return state.dept = dept;
+        },
+        setUpdateModal : function (state, updateModal){
+            return state.updateModal = updateModal;
         },
     },
     actions: {

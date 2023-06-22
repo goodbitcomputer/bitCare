@@ -138,8 +138,8 @@
       </div>
 
       <div>
-        <b-modal v-model="this.$store.state.login.registerModal" id="modal" size="lg" title="내정보 수정"
-                 @hidden="closeRegisterModal">
+        <b-modal v-model="this.$store.state.login.updateModal" id="modal" size="lg" title="내정보 수정"
+                 @hidden="closeUpdateModal">
           <div id="register">
             <EmployeeUpdate/>
           </div>
@@ -197,7 +197,7 @@ export default {
         ['alarmList', 'messageList', 'messageCount', 'alarmCount', 'sendList', 'sendCount', 'showModal', 'messageModal', 'announcementList']
     ),
     ...mapState('login',
-        ['role', 'name', 'registerModal']
+        ['role', 'name', 'registerModal', 'updateModal']
     )
   },
   methods: {
@@ -216,6 +216,7 @@ export default {
       setRole: 'setRole',
       setName: 'setName',
       setRegisterModal: 'setRegisterModal',
+      setUpdateModal: 'setUpdateModal',
     }),
     getSessionLogIn() {
       // Axios를 사용하여 RESTful API 호출
@@ -387,9 +388,9 @@ export default {
       this.setModal(this.showDetailsModal);
       this.setMessageModal(this.showDetailsModal);
     },
-    closeRegisterModal() {
+    closeUpdateModal() {
       this.showDetailsModal = false;
-      this.setRegisterModal(this.showDetailsModal);
+      this.setUpdateModal(this.showDetailsModal);
     },
     logOut() {
       axios.post('/logOut', {}

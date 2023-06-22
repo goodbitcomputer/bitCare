@@ -9,9 +9,11 @@ import java.util.List;
 public interface EmployeeDAO {
     public EmployeeDTO auth(EmployeeDTO employeeDTO);
     public List<EmployeeDTO> selectAll();
+    public List<EmployeeDTO> selectAllRole();
     public EmployeeDTO validate(String username);
     public EmployeeDTO selectOne(int id);
     public void update(EmployeeDTO employeeDTO);
     public void delete(int id);
     public void register(EmployeeDTO attempt);
+    public EmployeeDTO selectByName(String receive);
 }

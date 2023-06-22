@@ -28,7 +28,7 @@
       <div style="border-top: 1px solid #DBDFE5;">
         <p class="font-weight-bold">진료메모</p>
         <div
-            v-html="selectHistoryData.memo">
+            v-html="$store.state.nurse.historyData.memo">
           >
         </div>
       </div>
@@ -66,7 +66,7 @@
         <!--      진료기록title-->
         <div class="d-flex">
           <span>진료기록</span>
-          <span class="flex-grow-1">[{{ dateMsg(selectHistoryData.entryDate) }}]</span>
+          <span class="flex-grow-1">[{{ dateMsg($store.state.nurse.historyData.entryDate) }}]</span>
         </div>
         <!--      신체계측/바이탈-->
         <div>
@@ -88,10 +88,10 @@
         </div>
         <!--      의사정보-->
         <div class="doctor-info">
-          <span>{{ selectHistoryData.visit }}</span>
+          <span>{{ $store.state.nurse.historyData.visit }}</span>
           <span>외래진료</span>
-          <span>{{ selectHistoryData.dept }}</span>
-          <span>{{ selectHistoryData.name }}</span>
+          <span>{{ $store.state.nurse.historyData.dept }}</span>
+          <span>{{ $store.state.nurse.historyData.name }}</span>
         </div>
         <!--      진료기록 상세정보-->
         <!--      이미지 list-->
@@ -119,7 +119,7 @@
         <div>
           <span class="font-weight-bold">증상</span>
           <div style="padding: 5px; border: 1px solid #DBDFE5; border-radius: 5px;"
-               v-html="selectHistoryData.symptomDetail">
+               v-html="$store.state.nurse.historyData.symptomDetail">
           </div>
 
         </div>
@@ -245,7 +245,7 @@ export default {
   mounted() {
     // historyPage의 historyData 초기화
     this.$EventBus.$on('initNurseHistory', () => {
-      this.selectHistoryData = "";
+      this.$store.state.nurse.historyData = "";
     });
   },
   computed: {
@@ -258,11 +258,11 @@ export default {
     },
     // 진료기록 데이터가 있는지 확인
     isSelectEmpty() {
-      return this.selectHistoryData === "" ? true : false;
+      return this.$store.state.nurse.historyData === "" ? true : false;
     },
     // 대기환자 진료부서id와 진료기록 진료부서id가 같은지 비교
     isCheckUpdate() {
-      return this.selectHistoryData.deptId === this.waitingData.deptId ? true : false;
+      return this.$store.state.nurse.historyData.deptId === this.waitingData.deptId ? true : false;
     },
 
 
@@ -368,6 +368,7 @@ export default {
     // 선택된 진료기록데이터 저장
     setHistoryData(item) {
       this.selectHistoryData = item;
+      this.setVuexHistoryData(item);
     },
     setSelectSbList(item) {
       this.selectSbList = [];
