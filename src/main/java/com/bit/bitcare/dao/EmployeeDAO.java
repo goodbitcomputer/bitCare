@@ -14,4 +14,5 @@ public interface EmployeeDAO {
     public void update(EmployeeDTO employeeDTO);
     public void delete(int id);
     public void register(EmployeeDTO attempt);
+    public EmployeeDTO selectByName(String receive);
 }
