@@ -61,8 +61,7 @@
         temperature = #{temperature},
         symptom_detail = #{symptomDetail},
         entry_date = #{entryDate},
-        visit = #{visit},
-        receipt = #{receipt}
+        visit = #{visit}
         WHERE
         id = #{id}
     </update>

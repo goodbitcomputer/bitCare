@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="main-left">
-<!--      <div class="border-box waiting-icon">-->
-<!--        <b-icon icon="plus-circle" variant=""></b-icon>-->
-<!--      </div>-->
+      <!--      <div class="border-box waiting-icon">-->
+      <!--        <b-icon icon="plus-circle" variant=""></b-icon>-->
+      <!--      </div>-->
       <div class="main">
         <div class="main-left title-border-box">
           <div class="d-flex">
@@ -16,8 +16,10 @@
           </div>
         </div>
         <div class="waiting-info-box">
-          <div class="main-border-box" v-for="(item) in waitingList" :key="item.id">
-            <div @click="selectPatientBtn(item)">
+          <div class="" v-for="(item, index) in waitingList" :key="item.id">
+            <div class="waiting-box main-border-box"
+                 :class="{'waiting-select' : (isWaitingData && (index === selectedIndex) ? true:false)}"
+                 @click="selectPatientBtn(item, index)">
               <div>
                 <span class="font-weight-bold">{{ item.name }} </span>
                 <span>외래진료</span>
@@ -42,13 +44,15 @@
 
 <script>
 import axios from "axios";
-import {mapActions, mapMutations} from "vuex";
+import {mapActions, mapMutations, mapState} from "vuex";
 
 export default {
   name: "NurseWait",
   data() {
     return {
       waitingList: [],
+
+      selectedIndex: -1,
     }
   },
   mounted() {
@@ -58,7 +62,15 @@ export default {
       this.waitingRefresh();
     });
   },
-  computed: {},
+  computed: {
+    ...mapState('nurse',
+        ['waitingData']
+    ),
+    isWaitingData() {
+      if (this.waitingData === undefined) return false;
+      else return this.waitingData === "" ? false : true;
+    }
+  },
   methods: {
     ...mapMutations('nurse', {
       setWaitingData: 'setWaitingData',
@@ -68,10 +80,13 @@ export default {
     ...mapActions('nurse', {
       getHistoryList: 'getHistoryList'
     }),
-    selectPatientBtn(item) {
+    selectPatientBtn(item, index) {
       this.initHistoryData();
       this.setWaitingData(item);
       this.getHistoryList(item.patientId);
+
+      // 선택시 class에 select 추가
+      this.selectedIndex = index;
 
       // historyPage의 historyData 초기화
       this.$EventBus.$emit('initNurseHistory')
@@ -186,6 +201,15 @@ export default {
   border-image: initial;
   border-radius: 10px;
 }
+
+.waiting-box:hover {
+  background-color: #cccccc;
+  cursor: pointer;
+}
+.waiting-select {
+  background-color: #cccccc;
+}
+
 .main-border-box {
   margin: 5px;
   padding: 0 5px;
@@ -195,6 +219,7 @@ export default {
   border-image: initial;
   border-radius: 10px;
 }
+
 .util button {
   background: rgba(12, 11, 9, 0.7);
   color: white;

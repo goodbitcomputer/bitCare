@@ -6,11 +6,11 @@
     </div>
 
     <!--    patient 리스트-->
-    <div class="empty-box border-box" v-if="isEmpty">
-      <div class="empty-img-box">
-        <img src="@/assets/img/empty-box.png">
-      </div>
-    </div>
+<!--    <div class="empty-patient-box border-box" v-if="isEmpty">-->
+<!--      <div class="empty-img-box">-->
+<!--        <img src="@/assets/img/empty-box.png">-->
+<!--      </div>-->
+<!--    </div>-->
     <div class="border-box" v-if="!isEmpty">
       <div style="display: flex;align-items: center;">
         <span class="font-weight-bold">{{ this.waitingData.name }}</span>
@@ -40,8 +40,9 @@
     </div>
     <div class="d-flex" v-if="!isListEmpty">
       <div class="waiting-list-box">
-        <div class="main-border-box" v-for="(item) in historyList" :key="item.id">
-          <div @click="selectHistoryBtn(item)">
+        <div v-for="(item, index) in historyList" :key="item.id">
+          <div class="waiting-box main-border-box" :class="{'history-select' : (!isSelectEmpty && (index === selectedIndex) ? true:false)}"
+               @click="selectHistoryBtn(item, index)">
             <div>
               <span>{{ dateMsg(item.entryDate) }}</span>
             </div>
@@ -236,6 +237,7 @@ export default {
           prevEl: '.swiper-button-prev',
         },
       },
+      selectedIndex: -1,
     }
   },
   mounted() {
@@ -330,7 +332,10 @@ export default {
       return year + "." + month + "." + date;
     },
     // 진료기록리스트에서 특정 진료기록 선택
-    selectHistoryBtn(item) {
+    selectHistoryBtn(item, index) {
+      // 선택시 class에 select 추가
+      this.selectedIndex = index;
+
       axios.post('/doctor/getHistoryAddData', {
         historyId: item.id,
       }).then(response => {
@@ -457,15 +462,19 @@ export default {
   border-image: initial;
   border-radius: 10px;
 }
-.empty-list-box {
+.empty-patient-box {
   height: 140px;
+  display: flex;
+}
+.empty-list-box {
+  height: 600px;
   display: flex;
   flex-grow: 1;
   width: inherit;
 }
 
 .empty-box {
-  height: 140px;
+  height: 460px;
   display: flex;
 }
 
@@ -490,6 +499,13 @@ export default {
 /* 스크롤바 숨기기 */
 .waiting-list-box::-webkit-scrollbar {
   width: 0;
+}
+.waiting-box:hover {
+  background-color: #cccccc;
+  cursor: pointer;
+}
+.history-select {
+  background-color: #cccccc;
 }
 
 b-table * * {

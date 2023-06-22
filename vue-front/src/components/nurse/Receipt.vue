@@ -268,7 +268,7 @@ export default {
   border-radius: 10px;
 }
 .empty-box {
-  height: 300px;
+  height: 600px;
   display: flex;
 }
 

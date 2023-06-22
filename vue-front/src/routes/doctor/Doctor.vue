@@ -42,7 +42,6 @@ export default {
 .container {
   font-family: 'Pretendard-Regular';
   font-size: 13px;
-  padding-top: 20px;
   //display: flex;
 }
 
@@ -69,7 +68,6 @@ btn {
 // lg
 @media (min-width: 1200px) {
   .container {
-    padding-top: 20px;
     display: flex;
   }
   .waiting {
