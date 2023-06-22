@@ -110,23 +110,9 @@ export default {
           });
     },
     sendMessage() {
-      let isEmployee = false
-      for(let i=0; i<this.$store.state.login.list.length; i++){
-        if(this.$store.state.alarm.responseReceiver === this.$store.state.login.list[i].name){
-          isEmployee = true
-        }
-      }
-
-      if (isEmployee && this.messageContent !== '') {
+      if (this.sender !== '' && this.messageContent !== '') {
         this.connect()
         setTimeout(() => this.send(), 100)
-      }else if(!isEmployee){
-        window.Swal.fire({
-          icon: 'error',
-          title: 'error',
-          html: '존재하지않는 사용자입니다. <br> 수신자를 정확하게 입력해주세요.',
-          timer: 3000
-        })
       }
     },
     send() {
@@ -146,7 +132,7 @@ export default {
           type: this.type,
           entryDate: Date.now()
         };
-        this.stompClient.send("/app/receive/" + this.$store.state.alarm.responseReceiver, JSON.stringify(msg), {});
+        this.stompClient.send("/app/receive/" + this.receiver, JSON.stringify(msg), {});
       }
       console.log("메세지 전송 완료. 소켓 연결 해제")
       setTimeout(() => this.stompClient.disconnect(), 100)
