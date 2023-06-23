@@ -195,7 +195,6 @@ export default {
               this.recvList = receiveList
               this.setMessage(this.recvList)
               this.alarmLength()
-            } else {
             }
           })
           .catch(error => {

@@ -34,7 +34,6 @@ export default {
             return state.name = name;
         },
         setList : function (state, list){
-            console.log(state.list)
             return state.list = list;
         },
         setDeptList : function (state, deptList){

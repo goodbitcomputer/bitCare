@@ -130,6 +130,7 @@ export default {
           },
           (error) => {
             // 소켓 연결 실패
+            console.log(error)
             this.connected = false;
           }
       );

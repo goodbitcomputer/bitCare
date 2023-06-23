@@ -279,9 +279,7 @@ export default {
       setPhysicalData: 'setPhysicalData',
     }),
     searchBodyCategory() {
-      let count =0;
       this.bodyCategoryList.forEach((item) => {
-        count++;
         if (item.id === this.imgList[0].categoryId) {
           this.bodyCategoryId = item.id;
           this.bodyCategoryName = item.categoryName;

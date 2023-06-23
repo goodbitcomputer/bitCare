@@ -68,11 +68,13 @@ export default {
       role: [],
       roles: ['의사', '간호사'],
       selectRole: '',
+      dummy: 0,
     }
   },
   created(){
     this.getEmployeeList()
     for(let index in this.$store.state.login.list){
+      this.dummy = index
       this.role.push('')
     }
   },
