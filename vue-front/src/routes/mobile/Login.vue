@@ -91,12 +91,9 @@ export default {
     autoLogin() {
       axios.get('/api/login')
           .then(response => {
-            console.log(response.data)
             // 세션 데이터 사용 예시
             if (response.data && response.data.isLoggedIn) {
               let logIn = JSON.parse(JSON.stringify(response.data.logIn))
-              console.log('현재 로그인된 사용자: ' + logIn.name)
-              console.log(logIn.role)
               this.setName(logIn.name)
               this.setRole(logIn.role)
               this.$router.push('/mobile/doctor')
@@ -116,8 +113,6 @@ export default {
             this.setRole(response.data.role)
             this.setName(response.data.name)
             this.$router.push('/mobile/doctor')
-          } else {
-            console.log(response.data)
           }
         }
       }).catch((err) => {

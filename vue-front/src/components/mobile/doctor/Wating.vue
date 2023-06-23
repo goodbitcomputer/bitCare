@@ -94,7 +94,6 @@ export default {
       // Axios를 사용하여 RESTful API 호출
       axios.get('/api/login')
           .then(response => {
-            console.log(response.data);
             // 세션 데이터 사용 예시
             if (response.data && response.data.isLoggedIn) {
               let logIn = JSON.parse(JSON.stringify(response.data.logIn));
@@ -139,8 +138,6 @@ export default {
             this.setName('admin')
             this.setRole('ROLE_ADMIN')
             this.$router.push('/mobile/home')
-          } else {
-            console.log(response.data)
           }
         }
       }).catch((err) => {

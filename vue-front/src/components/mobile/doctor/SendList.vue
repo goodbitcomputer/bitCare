@@ -99,15 +99,10 @@ export default {
       // Axios를 사용하여 RESTful API 호출
       axios.get('/api/login')
           .then(response => {
-            console.log(response.data);
             // 세션 데이터 사용 예시
             if (response.data && response.data.isLoggedIn) {
               let logIn = JSON.parse(JSON.stringify(response.data.logIn));
-              console.log('현재 로그인된 사용자: ' + logIn.name);
               this.sender = logIn.name;
-              console.log(this.recvList)
-            } else {
-              console.log('로그인되어 있지 않습니다.');
             }
           })
           .catch(error => {
@@ -118,18 +113,15 @@ export default {
       const serverURL = "http://localhost:8080/receive"
       let socket = new SockJS(serverURL);
       this.stompClient = Stomp.over(socket);
-      console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)
       this.stompClient.connect({
             'client-id': this.sender
           },
           () => {
             // 소켓 연결 성공
             this.connected = true;
-            console.log('소켓 연결 성공');
             // 서버의 메시지 전송 endpoint를 구독합니다.
             // 이런형태를 pub sub 구조라고 합니다.
             this.stompClient.subscribe("/send/" + this.sender, res => {
-              console.log('구독으로 받은 메시지 입니다.', res.body)
               // 받은 데이터를 json으로 파싱하고 리스트에 넣어줍니다.
               if (res.body === 'cancel') {
                 this.settingSendList()
@@ -138,7 +130,6 @@ export default {
           },
           (error) => {
             // 소켓 연결 실패
-            console.log('소켓 연결 실패', error)
             this.connected = false;
           }
       );
@@ -148,18 +139,13 @@ export default {
       // Axios를 사용하여 RESTful API 호출
       axios.get('/api/sendMessageList')
           .then(response => {
-            console.log(response.data);
             // 세션 데이터 사용 예시
             if (response.data && response.data.isLoggedIn) {
               this.isLogin = true
               let sendList = JSON.parse(JSON.stringify(response.data.sendList));
-              console.log(sendList)
               this.recvList = sendList
               this.setSendList(this.recvList)
               this.sendLength()
-              console.log(this.recvList)
-            } else {
-              console.log('로그인되어 있지 않습니다.');
             }
           })
           .catch(error => {
@@ -181,7 +167,6 @@ export default {
       setTimeout(() => this.cancel(message), 100)
     },
     cancel(message) {
-      console.log("Cancel message:" + message.id);
       if (this.stompClient && this.stompClient.connected) {
         const msg = {
           connectType: "cancel",
@@ -189,7 +174,6 @@ export default {
         };
         this.stompClient.send("/app/receive/" + message.receiver, JSON.stringify(msg), {});
       }
-      console.log("전송 취소 요청 완료. 소켓 연결 해제")
       setTimeout(() => this.stompClient.disconnect(), 100)
       this.messageContent = ''
       this.showDetailsModal = false

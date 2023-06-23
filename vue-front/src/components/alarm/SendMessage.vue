@@ -55,18 +55,16 @@ export default {
       const serverURL = "/receive"
       let socket = new SockJS(serverURL);
       this.stompClient = Stomp.over(socket);
-      console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)
+
       this.stompClient.connect({
             'client-id': this.sender
           },
           () => {
             // 소켓 연결 성공
             this.connected = true;
-            console.log('소켓 연결 성공');
           },
           (error) => {
             // 소켓 연결 실패
-            console.log('소켓 연결 실패', error)
             this.connected = false;
           }
       );
@@ -74,16 +72,12 @@ export default {
     getEmployeeList(){
       axios.get('/api/selectAllRole')
           .then(response => {
-            console.log(response.data);
             // 세션 데이터 사용 예시
             if (response.data) {
               this.isLogin = true
               let employeeList = JSON.parse(JSON.stringify(response.data.employeeList));
               this.setList(employeeList)
               this.sendLength()
-              console.log(employeeList)
-            } else {
-              console.log('로그인되어 있지 않습니다.');
             }
           })
           .catch(error => {
@@ -93,16 +87,12 @@ export default {
     settingSendList(){
       axios.get('/api/sendMessageList')
           .then(response => {
-            console.log(response.data);
             // 세션 데이터 사용 예시
             if (response.data && response.data.isLoggedIn) {
               this.isLogin = true
               let sendList = JSON.parse(JSON.stringify(response.data.sendList));
               this.setSendList(sendList)
               this.sendLength()
-              console.log(sendList)
-            } else {
-              console.log('로그인되어 있지 않습니다.');
             }
           })
           .catch(error => {
@@ -130,7 +120,6 @@ export default {
       }
     },
     send() {
-      console.log("Send message:" + this.messageContent);
       if (this.stompClient && this.stompClient.connected) {
 
         this.type = "message";
@@ -148,7 +137,6 @@ export default {
         };
         this.stompClient.send("/app/receive/" + this.$store.state.alarm.responseReceiver, JSON.stringify(msg), {});
       }
-      console.log("메세지 전송 완료. 소켓 연결 해제")
       setTimeout(() => this.stompClient.disconnect(), 100)
       this.messageContent = ''
       this.setResponseReceiver('');

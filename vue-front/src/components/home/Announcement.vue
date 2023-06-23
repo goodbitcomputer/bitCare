@@ -140,17 +140,12 @@ export default {
       // Axios를 사용하여 RESTful API 호출
       axios.get('/api/announcementList')
           .then(response => {
-            console.log(response.data);
             // 세션 데이터 사용 예시
             if (response.data) {
               this.isLogin = true
               let announcementList = JSON.parse(JSON.stringify(response.data.announcementList));
-              console.log(announcementList)
               this.announcement = announcementList
               this.setAnnouncementList(this.announcement)
-              console.log(this.announcement)
-            } else {
-              console.log('로그인되어 있지 않습니다.');
             }
           })
           .catch(error => {

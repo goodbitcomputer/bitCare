@@ -222,7 +222,6 @@ export default {
       // Axios를 사용하여 RESTful API 호출
       axios.get('/api/login')
           .then(response => {
-            console.log(response.data);
             // 세션 데이터 사용 예시
             if (response.data && response.data.isLoggedIn) {
               let logIn = JSON.parse(JSON.stringify(response.data.logIn));
@@ -264,7 +263,6 @@ export default {
           },
           (error) => {
             // 소켓 연결 실패
-            console.log(error);
             this.connected = false
           }
       );
@@ -302,20 +300,15 @@ export default {
 
       axios.get('/api/receiveMessageList')
           .then(response => {
-            console.log(response.data);
             // 세션 데이터 사용 예시
             if (response.data && response.data.isLoggedIn) {
               this.isLogin = true
               let receiveList = JSON.parse(JSON.stringify(response.data.receiveList));
-              console.log(receiveList)
               this.setMessage(receiveList)
               if (receiveList != null) {
                 this.count = receiveList.filter(element => "new" === element.state).length
               }
               this.setCount(this.count)
-              console.log(receiveList)
-            } else {
-              console.log('로그인되어 있지 않습니다.');
             }
           })
           .catch(error => {
@@ -324,16 +317,12 @@ export default {
 
       axios.get('/api/sendMessageList')
           .then(response => {
-            console.log(response.data);
             // 세션 데이터 사용 예시
             if (response.data && response.data.isLoggedIn) {
               this.isLogin = true
               let sendList = JSON.parse(JSON.stringify(response.data.sendList));
               this.setSendList(sendList)
               this.sendLength()
-              console.log(sendList)
-            } else {
-              console.log('로그인되어 있지 않습니다.');
             }
           })
           .catch(error => {
@@ -342,16 +331,12 @@ export default {
 
       axios.get('/api/sendMessageList')
           .then(response => {
-            console.log(response.data);
             // 세션 데이터 사용 예시
             if (response.data && response.data.isLoggedIn) {
               this.isLogin = true
               let sendList = JSON.parse(JSON.stringify(response.data.sendList));
               this.setSendList(sendList)
               this.sendLength()
-              console.log(sendList)
-            } else {
-              console.log('로그인되어 있지 않습니다.');
             }
           })
           .catch(error => {
@@ -362,17 +347,12 @@ export default {
       // Axios를 사용하여 RESTful API 호출
       axios.get('/api/announcementList')
           .then(response => {
-            console.log(response.data);
             // 세션 데이터 사용 예시
             if (response.data) {
               this.isLogin = true
               let announcementList = JSON.parse(JSON.stringify(response.data.announcementList));
-              console.log(announcementList)
               this.announcement = announcementList
               this.setAnnouncementList(this.announcement)
-              console.log(this.announcement)
-            } else {
-              console.log('로그인되어 있지 않습니다.');
             }
           })
           .catch(error => {
@@ -400,8 +380,6 @@ export default {
             this.setName('admin')
             this.setRole('ROLE_ADMIN')
             this.$router.push('/login')
-          } else {
-            console.log(response.data)
           }
         }
       }).catch((err) => {
@@ -410,8 +388,6 @@ export default {
       })
     },
     search() {
-      console.log("search");
-      console.log(this.keyword);
       this.$router.push({path: "/search", query: {keyword: this.keyword}});
       // window.location.reload(true);
       this.$router.go();

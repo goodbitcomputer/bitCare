@@ -262,7 +262,6 @@ export default {
       return addImgList;
     },
     isImgEmpty() {
-      console.log(this.imgList.length);
       if (this.imgList.length === 0) {
         return true;
       } else {
@@ -280,14 +279,9 @@ export default {
       setPhysicalData: 'setPhysicalData',
     }),
     searchBodyCategory() {
-      console.log("searchBodyCategory");
-      console.log(this.imgList[0]);
-      console.log(this.bodyCategoryList);
       let count =0;
       this.bodyCategoryList.forEach((item) => {
-        console.log(count);
         count++;
-        console.log(item);
         if (item.id === this.imgList[0].categoryId) {
           this.bodyCategoryId = item.id;
           this.bodyCategoryName = item.categoryName;

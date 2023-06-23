@@ -79,7 +79,6 @@ export default {
       // Axios를 사용하여 RESTful API 호출
       axios.get('/api/login')
           .then(response => {
-            console.log(response.data);
             // 세션 데이터 사용 예시
             if (response.data && response.data.isLoggedIn) {
               let logIn = JSON.parse(JSON.stringify(response.data.logIn));
@@ -110,21 +109,15 @@ export default {
 
       axios.get('/api/receiveMessageList')
           .then(response => {
-            console.log(response.data);
             // 세션 데이터 사용 예시
             if (response.data && response.data.isLoggedIn) {
               this.isLogin = true
               let receiveList = JSON.parse(JSON.stringify(response.data.receiveList));
-              console.log(receiveList)
               this.setMessage(receiveList)
               if(receiveList != null) {
                 this.count = receiveList.filter(element => "new" === element.receiveState).length
               }
               this.setCount(this.count)
-              console.log(receiveList)
-              console.log(this.$store.state.alarm.messageCount)
-            } else {
-              console.log('로그인되어 있지 않습니다.');
             }
           })
           .catch(error => {
@@ -133,16 +126,12 @@ export default {
 
       axios.get('/api/sendMessageList')
           .then(response => {
-            console.log(response.data);
             // 세션 데이터 사용 예시
             if (response.data && response.data.isLoggedIn) {
               this.isLogin = true
               let sendList = JSON.parse(JSON.stringify(response.data.sendList));
               this.setSendList(sendList)
               this.sendLength()
-              console.log(sendList)
-            } else {
-              console.log('로그인되어 있지 않습니다.');
             }
           })
           .catch(error => {
@@ -162,7 +151,6 @@ export default {
       this.setSendCount(this.count)
     },
     connect() {
-      console.log("연결 시도")
       const serverURL = "http://localhost:8080/receive"
       let options = {debug: false, protocols: Stomp.VERSIONS.supportedProtocols()};
       let socket = new SockJS(serverURL);
@@ -171,7 +159,6 @@ export default {
           () => {
             // 소켓 연결 성공
             this.connected = true;
-            console.log("연결 성공")
             // 서버의 메시지 전송 endpoint를 구독합니다.
             // 이런형태를 pub sub 구조라고 합니다.
             this.stompClient.subscribe("/send/" + this.receiver, res => {

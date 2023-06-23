@@ -73,7 +73,6 @@ export default {
   created(){
     this.getEmployeeList()
     for(let index in this.$store.state.login.list){
-      console.log(index)
       this.role.push('')
     }
   },
@@ -137,13 +136,11 @@ export default {
     getEmployeeList(){
       axios.get('/api/selectAll')
           .then(response => {
-            console.log(response.data);
             // 세션 데이터 사용 예시
             if (response.data) {
               this.isLogin = true
               let employeeList = JSON.parse(JSON.stringify(response.data.employeeList));
               this.setList(employeeList)
-              console.log(employeeList)
             }
           })
           .catch(error => {

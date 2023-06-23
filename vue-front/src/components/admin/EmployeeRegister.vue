@@ -120,13 +120,11 @@ export default {
     getDeptList() {
       axios.get('/api/getDeptList')
           .then(response => {
-            console.log(response.data);
             // 세션 데이터 사용 예시
             if (response.data) {
               this.isLogin = true
               let deptList = JSON.parse(JSON.stringify(response.data.deptList));
               this.setDeptList(deptList)
-              console.log(deptList)
             }
           })
           .catch(error => {
@@ -136,13 +134,11 @@ export default {
     getEmployeeList(){
       axios.get('/api/selectAll')
           .then(response => {
-            console.log(response.data);
             // 세션 데이터 사용 예시
             if (response.data) {
               this.isLogin = true
               let employeeList = JSON.parse(JSON.stringify(response.data.employeeList));
               this.setList(employeeList)
-              console.log(employeeList)
             }
           })
           .catch(error => {
@@ -151,7 +147,6 @@ export default {
     },
     validateInput(){
       let phoneStr = this.phonePadMsg()
-      console.log(phoneStr)
       if(phoneStr === ""){
         window.Swal.fire({
           icon: 'error',

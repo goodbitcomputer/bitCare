@@ -69,8 +69,6 @@ export default {
         if (response.status === 200) {
           this.patient = response.data.selectPatient
           this.setPatientData(this.patient)
-        } else {
-          console.log('메시지 불러오기 실패')
         }
       })
 

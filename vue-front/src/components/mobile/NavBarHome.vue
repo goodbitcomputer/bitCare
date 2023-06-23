@@ -47,8 +47,6 @@ export default {
       this.setNextStep(6);
     },
     search() {
-      console.log("search");
-      console.log(this.keyword);
       this.$router.push({path: "/mobile/search", query: {keyword: this.keyword}});
       // window.location.reload(true);
       this.$router.go();
