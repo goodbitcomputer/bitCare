@@ -34,7 +34,7 @@
             </div>
           </div>
         </div>
-        <div class="justify-content-center">
+        <div class="justify-content-center" style="height: 54px">
           <div class="">
             <div class="form-floating d-flex">
               <label class="text-nowrap col-2" for="dept">진료 과목</label>
@@ -44,7 +44,7 @@
             </div>
           </div>
         </div>
-        <div class="justify-content-center">
+        <div class="justify-content-center" style="height: 54px">
           <div class="">
             <div class="form-floating d-flex">
               <label class="text-nowrap col-2" for="name">권한</label>
