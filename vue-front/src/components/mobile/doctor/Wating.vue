@@ -154,7 +154,7 @@ export default {
     },
     closeModal() {
       this.showDetailsModal = false;
-      this.setRegisterModal(this.showDetailsModal);
+      this.setUpdateModal(this.showDetailsModal);
     },
   }
 }
