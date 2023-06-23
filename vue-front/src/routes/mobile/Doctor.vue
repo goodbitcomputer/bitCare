@@ -69,7 +69,7 @@ export default {
       return this.nextStep===5 ? true : false;
     },
     settingByStep() {
-      return this.nextStep===7 ? true : false;
+      return this.nextStep===6 ? true : false;
     },
     cameraByStep() {
       return this.nextStep===8 ? true : false;
