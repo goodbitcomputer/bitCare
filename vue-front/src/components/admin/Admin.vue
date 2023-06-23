@@ -169,6 +169,6 @@ export default {
 
 <style scoped>
 #register {
-  height: 480px; overflow-y: auto;
+  height: 720px; overflow-y: auto;
 }
 </style>
