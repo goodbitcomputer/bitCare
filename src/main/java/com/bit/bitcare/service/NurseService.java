@@ -3,8 +3,10 @@ package com.bit.bitcare.service;
 import com.bit.bitcare.model.*;
 import com.bit.bitcare.vo.doctor.UpsertVO;
 import com.google.gson.JsonObject;
+import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -17,4 +19,5 @@ public interface NurseService {
     public ReceiptDTO getReceiptData(Map<String, Object> requestData);
     public Boolean payment(Map<String, Object> requestData);
     public String canclePayment(Map<String, Object> requestData);
+    public ResponseEntity<String> selectOne(int patientId) throws IOException;
 }

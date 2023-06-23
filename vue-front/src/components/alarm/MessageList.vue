@@ -30,7 +30,7 @@
       </table>
     </div>
     <div>
-      <b-modal v-model="this.$store.state.alarm.messageModal" size="lg" title="쪽지 내용" @hidden="closeModal">
+      <b-modal v-model="this.$store.state.alarm.messageModal" size="lg" hide-footer title="쪽지 내용" @hidden="closeModal">
         <div>
           <h2>
             {{ this.$store.state.alarm.selectedMessage.sender }}

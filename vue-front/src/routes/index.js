@@ -14,6 +14,7 @@ import MobileCamera from "@/routes/mobile/Camera.vue";
 import MobilePayment from "@/routes/mobile/Payment.vue";
 import MobileSearch from "@/routes/mobile/MobileSearch.vue";
 import Search from "@/routes/Search.vue";
+import Receipt from "@/routes/receipt/receipt.vue";
 import ImageEditor from "@/routes/doctor/ImageEditor.vue";
 import Alarm from './alarm/Alarm.vue'
 import store from "@/store";
@@ -210,6 +211,13 @@ export default new VueRouter({
     {
       path: '/search/',
       component: Search,
+      meta: {
+        roles: ['ROLE_DOCTOR', 'ROLE_NURSE', 'ROLE_MASTER']
+      }
+    },
+    {
+      path: '/receipt_list/',
+      component: Receipt,
       meta: {
         roles: ['ROLE_DOCTOR', 'ROLE_NURSE', 'ROLE_MASTER']
       }

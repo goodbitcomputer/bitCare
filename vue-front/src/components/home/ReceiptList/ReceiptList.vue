@@ -1,23 +1,32 @@
 <template>
-  <div class="waiting-info-box">
-    <b-badge pills card vertical class="admin col text-center">
-      <span style="font-weight: 200; font-size: 30px;"> 수납 요청 미처리 목록 </span>
-    </b-badge>
-    <div class="border-box" v-for="(item) in this.$store.state.doctor.receiptOnList" :key="item.id"
-         style="height: 70px">
-      <div @click="selectHistoryBtn(item)">
-        <div>
-          <span class="font-weight-bold"> 진료기록 번호 : {{ item.id }} </span>
+  <div>
+    <div class="main-left">
+      <!--      <div class="border-box waiting-icon">-->
+      <!--        <b-icon icon="plus-circle" variant=""></b-icon>-->
+      <!--      </div>-->
+      <div class="main">
+        <div class="main-left title-border-box">
+          <div class="d-flex">
+            <span class="flex-grow-1" style="font-size: 1.2em; font-weight: 700">수납 미요청 리스트</span>
+          </div>
         </div>
-        <div class="patient-info">
-          <span>cn.{{ item.patientId }} </span>
-          <!--          <span>{{ formatName(item.patientId)}}</span>-->
-          <span>{{ formatDept(item.deptId) }} </span>
-          <span>{{ item.visit }}</span>
-          <span>{{ formatDate(item.entryDate) }}</span>
-        </div>
-        <div>
-          <span v-html="item.memo"></span>
+        <div class="waiting-info-box">
+          <div class="" v-for="(item) in this.$store.state.doctor.receiptOnList" :key="item.id">
+            <div class="waiting-box main-border-box" @click="selectHistoryBtn(item)">
+              <div>
+                <span class="font-weight-bold">진료기록 번호 : {{ item.id }} </span>
+                <span>{{ item.visit }}</span>
+              </div>
+              <div class="patient-info">
+                <span>cn.{{ item.patientId }} </span>
+                <span>{{ formatDate(item.entryDate) }}</span>
+                <span class="font-weight-bold"> {{ formatDept(item.deptId) }} </span>
+              </div>
+              <div>
+                <span v-html="item.memo"></span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -25,24 +34,20 @@
 </template>
 
 <script>
-import {mapMutations, mapState} from "vuex";
 import axios from "axios";
+import {mapMutations, mapState} from "vuex";
 
 export default {
-  name: "ReceiptNow",
-  data() {
-    return {
-      patient: "",
-    }
-  },
+  name: "NurseWait",
+
   computed: {
     ...mapState('nurse',
-        ['historyList', 'waitingData']
+        ['waitingData']
     ),
     isWaitingData() {
       if (this.waitingData === undefined) return false;
       else return this.waitingData === "" ? false : true;
-    }
+    },
   },
   methods: {
     ...mapMutations('receipt', {
@@ -54,6 +59,7 @@ export default {
       setPhysicalData: 'setPhysicalData',
       setVisitList: 'setVisitList',
     }),
+
     ...mapMutations('nurse',{
       setReceiptData: 'setReceiptData'
     }),
@@ -113,11 +119,8 @@ export default {
 
       this.getReceiptData(item)
       this.getVisitData(item.visit);
-
-      setTimeout(() => {
-        this.$router.push('/receipt_list')
-      }, 100)
     },
+
     getReceiptData(item) {
       return axios.post('/nurse/getReceiptData', {
         historyId: item.id,
@@ -168,88 +171,86 @@ export default {
       return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     },
 
-
-    // // 사진촬영버튼
-    // photography() {
-    //   this.setPhotoListToNewCameraList(this.savePhotoList);
-    //   this.setNextStep(8);
-    // },
-
-    // // 저장 버튼
-    // saveBtn() {
-    //   this.saveFileList = [];
-    //
-    //   if (this.savePhotoList.length === 0) {
-    //     Swal.fire({
-    //       icon: 'error',
-    //       title: '실패 !!!',
-    //       text: '추가된 사진이 없습니다.',
-    //       showConfirmButton: false,
-    //       timer: 1000
-    //     })
-    //   } else if (this.bodyCategoryId === "") {
-    //     Swal.fire({
-    //       icon: 'error',
-    //       title: '실패 !!!',
-    //       text: '이미지 카테고리를 선택해주세요.',
-    //       showConfirmButton: false,
-    //       timer: 1000
-    //     })
-    //   } else {
-    //     this.savePhotoList.forEach((item) => {
-    //       this.saveFileList.push(item.file)
-    //     })
-    //
-    //     let formData = new FormData();
-    //     formData.append("bodyCategoryId", new Blob([JSON.stringify(this.bodyCategoryId)], {type: "application/json"}));
-    //     formData.append("historyId", new Blob([JSON.stringify(this.historyData.id)], {type: "application/json"}));
-    //     formData.append("memo", new Blob([JSON.stringify(this.memoEditor.getData())], {type: "application/json"}));
-    //     for (let i = 0; i < this.saveFileList.length; i++) {
-    //       formData.append("uploadFiles", this.saveFileList[i]);// 키,값으로 append
-    //     }
-    //     return axios.post('/mobile/doctor/photoSave_proc', formData, {
-    //       headers: {
-    //         'Content-Type': 'multipart/form-data'
-    //       }
-    //     }).then((response) => {
-    //       if (response.data === true) {
-    //         Swal.fire({
-    //           icon: 'success',
-    //           title: '성공 !!!',
-    //           text: 'file save',
-    //           showConfirmButton: false,
-    //           timer: 1000
-    //         }).then(() => {
-    //           this.setNextStep(3);
-    //         })
-    //       } else {
-    //         Swal.fire({
-    //           icon: 'error',
-    //           title: '실패 !!!',
-    //           text: 'fail',
-    //           showConfirmButton: false,
-    //           timer: 1000
-    //         }).then(() => {
-    //           this.setNextStep(3);
-    //         })
-    //       }
-    //     }).catch(function (error) {
-    //       console.log(error);
-    //     })
-    //   }
-    // },
-
-    // // imageCategory item 선택시 data 변경
-    // dropClick(item) {
-    //   this.bodyCategoryName = item.categoryName;
-    //   this.bodyCategoryId = item.id;
-    // },
-
-  }
+  },
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.refresh-img-box {
+  width: 25px;
+  margin: 0 auto;
+  display: flex;
+  vertical-align: middle;
+  justify-content: center;
+}
+
+.refresh-img-box img {
+  width: inherit;
+  object-fit: contain;
+}
+
+//.main-left {
+//  transition: 0.3s;
+//  height: 100%;
+//  width: 50px;
+//  overflow: hidden;
+//  //background: chartreuse;
+//  transition-duration: 0.3s;
+//}
+//
+//.main-left .main {
+//  display: none;
+//  white-space: nowrap;
+//}
+//
+//.main-left .waiting-icon {
+//  display: inline-block;
+//}
+//
+//.main-left:hover {
+//  height: 100%;
+//  width: 200px;
+//  overflow: hidden;
+//}
+//
+//.main-left:hover .waiting-icon {
+//  display: none;
+//}
+//
+//.main-left:hover * {
+//  overflow: hidden;
+//  display: block;
+//  width: auto;
+//}
+.title-border-box {
+  margin: 5px;
+  padding: 0 5px;
+  border-width: 2px;
+  border-style: solid;
+  border-color: #003A63;
+  border-image: initial;
+  border-radius: 10px;
+}
+
+.waiting-box:hover {
+  background-color: #cccccc;
+  cursor: pointer;
+}
+
+.waiting-select {
+  background-color: #cccccc;
+}
+
+.main-border-box {
+  margin: 5px;
+  padding: 0 5px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #ccc;
+  border-image: initial;
+  border-radius: 10px;
+}
+
 .util button {
   background: rgba(12, 11, 9, 0.7);
   color: white;
@@ -270,7 +271,7 @@ export default {
 
 .patient-info span {
   font-size: 10px;
-  /*글자 줄바꿈 안되게 함.*/
+  // 글자 줄바꿈 안되게 함.
   white-space: nowrap;
 }
 

@@ -4,8 +4,10 @@ import com.bit.bitcare.dao.*;
 import com.bit.bitcare.lucene.DiseaseIndexer;
 import com.bit.bitcare.model.*;
 import com.bit.bitcare.service.NurseService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,9 +32,11 @@ public class NurseServiceImpl implements NurseService {
     private final HistoryImageDAO historyImageDAO;
     private final VisitDAO visitDAO;
     private final ReceiptDAO receiptDAO;
-
-    public NurseServiceImpl(ReceiptDAO receiptDAO, VisitDAO visitDAO, HistoryImageDAO historyImageDAO, HistoryDiagnoseDAO historyDiagnoseDAO, HistoryDiseaseDAO historyDiseaseDAO, HistoryDAO historyDAO, WaitingDAO waitingDAO, DiagnoseDAO diagnoseDAO, DiseaseDAO diseaseDAO, DiseaseIndexer diseaseIndexer) {
+    private final PatientDAO patientDAO;
+    private final ObjectMapper objectMapper;
+    public NurseServiceImpl(ReceiptDAO receiptDAO, VisitDAO visitDAO, HistoryImageDAO historyImageDAO, HistoryDiagnoseDAO historyDiagnoseDAO, HistoryDiseaseDAO historyDiseaseDAO, HistoryDAO historyDAO, WaitingDAO waitingDAO, DiagnoseDAO diagnoseDAO, DiseaseDAO diseaseDAO, PatientDAO patientDAO, ObjectMapper objectMapper, DiseaseIndexer diseaseIndexer) {
         this.diseaseIndexer = diseaseIndexer;
+        this.objectMapper = objectMapper;
         this.diseaseDAO = diseaseDAO;
         this.diagnoseDAO = diagnoseDAO;
         this.waitingDAO = waitingDAO;
@@ -42,6 +46,7 @@ public class NurseServiceImpl implements NurseService {
         this.historyImageDAO = historyImageDAO;
         this.visitDAO = visitDAO;
         this.receiptDAO = receiptDAO;
+        this.patientDAO = patientDAO;
     }
 
     @Override
@@ -167,6 +172,22 @@ public class NurseServiceImpl implements NurseService {
         return "결제요청완료";
     }
 
+    @Override
+    public ResponseEntity<String> selectOne(int patientId) throws IOException{
+        // JSON 데이터 생성
+        Map<String, Object> data = new HashMap<>();
 
+        PatientDTO selectPatient = patientDAO.selectOne(patientId);
+
+        data.put("selectPatient", selectPatient);
+
+        // JSON 문자열 생성
+        String json = objectMapper.writeValueAsString(data);
+
+        // HTTP 응답 생성
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(json);
+    }
 }
 

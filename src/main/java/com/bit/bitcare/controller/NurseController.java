@@ -9,6 +9,7 @@ import com.bit.bitcare.vo.doctor.UpsertVO;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.Payment;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -84,4 +85,9 @@ public class NurseController {
         return nurseService.canclePayment(requestData);
     }
 
+    @ResponseBody
+    @GetMapping("/select_one")
+    public ResponseEntity<String> selectOne(@RequestParam int patientId) throws IOException{
+        return nurseService.selectOne(patientId);
+    }
 }

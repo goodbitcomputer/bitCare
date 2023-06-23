@@ -8,6 +8,7 @@ import mobile from './mobile'
 import mobileDoctor from './mobileDoctor'
 import mobilePayment from './mobilePayment'
 import search from './search'
+import receipt from './receipt'
 import createPersistedState from 'vuex-persistedstate';
 import login from "./login";
 Vue.use(Vuex)
@@ -24,6 +25,7 @@ export default new Vuex.Store({
         mobileDoctor,
         mobilePayment,
         search,
+        receipt,
     },
     plugins: [
         createPersistedState({
