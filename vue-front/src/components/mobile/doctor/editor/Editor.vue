@@ -290,7 +290,7 @@ export default {
         } else {
           // 이미지 편집 모드에서는 선택한 이미지를 편집기에 로드
           // let url = this.image.imagePath;
-          console.log(url);
+          // console.log(url);
           // console.log(this.image.imagePath);
           // console.log(this.images.imagePath);
           // console.log(this.image.images.imagePath);
