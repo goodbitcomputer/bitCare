@@ -8,6 +8,7 @@ import java.util.List;
 @Component
 public interface WaitingDAO {
     public WaitingDTO selectOne(int id);
+    public List<WaitingDTO> selectByPatientId(int patientId);
     public List<WaitingDTO> selectAll();
     public List<WaitingDTO> selectWaitByDept(int deptId);
     public List<WaitingDTO> selectCompletedByDept(int deptId);

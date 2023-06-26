@@ -10,16 +10,21 @@
           <b-form-input class="physical-input" type="number" v-model="data.item.weight"></b-form-input>
         </template>
         <template #cell(bpSystolic)="data">
-          <b-form-input class="physical-input" type="number" v-model="data.item.bpSystolic"></b-form-input>
+          <b-form-input class="physical-input" type="number" min="0" maxlength="4"
+                        v-model="data.item.bpSystolic"></b-form-input>
         </template>
         <template #cell(bpDiastolic)="data">
-          <b-form-input class="physical-input" type="number" v-model="data.item.bpDiastolic"></b-form-input>
+          <b-form-input class="physical-input" type="number" min="0" maxlength="4"
+                        v-model="data.item.bpDiastolic"></b-form-input>
         </template>
         <template #cell(temperature)="data">
-          <b-form-input class="physical-input" type="number" v-model="data.item.temperature"></b-form-input>
+          <b-form-input class="physical-input" type="number" min="0" maxlength="4"
+                        v-model="data.item.temperature"></b-form-input>
         </template>
       </b-table>
     </div>
+    <!--    <input type="text" :value="number">-->
+    <!--    <input type="text" :value="handleOnInput(number2)">-->
   </div>
 </template>
 
@@ -40,6 +45,7 @@ export default {
         {key: 'temperature', label: '체온'},
       ],
 
+
     }
   },
   computed: {
@@ -53,7 +59,33 @@ export default {
     msg() {
       return this.cbItems;
     },
-  }
+
+  },
+  watch: {
+
+  },
+  methods: {
+    handleOnInput(event) {
+      console.log("event");
+      console.log(event);
+
+      let regex = /[^0-9]/g;
+      event = event.replace(regex, '');
+      console.log(event);
+
+
+      // if (event.length > 4) {
+      //   event = event.substr(0, 4);
+      //   console.log('length > 4');
+      //   console.log(event);
+      // }
+
+      console.log("physicalData");
+      console.log(this.physicalData);
+      return event
+    },
+
+  },
 }
 </script>
 

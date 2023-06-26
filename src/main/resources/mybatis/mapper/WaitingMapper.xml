@@ -22,6 +22,14 @@
         ON waiting.patient_id = patient.id
         WHERE waiting.id= #{id}
     </select>
+    <!-- 접수 대기 인원 선택 -->
+    <select id="selectByPatientId" parameterType="int" resultType="waitingDTO">
+        SELECT waiting.*, patient.name, patient.identity_number, patient.phone_number, patient.gender, patient.birth,
+        patient.address_id FROM waiting
+        LEFT JOIN patient
+        ON waiting.patient_id = patient.id
+        WHERE waiting.patient_id= #{patientId} and waiting.state = "대기중";
+    </select>
 
     <!-- 접수 대기 목록 -->
     <select id="selectAll" resultType="waitingDTO">

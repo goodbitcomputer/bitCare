@@ -1,14 +1,14 @@
 <template>
   <div>
-<!--    <div class="border-box">-->
-<!--      <span style="font-size: 1.2em; font-weight: 700">진료 기록 작성</span>-->
-<!--    </div>-->
+    <!--    <div class="border-box">-->
+    <!--      <span style="font-size: 1.2em; font-weight: 700">진료 기록 작성</span>-->
+    <!--    </div>-->
 
-<!--    <div v-if="isSelectEmpty" class="empty-list-box border-box">-->
-<!--      <div class="empty-img-box">-->
-<!--        <img src="@/assets/img/empty-box.png">-->
-<!--      </div>-->
-<!--    </div>-->
+    <!--    <div v-if="isSelectEmpty" class="empty-list-box border-box">-->
+    <!--      <div class="empty-img-box">-->
+    <!--        <img src="@/assets/img/empty-box.png">-->
+    <!--      </div>-->
+    <!--    </div>-->
     <div v-if="!isSelectEmpty">
       <div class="border-box">
         <b-dropdown :text="visitMsg" class="m-0" size="sm">
@@ -20,7 +20,12 @@
       <div class="border-box">
         <div class="d-flex">
           <span class="font-weight-bold flex-grow-1">증상</span>
-          <button @click="editorBtn">편집</button>
+          <div class="d-flex" style="cursor:pointer" @click="editorBtn">
+            <div class="edit-img-box" >
+              <img src="@/assets/img/edit.png">
+            </div>
+            <span class="justify-content-center font-weight-bold" style="margin-left: 2px">편집</span>
+          </div>
         </div>
         <div class="symptom-box">
           <div class="symptomInfo-box">
@@ -92,13 +97,13 @@
         <div>
           <b-table :fields="cbFields" :items="writeCbList" small>
             <template #cell(dose)="data">
-              <input v-model="data.item.dose" class="cb-input" type="number">
+              <input v-model="data.item.dose" class="cb-input" type="number" min="0" maxlength="3"/>
             </template>
             <template #cell(time)="data">
-              <input v-model="data.item.time" class="cb-input" type="number">
+              <input v-model="data.item.time" class="cb-input" type="number" min="0" maxlength="3"/>
             </template>
             <template #cell(days)="data">
-              <input v-model="data.item.days" class="cb-input" type="number">
+              <input v-model="data.item.days" class="cb-input" type="number" min="0" maxlength="3"/>
             </template>
 
             <template #cell(icon)="data">
@@ -378,6 +383,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.edit-img-box {
+  width: 15px;
+  margin: 0 auto;
+  display: flex;
+  vertical-align: middle;
+  justify-content: center;
+}
+
+.edit-img-box img {
+  width: inherit;
+  object-fit: contain;
+}
+
 .empty-box {
   height: 140px;
   display: flex;

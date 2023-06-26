@@ -41,7 +41,12 @@
           <div class="d-flex">
             <span>진료기록</span>
             <span class="flex-grow-1">[{{ dateMsg(selectHistoryData.entryDate) }}]</span>
-            <span style="cursor:pointer" @click="updateBtn" v-if="isCheckUpdate">편집</span>
+            <div class="d-flex" style="cursor:pointer" @click="updateBtn" v-if="isCheckUpdate">
+              <div class="edit-img-box" >
+                <img src="@/assets/img/edit.png">
+              </div>
+              <span class="justify-content-center font-weight-bold" style="margin-left: 2px">편집</span>
+            </div>
           </div>
           <!--      신체계측/바이탈-->
           <div>
@@ -348,6 +353,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.edit-img-box {
+  width: 15px;
+  margin: 0 auto;
+  display: flex;
+  vertical-align: middle;
+  justify-content: center;
+}
+
+.edit-img-box img {
+  width: inherit;
+  object-fit: contain;
+}
 .refresh-img-box {
   width: 25px;
   margin: 0 auto;

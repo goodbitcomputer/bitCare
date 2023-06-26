@@ -113,19 +113,26 @@ public class MobileServiceImpl implements MobileService {
             int deptId = (int) requestData.get("deptId");
             String symptom = (String) requestData.get("symptom");
 
-            WaitingDTO waitingDTO = new WaitingDTO();
-            waitingDTO.setPatientId(patientId);
-            waitingDTO.setDeptId(deptId);
-            waitingDTO.setSymptom(symptom);
+            List<WaitingDTO> list = waitingDAO.selectByPatientId(patientId);
 
-            waitingDAO.insert(waitingDTO);
+            if (waitingDAO.selectByPatientId(patientId).isEmpty() == true) {
+
+                WaitingDTO waitingDTO = new WaitingDTO();
+                waitingDTO.setPatientId(patientId);
+                waitingDTO.setDeptId(deptId);
+                waitingDTO.setSymptom(symptom);
+
+                waitingDAO.insert(waitingDTO);
+                return true;
+            } else {
+                return false;
+            }
 
         } catch (Exception e) {
 //            e.printStackTrace();
             return false;
         }
 
-        return true;
     }
 
 }

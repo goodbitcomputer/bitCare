@@ -2,7 +2,7 @@
   <div>
     <div class="title-border-box">
       <div class="d-flex">
-        <span class="flex-grow-1" style="font-size: 1.2em; font-weight: 700">대기 환자</span>
+        <span class="flex-grow-1" style="font-size: 1.2em; font-weight: 700">{{ waitingMsg }}</span>
         <div class="refresh-img-box" style="cursor:pointer" @click="waitingRefresh">
           <img src="@/assets/img/refresh.png">
         </div>
@@ -45,6 +45,7 @@ export default {
   name: "DoctorWait",
   data() {
     return {
+      isWaitingBtn: 1,  // 대기환자, 완료환자 버튼 클릭 유무
       waitingList: [],
       selectedIndex: -1,
     }
@@ -64,7 +65,11 @@ export default {
     isWaitingData() {
       if (this.waitingData === undefined) return false;
       else return this.waitingData === "" ? false : true;
-    }
+    },
+    waitingMsg() {
+      if(this.isWaitingBtn === 1) return "대기 환자";
+      else return "완료 환자";
+    },
   },
   methods: {
     ...mapMutations('doctor', {
@@ -131,6 +136,7 @@ export default {
     waitingBtn() {
       return axios.get('/doctor/getWaitingData', {}).then(response => {
         let list = response.data;
+        this.isWaitingBtn = 1;  // 대기환자, 완료환자 구분하는 index
         this.setWaitingList(list);
         this.setWaitingData("");
         this.initHistoryList();
@@ -142,6 +148,7 @@ export default {
     completedBtn() {
       return axios.get('/doctor/getWaitingCmopletedData', {}).then(response => {
         let list = response.data;
+        this.isWaitingBtn = 2;  // 대기환자, 완료환자 구분하는 index
         this.setWaitingList(list);
         this.setWaitingData("");
         this.initHistoryList();

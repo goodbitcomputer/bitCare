@@ -37,7 +37,7 @@ export default {
         allWaitingCount: 0,
         allHistoryList: [],
         receiptOnList: [],
-        receiptCount : 0,
+        receiptCount: 0,
     },
     getters: {},
     mutations: {
@@ -62,15 +62,17 @@ export default {
         },
         // writeData 초기화 기능
         initWriteHistory: (state) => {
-            state.memoEditor.setData('');
-            state.symptomEditor.setData('');
-            state.physicalData = [{height: "", weight: "", bpSystolic: "", bpDiastolic: "", temperature: ""},];
-            state.historyId = -1;
-            state.writeSbList = [];
-            state.sbList = [];
-            state.sbDummyList = [];
-            state.writeCbList = [];
-            state.writeImgList = [];
+            if (state.memoEditor !== "") {
+                state.memoEditor.setData('');
+                state.symptomEditor.setData('');
+                state.physicalData = [{height: "", weight: "", bpSystolic: "", bpDiastolic: "", temperature: ""},];
+                state.historyId = -1;
+                state.writeSbList = [];
+                state.sbList = [];
+                state.sbDummyList = [];
+                state.writeCbList = [];
+                state.writeImgList = [];
+            }
         },
         // 환자 + writeData 초기화 기능
         initWriteHistoryPlus: (state) => {
@@ -157,7 +159,7 @@ export default {
         },
 
         // 히스토리 리스트 초기화
-        initHistoryList(state, ) {
+        initHistoryList(state,) {
             state.historyList = [];
         },
         // 히스토리 리스트 -----------------------------
@@ -184,22 +186,22 @@ export default {
             })
             // console.log(state.historyList);
         },
-        setSelectDept(state, selectDept){
+        setSelectDept(state, selectDept) {
             return state.selectDept = selectDept;
         },
-        setWaitingList(state, waitingList){
+        setWaitingList(state, waitingList) {
             return state.waitingList = waitingList;
         },
-        setAllWaitingCount(state, allWaitingCount){
+        setAllWaitingCount(state, allWaitingCount) {
             return state.allWaitingCount = allWaitingCount;
         },
-        setAllHistoryList(state, allHistoryList){
+        setAllHistoryList(state, allHistoryList) {
             return state.allHistoryList = allHistoryList;
         },
-        setReceiptOnList(state, receiptOnList){
+        setReceiptOnList(state, receiptOnList) {
             return state.receiptOnList = receiptOnList
         },
-        setReceiptCount(state, receiptCount){
+        setReceiptCount(state, receiptCount) {
             return state.receiptCount = receiptCount
         }
     },

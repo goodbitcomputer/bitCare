@@ -52,6 +52,7 @@ export default {
   name: "NurseWait",
   data() {
     return {
+      isWaitingBtn: 1,  // 대기환자, 완료환자 버튼 클릭 유무
       waitingList: [],
 
       selectedIndex: -1,
@@ -71,7 +72,11 @@ export default {
     isWaitingData() {
       if (this.waitingData === undefined) return false;
       else return this.waitingData === "" ? false : true;
-    }
+    },
+    waitingMsg() {
+      if(this.isWaitingBtn === 1) return "대기 환자";
+      else return "완료 환자";
+    },
   },
   methods: {
     ...mapMutations('nurse', {
@@ -134,6 +139,7 @@ export default {
       this.waitingRefresh();
       return axios.get('/nurse/getWaitingData', {}).then(response => {
         let list = response.data;
+        this.isWaitingBtn = 1;  // 대기환자, 완료환자 구분하는 index
         this.setWaitingList(list);
       }).catch(function (error) {
         console.log(error);
@@ -144,6 +150,7 @@ export default {
       this.waitingRefresh();
       return axios.get('/nurse/getWaitingCmopletedData', {}).then(response => {
         let list = response.data;
+        this.isWaitingBtn = 2;  // 대기환자, 완료환자 구분하는 index
         this.setWaitingList(list);
       }).catch(function (error) {
         console.log(error);
