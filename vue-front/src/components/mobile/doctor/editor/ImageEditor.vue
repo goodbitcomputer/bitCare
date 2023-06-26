@@ -125,20 +125,20 @@ export default {
     }),
     initEditor() {
       this.editorInstance = new ImageEditor(this.$refs.mobileTuiImageEditor, this.editorOptions);
-      console.log(this.editorInstance);
+      // console.log(this.editorInstance);
       this.setImageEditor(this.editorInstance);
     },
 
     // 2023.06.08 유동준
     // 편집한 이미지 저장하기 기능
     saveEditedImage(imageList) {
-      console.log("saveEditedImage");
-      console.log(imageList);
+      // console.log("saveEditedImage");
+      // console.log(imageList);
       const canvas = this.editorInstance.toDataURL();
       const blob = this.dataURLtoBlob(canvas);
       const file = new File([blob], "edited.png", {type: "image/png"});
 
-      console.log(canvas);
+      // console.log(canvas);
 
       let formData = new FormData();
 
@@ -148,11 +148,11 @@ export default {
       formData.append("edited", new Blob([JSON.stringify(this.historyImageId)], {type: "application/json"}));
 
       // 수정본 없을때
-      console.log('수정본 없을떄');
-      console.log(formData.get("uploadFile"));
-      console.log(formData.get("historyId"));
-      console.log(formData.get("bodyCategoryId"));
-      console.log(formData.get("edited"));
+      // console.log('수정본 없을떄');
+      // console.log(formData.get("uploadFile"));
+      // console.log(formData.get("historyId"));
+      // console.log(formData.get("bodyCategoryId"));
+      // console.log(formData.get("edited"));
 
       let image = []
       let editedId = []
@@ -176,12 +176,12 @@ export default {
         editedData.append("edited", (this.historyImageId + 0.1).toString());
 
         // 수정본 없을때
-        console.log('수정본 있을때');
-        console.log(editedData.get("id"));
-        console.log(editedData.get("uploadFile"));
-        console.log(editedData.get("historyId"));
-        console.log(editedData.get("bodyCategoryId"));
-        console.log(editedData.get("edited"));
+        // console.log('수정본 있을때');
+        // console.log(editedData.get("id"));
+        // console.log(editedData.get("uploadFile"));
+        // console.log(editedData.get("historyId"));
+        // console.log(editedData.get("bodyCategoryId"));
+        // console.log(editedData.get("edited"));
 
         axios
             .post("/doctor/editor/updateEditedImage", editedData, {
