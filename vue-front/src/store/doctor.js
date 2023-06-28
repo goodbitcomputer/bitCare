@@ -38,6 +38,7 @@ export default {
         allHistoryList: [],
         receiptOnList: [],
         receiptCount: 0,
+        historyCountList: [],
     },
     getters: {},
     mutations: {
@@ -203,7 +204,10 @@ export default {
         },
         setReceiptCount(state, receiptCount) {
             return state.receiptCount = receiptCount
-        }
+        },
+        setHistoryCountList(state, historyCountList){
+            return state.historyCountList = historyCountList
+        },
     },
 
     actions: {

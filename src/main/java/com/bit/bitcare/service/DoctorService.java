@@ -19,4 +19,5 @@ public interface DoctorService {
     public List<HistoryDTO> getNotReceiptHistory();
     public JsonObject getHistoryAddData(int historyId);
     public void completedWaiting(WaitingDTO waitingDTO);
+    public List<Integer> getHistoryCount();
 }

@@ -127,6 +127,16 @@ public class DoctorController {
         doctorService.completedWaiting(waitingDTO);
     }
 
-
-
+    /**
+     * ---------------------------------------------------------------------------
+     * 2023.06.28 문희찬
+     * <p>
+     * 부상에 대한 입원 통계 데이터 가져오기
+     * ---------------------------------------------------------------------------
+     */
+    @ResponseBody
+    @GetMapping("/getHistoryCount")
+    public List<Integer> getHistoryCount() {
+        return doctorService.getHistoryCount();
+    }
 }

@@ -23,4 +23,5 @@ public interface HistoryImageDAO {
     void updateEditedImage(HistoryImageDTO historyImageDTO);
 
     public void update(HistoryImageDTO historyImageDTO);
+    public List<Integer> historyCount();
 }

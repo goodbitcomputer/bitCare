@@ -70,4 +70,12 @@
         WHERE id = #{id}
     </update>
 
+    <select id="historyCount" resultType="int">
+        select count(distinct a.`history_id`) as `history_count`
+        from `body_category` left outer join(
+        select * from `history_image`
+        ) as a on (a.`category_id` = `body_category`.`id`)
+        group by `body_category`.`id`
+        order by `body_category`.`id`;
+    </select>
 </mapper>

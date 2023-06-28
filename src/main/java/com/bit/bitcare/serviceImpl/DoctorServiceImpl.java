@@ -258,6 +258,9 @@ public class DoctorServiceImpl implements DoctorService {
         waitingDAO.update(waitingDTO);
     }
 
-
+    @Override
+    public List<Integer> getHistoryCount(){
+        return historyImageDAO.historyCount();
+    }
 }
 

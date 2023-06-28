@@ -9,6 +9,7 @@
         <DeptSelect/>
       </div>
       <div class="list">
+        <ChartView/>
         <ClinicNow/>
         <div>
           <div class="container">
@@ -33,10 +34,12 @@ import WaitingNow from "@/components/home/WaitingNow.vue";
 import DeptSelect from "@/components/home/DeptSelect.vue";
 import ReceiptNow from "@/components/home/ReceiptNow.vue";
 import AnnouncementBoard from "@/components/home/Announcement.vue";
+import ChartView from "@/components/home/ChartView.vue";
 
 export default {
   name: "DoctorView",
   components: {
+    ChartView,
     AnnouncementBoard,
     ReceiptNow,
     DeptSelect,
