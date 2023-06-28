@@ -2,8 +2,10 @@ package com.bit.bitcare.serviceImpl;
 
 import com.bit.bitcare.awsS3.AwsS3;
 import com.bit.bitcare.awsS3.AwsS3Service;
+import com.bit.bitcare.dao.BodyCategoryDAO;
 import com.bit.bitcare.dao.HistoryDAO;
 import com.bit.bitcare.dao.HistoryImageDAO;
+import com.bit.bitcare.model.BodyCategoryDTO;
 import com.bit.bitcare.model.HistoryImageDTO;
 import com.bit.bitcare.service.EditorService;
 import org.springframework.stereotype.Service;
@@ -14,12 +16,14 @@ import java.util.List;
 public class EditorServiceImpl implements EditorService {
     private final HistoryImageDAO historyImageDAO;
     private final HistoryDAO historyDAO;
+    private final BodyCategoryDAO bodyCategoryDAO;
     private final AwsS3Service awsS3Service;
 
-    public EditorServiceImpl(HistoryImageDAO historyImageDAO, HistoryDAO historyDAO, AwsS3Service awsS3Service) {
+    public EditorServiceImpl(HistoryImageDAO historyImageDAO, HistoryDAO historyDAO, BodyCategoryDAO bodyCategoryDAO, AwsS3Service awsS3Service) {
         this.historyImageDAO = historyImageDAO;
         this.historyDAO = historyDAO;
         this.awsS3Service = awsS3Service;
+        this.bodyCategoryDAO = bodyCategoryDAO;
     }
 
 
@@ -57,4 +61,10 @@ public class EditorServiceImpl implements EditorService {
         historyImageDAO.updateEditedImage(historyImageDTO);
     }
 
+
+    @Override
+    public BodyCategoryDTO loadBodyCategoryImage(int patientId, int historyId) {
+        return bodyCategoryDAO.loadBodyCategoryImage(patientId, historyId);
+
+    }
 }
