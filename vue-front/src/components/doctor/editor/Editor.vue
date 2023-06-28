@@ -29,7 +29,7 @@
         >
           <img :src="image.imagePath" class="image-list-box" draggable="false"/>
           <div v-if="isSelected(image.imagePath)" class="img-cover"></div>
-          <p class="image-date">{{ formatDate(image.entryDate) }}</p>
+          <p class="image-date">{{ formatDate(image) }}</p>
           <div v-if="isSelected(image.imagePath)" class="dropdown">
             <ul class="draggable-list">
               <li
@@ -41,7 +41,7 @@
                   @dragstart="dragImage($event, dropdownImage.imagePath)"
               >
                 <img :src="image.imagePath" class="image-list-box"/>
-                <p class="image-date">{{ formatDate(image.entryDate) }}</p>
+                <p class="image-date">{{ formatDate(image) }}</p>
               </li>
             </ul>
           </div>
@@ -111,6 +111,7 @@ export default {
     document.addEventListener('keydown', this.handleKeyDown);
     const patientId = this.$route.query.patientId;
     const historyId = this.$route.query.historyId;
+
     axios
         .post('/doctor/editor/selectByPatientIdAndHistoryId', null, {
           params: {
@@ -125,6 +126,24 @@ export default {
         .catch(error => {
           console.error(error);
         });
+
+    axios
+        .post('/doctor/editor/loadBodyCategoryImage', null, {
+          params: {
+            patientId: patientId,
+            historyId: historyId
+          }
+        })
+        .then(response => {
+          console.log(response.data);
+          this.images = [response.data, ...this.images];
+        })
+        .catch(error => {
+          console.error(error);
+        });
+
+
+
   },
   beforeUnmount() {
     document.removeEventListener("keydown", this.handleKeyDown);
@@ -134,12 +153,19 @@ export default {
       setHistoryImageId: 'setHistoryImageId',
       setBodyCategoryId: 'setBodyCategoryId',
     }),
-    formatDate(date) {
-      const formattedDate = new Date(date);
-      const year = formattedDate.getFullYear();
-      const month = String(formattedDate.getMonth() + 1).padStart(2, '0');
-      const day = String(formattedDate.getDate()).padStart(2, '0');
-      return `${year}년 ${month}월 ${day}일`;
+    formatDate(image) {
+      console.log(image.entryDate);
+
+      if (image.entryDate !== undefined){
+        const formattedDate = new Date(image.entryDate);
+        const year = formattedDate.getFullYear();
+        const month = String(formattedDate.getMonth() + 1).padStart(2, '0');
+        const day = String(formattedDate.getDate()).padStart(2, '0');
+        return `${year}년 ${month}월 ${day}일`;
+      } else {
+        return image.categoryName;
+      }
+
     },
     handleEditComplete(image) {
       this.images.push({imagePath: image});

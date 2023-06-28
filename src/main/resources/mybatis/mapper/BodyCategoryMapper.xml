@@ -16,4 +16,14 @@
         where id = #{id}
     </select>
 
+    <select id="loadBodyCategoryImage" parameterType="map" resultType="bodyCategoryDTO">
+        select bc.`category_name`, bc.`image_path` from `body_category` as bc
+        inner join `history_image` as hi on hi.`category_id` = bc.`id`
+        inner join `history` as h on hi.`history_id` = h.`id`
+        inner join `patient` as p on h.`patient_id` = p.`id`
+        where p.`id` = #{patientId}
+        and h.`id` = #{historyId}
+        limit 1;
+    </select>
+
 </mapper>

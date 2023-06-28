@@ -8,5 +8,8 @@ import java.util.List;
 @Component
 public interface BodyCategoryDAO {
     public BodyCategoryDTO selectOne(int id);
+
     public List<BodyCategoryDTO> selectAll();
+
+    public BodyCategoryDTO loadBodyCategoryImage(int patientId, int historyId);
 }

@@ -2,8 +2,10 @@ package com.bit.bitcare.controller;
 
 import com.bit.bitcare.awsS3.AwsS3;
 import com.bit.bitcare.awsS3.AwsS3Service;
+import com.bit.bitcare.dao.BodyCategoryDAO;
 import com.bit.bitcare.dao.HistoryDAO;
 import com.bit.bitcare.dao.HistoryImageDAO;
+import com.bit.bitcare.model.BodyCategoryDTO;
 import com.bit.bitcare.model.HistoryDTO;
 import com.bit.bitcare.model.HistoryImageDTO;
 import com.bit.bitcare.service.EditorService;
@@ -23,13 +25,15 @@ public class EditorController {
     private final AwsS3Service awsS3Service;
     private final HistoryDAO historyDAO;
     private final HistoryImageDAO historyImageDAO;
+    private final BodyCategoryDAO bodyCategoryDAO;
 
     @Autowired
-    public EditorController(HistoryImageDAO historyImageDAO, HistoryDAO historyDAO, EditorService editorService, AwsS3Service awsS3Service) {
+    public EditorController(HistoryImageDAO historyImageDAO, HistoryDAO historyDAO, EditorService editorService, AwsS3Service awsS3Service, BodyCategoryDAO bodyCategoryDAO) {
         this.editorService = editorService;
         this.awsS3Service = awsS3Service;
         this.historyDAO = historyDAO;
         this.historyImageDAO = historyImageDAO;
+        this.bodyCategoryDAO = bodyCategoryDAO;
     }
 
     @ResponseBody
@@ -76,7 +80,7 @@ public class EditorController {
 
     @ResponseBody
     @PostMapping("/updateEditedImage")
-    public void updateEditedImage(@RequestPart (value = "uploadFile", required = true) MultipartFile file, HistoryImageDTO historyImageDTO) throws IOException {
+    public void updateEditedImage(@RequestPart(value = "uploadFile", required = true) MultipartFile file, HistoryImageDTO historyImageDTO) throws IOException {
         HistoryDTO historyDTO = historyDAO.selectOne(historyImageDTO.getHistoryId());
         HistoryImageDTO historyImageTemp = historyImageDAO.selectById(historyImageDTO.getId());
         // s3 이미지 삭제
@@ -90,6 +94,14 @@ public class EditorController {
 
         editorService.updateEditedImage(awsS3, historyImageTemp);
 
+    }
+
+
+    @ResponseBody
+    @PostMapping("/loadBodyCategoryImage")
+    public BodyCategoryDTO loadBodyCategoryImage(@RequestParam int patientId, @RequestParam int historyId) {
+        System.out.println(bodyCategoryDAO.loadBodyCategoryImage(patientId, historyId));
+        return bodyCategoryDAO.loadBodyCategoryImage(patientId, historyId);
     }
 
 
