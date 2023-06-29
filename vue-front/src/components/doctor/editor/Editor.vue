@@ -141,9 +141,6 @@ export default {
         .catch(error => {
           console.error(error);
         });
-
-
-
   },
   beforeUnmount() {
     document.removeEventListener("keydown", this.handleKeyDown);
@@ -156,7 +153,7 @@ export default {
     formatDate(image) {
       console.log(image.entryDate);
 
-      if (image.entryDate !== undefined){
+      if (image.entryDate !== undefined) {
         const formattedDate = new Date(image.entryDate);
         const year = formattedDate.getFullYear();
         const month = String(formattedDate.getMonth() + 1).padStart(2, '0');

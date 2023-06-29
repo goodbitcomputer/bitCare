@@ -27,7 +27,7 @@
         >
           <img :src="image.imagePath" class="image-list-box"/>
           <div class="img-cover"></div>
-          <p class="image-date">{{ formatDate(image.entryDate) }}</p>
+          <p class="image-date">{{ formatDate(image) }}</p>
         </div>
       </div>
       <br/>
@@ -106,6 +106,21 @@ export default {
         .catch(error => {
           console.error(error);
         });
+
+    axios
+        .post('/doctor/editor/loadBodyCategoryImage', null, {
+          params: {
+            patientId: patientId,
+            historyId: historyId
+          }
+        })
+        .then(response => {
+          console.log(response.data);
+          this.images = [response.data, ...this.images];
+        })
+        .catch(error => {
+          console.error(error);
+        });
   },
   beforeUnmount() {
     document.removeEventListener("keydown", this.handleKeyDown);
@@ -122,12 +137,19 @@ export default {
       setIsViewer: 'setIsViewer',
       setTempImage: 'setTempImage',
     }),
-    formatDate(date) {
-      const formattedDate = new Date(date);
-      const year = formattedDate.getFullYear();
-      const month = String(formattedDate.getMonth() + 1).padStart(2, '0');
-      const day = String(formattedDate.getDate()).padStart(2, '0');
-      return `${year}년 ${month}월 ${day}일`;
+    formatDate(image) {
+      console.log(image.entryDate);
+
+      if (image.entryDate !== undefined) {
+        const formattedDate = new Date(image.entryDate);
+        const year = formattedDate.getFullYear();
+        const month = String(formattedDate.getMonth() + 1).padStart(2, '0');
+        const day = String(formattedDate.getDate()).padStart(2, '0');
+        return `${year}년 ${month}월 ${day}일`;
+      } else {
+        return image.categoryName;
+      }
+
     },
     handleEditComplete(image) {
       this.images.push({imagePath: image});
