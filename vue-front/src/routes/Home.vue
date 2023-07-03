@@ -22,6 +22,7 @@
         </div>
       </div>
     </div>
+    <chat-bot/>
   </div>
 </template>
 
@@ -33,10 +34,12 @@ import WaitingNow from "@/components/home/WaitingNow.vue";
 import DeptSelect from "@/components/home/DeptSelect.vue";
 import ReceiptNow from "@/components/home/ReceiptNow.vue";
 import AnnouncementBoard from "@/components/home/Announcement.vue";
+import ChatBot from "@/components/chatbot/ChatBot.vue";
 
 export default {
   name: "DoctorView",
   components: {
+    ChatBot,
     AnnouncementBoard,
     ReceiptNow,
     DeptSelect,

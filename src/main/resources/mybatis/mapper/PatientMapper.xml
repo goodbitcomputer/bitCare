@@ -40,6 +40,24 @@
         values(#{name}, #{identityNumber}, #{gender}, #{birth}, #{phoneNumber}, #{addressId})
     </insert>
 
+<!--    &lt;!&ndash; 환자 검색   &ndash;&gt;-->
+<!--    <select id="searchAll" parameterType="searchDTO" resultType="patientDTO">-->
+<!--        SELECT p.*, h.symptom_detail FROM bit_care.patient as p-->
+<!--        LEFT JOIN (-->
+<!--        SELECT * FROM history as a-->
+<!--        WHERE a.id = (-->
+<!--        SELECT id FROM history as b-->
+<!--        WHERE b.patient_id = a.patient_id-->
+<!--        ORDER BY b.id desc-->
+<!--        LIMIT 1)-->
+<!--        ) AS h-->
+<!--        ON p.id = h.patient_id-->
+<!--        WHERE p.id like concat('%', #{keyword}, '%') or-->
+<!--        p.name like concat('%', #{keyword}, '%') or-->
+<!--        p.identity_number like concat('%', #{keyword}, '%') or-->
+<!--        p.phone_number like concat('%', #{keyword}, '%')-->
+<!--        LIMIT #{offset}, #{recordSize}-->
+<!--    </select>-->
     <!-- 환자 검색   -->
     <select id="searchAll" parameterType="searchDTO" resultType="patientDTO">
         SELECT p.*, h.symptom_detail FROM bit_care.patient as p
@@ -52,20 +70,55 @@
         LIMIT 1)
         ) AS h
         ON p.id = h.patient_id
-        WHERE p.id like concat('%', #{keyword}, '%') or
-        p.name like concat('%', #{keyword}, '%') or
-        p.identity_number like concat('%', #{keyword}, '%') or
-        p.phone_number like concat('%', #{keyword}, '%')
+        INNER JOIN (
+        SELECT distinct patient.id FROM patient
+        LEFT JOIN history
+        ON patient.id = history.patient_id
+        LEFT JOIN history_disease
+        ON history.id = history_disease.history_id
+        where history_disease.name like concat('%', #{keyword}, '%') or
+        patient.id like concat('%', #{keyword}, '%') or
+        patient.name like concat('%', #{keyword}, '%') or
+        patient.identity_number like concat('%', #{keyword}, '%') or
+        patient.phone_number like concat('%', #{keyword}, '%')
+        ) as p2
+        ON p.id = p2.id
         LIMIT #{offset}, #{recordSize}
     </select>
 
+<!--    &lt;!&ndash; 환자 수 카운팅   &ndash;&gt;-->
+<!--    <select id="count" parameterType="searchDTO" resultType="int">-->
+<!--        SELECT COUNT(*) FROM patient-->
+<!--        WHERE id like concat('%', #{keyword}, '%') or-->
+<!--        name like concat('%', #{keyword}, '%') or-->
+<!--        identity_number like concat('%', #{keyword}, '%') or-->
+<!--        phone_number like concat('%', #{keyword}, '%');-->
+<!--    </select>-->
     <!-- 환자 수 카운팅   -->
     <select id="count" parameterType="searchDTO" resultType="int">
-        SELECT COUNT(*) FROM patient
-        WHERE id like concat('%', #{keyword}, '%') or
-        name like concat('%', #{keyword}, '%') or
-        identity_number like concat('%', #{keyword}, '%') or
-        phone_number like concat('%', #{keyword}, '%');
+        SELECT count(distinct p.id) FROM bit_care.patient as p
+        LEFT JOIN (
+        SELECT * FROM history as a
+        WHERE a.id = (
+        SELECT id FROM history as b
+        WHERE b.patient_id = a.patient_id
+        ORDER BY b.id desc
+        LIMIT 1)
+        ) AS h
+        ON p.id = h.patient_id
+        INNER JOIN (
+        SELECT distinct patient.id FROM patient
+        LEFT JOIN history
+        ON patient.id = history.patient_id
+        LEFT JOIN history_disease
+        ON history.id = history_disease.history_id
+        where history_disease.name like concat('%', #{keyword}, '%') or
+        patient.id like concat('%', #{keyword}, '%') or
+        patient.name like concat('%', #{keyword}, '%') or
+        patient.identity_number like concat('%', #{keyword}, '%') or
+        patient.phone_number like concat('%', #{keyword}, '%')
+        ) as p2
+        ON p.id = p2.id;
     </select>
 
 </mapper>

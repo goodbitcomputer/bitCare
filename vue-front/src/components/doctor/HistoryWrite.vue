@@ -21,7 +21,7 @@
         <div class="d-flex">
           <span class="font-weight-bold flex-grow-1">증상</span>
           <div class="d-flex" style="cursor:pointer" @click="editorBtn">
-            <div class="edit-img-box" >
+            <div class="edit-img-box">
               <img src="@/assets/img/edit.png">
             </div>
             <span class="justify-content-center font-weight-bold" style="margin-left: 2px">편집</span>

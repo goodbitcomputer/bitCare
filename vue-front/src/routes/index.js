@@ -55,7 +55,7 @@ export default new VueRouter({
       path: '/Home',
       component: Home,
       meta: {
-        roles: ['ROLE_DOCTOR', 'ROLE_NURSE', 'ROLE_MASTER']
+        roles: ['ROLE_DOCTOR', 'ROLE_NURSE', 'ROLE_MASTER', 'ROLE_ADMIN']
       }
     },
     {

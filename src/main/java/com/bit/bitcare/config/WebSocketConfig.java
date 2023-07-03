@@ -23,7 +23,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
      */
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/send");
+        config.enableSimpleBroker("/send", "/topic");
         config.setApplicationDestinationPrefixes("/app");
     }
 
@@ -37,7 +37,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     // connection을 맺을때 CORS 허용합니다.
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/receive")
+        registry.addEndpoint("/receive", "/ws")
                 // 스프링 5.3, 스프링부트 2.4 버전 부터 allowCredentials이 true인 경우 setAllowedOrigins 메서드에서
                 // 와일드 카드 `'*'`을 사용하실 수 없습니다.
                 .setAllowedOriginPatterns("*")

@@ -34,6 +34,7 @@ public class NurseServiceImpl implements NurseService {
     private final ReceiptDAO receiptDAO;
     private final PatientDAO patientDAO;
     private final ObjectMapper objectMapper;
+
     public NurseServiceImpl(ReceiptDAO receiptDAO, VisitDAO visitDAO, HistoryImageDAO historyImageDAO, HistoryDiagnoseDAO historyDiagnoseDAO, HistoryDiseaseDAO historyDiseaseDAO, HistoryDAO historyDAO, WaitingDAO waitingDAO, DiagnoseDAO diagnoseDAO, DiseaseDAO diseaseDAO, PatientDAO patientDAO, ObjectMapper objectMapper, DiseaseIndexer diseaseIndexer) {
         this.diseaseIndexer = diseaseIndexer;
         this.objectMapper = objectMapper;
@@ -160,12 +161,12 @@ public class NurseServiceImpl implements NurseService {
     public String canclePayment(Map<String, Object> requestData) {
         try {
             int receiptId = (int) requestData.get("receiptId");
-            if(receiptDAO.selectOne(receiptId).getImpUid() == null) {
+            if (receiptDAO.selectOne(receiptId).getImpUid() == null) {
                 receiptDAO.delete(receiptId);
-            }else{
+            } else {
                 return "결제완료된내역";
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return "요청완료된내역";
         }
@@ -173,7 +174,7 @@ public class NurseServiceImpl implements NurseService {
     }
 
     @Override
-    public ResponseEntity<String> selectOne(int patientId) throws IOException{
+    public ResponseEntity<String> selectOne(int patientId) throws IOException {
         // JSON 데이터 생성
         Map<String, Object> data = new HashMap<>();
 
